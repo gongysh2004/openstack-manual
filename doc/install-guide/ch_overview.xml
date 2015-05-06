@@ -39,8 +39,6 @@
   <section xml:id="architecture_example-architectures">
     <title>样例架构</title>
     <para>OpenStack是个高可配置的，可以用来满足各种不同的部署需要。本手册使用下面的样例架构：</para>
-    <itemizedlist>
-      <listitem>
         <para>使用Neutron的两节点架构，附带块存储和对象存储：</para>
         <itemizedlist>
           <listitem>
@@ -90,13 +88,7 @@
               performance of storage services.</para>
           </listitem>
         </itemizedlist>
-        <note>
-          <para>When you implement this architecture, skip
-            <xref linkend="section_nova-networking" /> in
-            <xref linkend="ch_networking" />. Optional services might
-            require additional nodes or additional resources on existing
-            nodes.</para>
-        </note>
+
         <figure xml:id="example-architecture-with-neutron-networking-hw">
           <title>Minimal architecture example with OpenStack Networking
             (neutron)&mdash;Hardware requirements</title>
@@ -127,102 +119,5 @@
             </imageobject>
           </mediaobject>
         </figure>
-
-      </listitem>
-      <listitem>
-        <para>Two-node architecture with legacy networking
-          (nova-network) and optional nodes for Block Storage and
-          Object Storage services.</para>
-        <itemizedlist>
-          <listitem>
-            <para>The
-              <glossterm baseform="cloud controller node"
-              >controller node</glossterm> runs the Identity service,
-              Image service, management portion of Compute, and the
-              dashboard. It also includes supporting services such as
-              a SQL database, <glossterm>message queue</glossterm>, and
-              <glossterm>Network Time Protocol (NTP)</glossterm>.</para>
-            <para>Optionally, the controller node runs portions of
-              Block Storage, Object Storage, Orchestration, Telemetry,
-              Database, and Data processing services. These
-              components provide additional features for your
-              environment.</para>
-          </listitem>
-          <listitem>
-            <para>The <glossterm>compute node</glossterm> runs the
-              <glossterm>hypervisor</glossterm> portion of Compute
-              that operates <glossterm>tenant</glossterm>
-              <glossterm baseform="virtual machine (VM)">virtual machines</glossterm>
-              or instances. By default, Compute uses
-              <glossterm baseform="kernel-based VM (KVM)">KVM</glossterm>
-              as the <glossterm>hypervisor</glossterm>. Compute also
-              provisions tenant networks and provides firewalling
-              (<glossterm baseform="security group"
-              >security groups</glossterm>) services. You can run more
-              than one compute node.</para>
-            <para>Optionally, the compute node runs a Telemetry
-              agent to collect meters. Also, it can contain a third
-              network interface on a separate storage network to improve
-              performance of storage services.</para>
-          </listitem>
-          <listitem>
-            <para>The optional Block Storage node contains the disks that
-              the Block Storage service provisions for tenant virtual machine
-              instances. You can run more than one of these nodes.</para>
-            <para>Optionally, the Block Storage node runs a Telemetry
-              agent to collect meters. Also, it can contain a second
-              network interface on a separate storage network to improve
-              performance of storage services.</para>
-          </listitem>
-          <listitem>
-            <para>The optional Object Storage nodes contain the disks that
-              the Object Storage service uses for storing accounts,
-              containers, and objects. You can run more than two of these
-              nodes. However, the minimal architecture example requires
-              two nodes.</para>
-            <para>Optionally, these nodes can contain a second network
-              interface on a separate storage network to improve
-              performance of storage services.</para>
-          </listitem>
-        </itemizedlist>
-        <note>
-          <para>When you implement this architecture, skip
-            <xref linkend="section_neutron-networking" /> in
-            <xref linkend="ch_networking" />. To use optional services, you
-            might need to build additional nodes, as described in
-            subsequent chapters.</para>
-        </note>
-        <figure xml:id="example-architecture-with-legacy-networking-hw">
-          <title>Minimal architecture example with legacy networking
-            (nova-network)&mdash;Hardware requirements</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata contentwidth="6in"
-                fileref="../common/figures/installguidearch-nova-hw.png"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-        <figure xml:id="example-architecture-with-legacy-networking-networks">
-          <title>Minimal architecture example with legacy networking
-            (nova-network)&mdash;Network layout</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata contentwidth="6in"
-                fileref="../common/figures/installguidearch-nova-networks.png"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-        <figure xml:id="example-architecture-with-legacy-networking-services">
-          <title>Minimal architecture example with legacy networking
-            (nova-network)&mdash;Service layout</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata contentwidth="6in"
-                fileref="../common/figures/installguidearch-nova-services.png"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </listitem>
-    </itemizedlist>
   </section>
 </chapter>

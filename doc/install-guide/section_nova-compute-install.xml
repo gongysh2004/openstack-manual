@@ -30,10 +30,7 @@
       <link linkend="basics-packages">OpenStack packages</link>
       instructions. For OpenStack Networking (neutron), also follow the
       <link linkend="basics-networking-neutron">OpenStack
-      Networking compute node</link> instructions. For legacy networking
-      (nova-network), also follow the
-      <link linkend="basics-networking-nova">legacy networking compute node</link>
-      instructions. Each additional compute node requires unique IP
+      Networking compute node</link> instructions. Each additional compute node requires unique IP
       addresses.</para>
   </note>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">

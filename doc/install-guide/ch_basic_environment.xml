@@ -7,20 +7,10 @@
   <?dbhtml stop-chunking?>
   <title>基础环境</title>
 
-  <note>
-    <para>
-      The trunk version of this guide focuses on the future Kilo
-      release and will not work for the current Juno release. If
-      you want to install Juno, you must use the <link
-      xlink:href="http://docs.openstack.org">Juno version</link>
-      of this guide instead.
-    </para>
-  </note>
 
   <para>This chapter explains how to configure each node in the
     <link linkend="architecture_example-architectures">example architectures</link>
-    including the <link linkend="example-architecture-with-legacy-networking-hw">
-    two-node architecture with legacy networking</link> and
+    including the
     <link linkend="example-architecture-with-neutron-networking-hw">three-node
     architecture with OpenStack Networking (neutron)</link>.</para>
   <note>

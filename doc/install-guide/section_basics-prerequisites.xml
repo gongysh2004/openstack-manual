@@ -8,8 +8,7 @@
   <title>机器配置</title>
   <para>For best performance, we recommend that your environment meets or
     exceeds the hardware requirements in
-    <xref linkend="example-architecture-with-neutron-networking-hw"/> or
-    <xref linkend="example-architecture-with-legacy-networking-hw"/>. However,
+    <xref linkend="example-architecture-with-neutron-networking-hw"/> However,
     OpenStack does not require a significant amount of resources and the
     following minimum requirements should support a proof-of-concept
     environment with core services and several
