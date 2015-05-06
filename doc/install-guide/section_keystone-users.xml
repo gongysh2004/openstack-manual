@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="keystone-users">
-  <title>Create projects, users, and roles</title>
+  <title>创建项目，用户和角色</title>
   <para>The Identity service provides authentication services for each
     OpenStack service. The authentication service uses a combination of
     <glossterm baseform="domain">domains</glossterm>,

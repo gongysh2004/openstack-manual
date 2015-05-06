@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="keystone-services">
-  <title>Create the service entity and API endpoint</title>
+  <title>创建服务实体和API端点</title>
   <para>The Identity service provides a catalog of services and their
      locations. Each service that you add to your OpenStack environment
      requires a <glossterm>service</glossterm> entity and several

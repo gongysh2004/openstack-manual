@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="ch_nova">
   <?dbhtml stop-chunking?>
-  <title>Add the Compute service</title>
+  <title>添加计算服务</title>
   <xi:include href="../common/section_getstart_compute.xml"/>
   <xi:include href="section_nova-controller-install.xml"/>
   <xi:include href="section_nova-compute-install.xml"/>

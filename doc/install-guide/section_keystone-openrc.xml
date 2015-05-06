@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="keystone-client-environment-scripts">
-  <title>Create OpenStack client environment scripts</title>
+  <title>创建OpenStack客户端环境脚本</title>
   <para>The previous section used a combination of environment variables and
     command options to interact with the Identity service via the
     <command>openstack</command> client. To increase efficiency of client

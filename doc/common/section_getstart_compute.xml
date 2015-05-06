@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="compute-service">
-  <title>OpenStack Compute</title>
+  <title>OpenStack计算服务</title>
   <para>Use OpenStack Compute to host and manage cloud computing
     systems. OpenStack Compute is a major part of an
     Infrastructure-as-a-Service (IaaS) system. The main modules are

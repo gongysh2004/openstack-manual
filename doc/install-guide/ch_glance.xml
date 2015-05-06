@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ch_glance">
-  <title>Add the Image service</title>
+  <title>添加镜像服务</title>
   <para>The OpenStack Image service (glance) enables users to discover,
     register, and retrieve virtual machine images. It offers a <glossterm
       baseform="RESTful">REST</glossterm> API that enables you to

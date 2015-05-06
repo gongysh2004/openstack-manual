@@ -9,34 +9,25 @@
   version="5.0"
   xml:id="ch_overview">
   <?dbhtml stop-chunking?>
-  <title>Architecture</title>
+  <title>架构</title>
   <section xml:id="architecture_overview">
-    <title>Overview</title>
-    <para>The <glossterm>OpenStack</glossterm> project is an open source cloud
-      computing platform that supports all types of cloud environments. The
-      project aims for simple implementation, massive scalability, and a rich
-      set of features. Cloud computing experts from around the world
-      contribute to the project.</para>
-    <para>OpenStack provides an Infrastructure-as-a-Service
-      (<glossterm>IaaS</glossterm>) solution through a variety of complemental
-      services. Each service offers an application programming interface
-      (<glossterm>API</glossterm>) that facilitates this integration. The
-      following table provides a list of OpenStack services:</para>
+    <title>概述</title>
+    <para><glossterm>OpenStack</glossterm> 项目是个开源云计算计算平台，支持所有类型的云环境。
+    它的目标是提供一个实现简单，大型规模和易扩展和丰富功能的平台。几乎全世界的云计算专家都在这个项目
+    中贡献。</para>
+    <para>通过多个互相补充的软件和服务，OpenStack提供Infrastructure-as-a-Service
+      (<glossterm>IaaS</glossterm>)方案。每个成员服务都有自己的编程接口
+      (<glossterm>API</glossterm>)来促成这个集成方案。 下表列出了本手册要覆盖的一些成员项目：</para>
     <xi:include href="../common/ch_getstart.xml"
       xpointer="element(table1)"/>
-    <para>This guide describes how to deploy these services in a functional
-      test environment and, by example, teaches you how to build a production
-      environment. Realistically, you would use automation tools such as
-      Ansible, Chef, and Puppet to deploy and manage a production
-      environment.</para>
+    <para>本手册提供了详细的安装和配置步骤来构建一个可以用于功能测试的实验环境。
+    在实际使用中，我们应该借助于自动部署工具，比如Ansible, Chef, 和Puppet来部署一个生产环境。</para>
   </section>
   <section xml:id="architecture_conceptual-architecture">
-    <title>Conceptual architecture</title>
-    <para>Launching a virtual machine or instance involves many interactions
-      among several services. The following diagram provides the conceptual
-      architecture of a typical OpenStack environment.</para>
+    <title>概念架构</title>
+    <para>启动一个虚拟机要涉及多个服务的交互，下图提供了一个典型OpenStack环境下各个组件的交互过程。</para>
     <figure xml:id="conceptual-architecture">
-      <title>Conceptual architecture</title>
+      <title>概念架构</title>
       <mediaobject>
         <imageobject>
           <imagedata contentwidth="6in"
@@ -46,55 +37,34 @@
     </figure>
   </section>
   <section xml:id="architecture_example-architectures">
-    <title>Example architectures</title>
-    <para>OpenStack is highly configurable to meet different needs with various
-      compute, networking, and storage options. This guide enables you to
-      choose your own OpenStack adventure using a combination of core and
-      optional services. This guide uses the following example
-      architectures:</para>
+    <title>样例架构</title>
+    <para>OpenStack是个高可配置的，可以用来满足各种不同的部署需要。本手册使用下面的样例架构：</para>
     <itemizedlist>
       <listitem>
-        <para>Three-node architecture with OpenStack Networking
-          (neutron) and optional nodes for Block Storage and Object
-          Storage services.</para>
+        <para>使用Neutron的两节点架构，附带块存储和对象存储：</para>
         <itemizedlist>
           <listitem>
-            <para>The
+            <para>
               <glossterm baseform="cloud controller node"
-              >controller node</glossterm> runs the Identity service, Image
-              Service, management portions of Compute and Networking,
-              Networking plug-in, and the dashboard. It also includes
-              supporting services such as a SQL database,
-              <glossterm>message queue</glossterm>, and
+              >控制节点</glossterm> 运行 身份服务，镜像服务，计算和网络的管理部分，dashboard。
+              另外还有数据库，
+              <glossterm>消息队列</glossterm>，和
               <glossterm>Network Time Protocol (NTP)</glossterm>.</para>
-            <para>Optionally, the controller node runs portions of
-              Block Storage, Object Storage, Orchestration, Telemetry,
-              Database, and Data processing services. These
-              components provide additional features for your
-              environment.</para>
-          </listitem>
-          <listitem>
-            <para>The network node runs the Networking plug-in and
-              several agents that provision tenant networks and provide
-              switching, routing,
+            <para>控制节点还运行块存储服务，对象存储服务，编排服务，计量服务</para>
+             <para>控制节点还运行网络服务，包括：
               <glossterm baseform="Network Address Translation (NAT)"
-              >NAT</glossterm>, and <glossterm>DHCP</glossterm> services.
-              This node also handles external (Internet) connectivity for
-              tenant virtual machine instances.</para>
+              >NAT</glossterm>, 和 <glossterm>DHCP</glossterm> 服务。</para>
           </listitem>
           <listitem>
-            <para>The <glossterm>compute node</glossterm> runs the
-              <glossterm>hypervisor</glossterm> portion of Compute
-              that operates <glossterm>tenant</glossterm>
-              <glossterm baseform="virtual machine (VM)">virtual machines</glossterm>
-              or instances. By default, Compute uses
+            <para><glossterm>计算节点</glossterm> 运行
+              <glossterm>hypervisor</glossterm>来操作 <glossterm>tenant</glossterm>
+              <glossterm baseform="virtual machine (VM)">虚拟机</glossterm>。
+              计算服务使用
               <glossterm baseform="kernel-based VM (KVM)">KVM</glossterm>
-              as the <glossterm>hypervisor</glossterm>. The compute node
-              also runs the Networking plug-in and an agent that connect
-              tenant networks to instances and provide firewalling
+              作为<glossterm>hypervisor</glossterm>。计算节点还运行网络代理（Neutron的组件
+              来给租户的虚拟机提供
               (<glossterm baseform="security group"
-              >security groups</glossterm>) services. You can run more
-              than one compute node.</para>
+              >安全组</glossterm>)服务。</para>
             <para>Optionally, the compute node runs a Telemetry
               agent to collect meters. Also, it can contain a third
               network interface on a separate storage network to improve

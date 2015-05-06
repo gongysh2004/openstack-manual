@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ch_networking">
-  <title>Add a networking component</title>
+  <title>添加网络服务</title>
   <para>This chapter explains how to install and configure either
     OpenStack Networking (neutron), or the legacy <systemitem
       class="service">nova-network</systemitem> component.
@@ -28,12 +28,14 @@
     <xi:include href="section_neutron-compute-node.xml"/>
     <xi:include href="section_neutron-initial-networks.xml"/>
   </section>
+  <!--
   <section xml:id="section_nova-networking">
     <title>Legacy networking (nova-network)</title>
     <xi:include href="section_nova-networking-controller-node.xml"/>
     <xi:include href="section_nova-networking-compute-node.xml"/>
     <xi:include href="section_nova-networking-initial-network.xml"/>
   </section>
+  -->
   <section xml:id="section_networking_next_steps">
     <title>Next steps</title>
     <para>Your OpenStack environment now includes the core components

@@ -7,27 +7,28 @@
   <!-- TODO(jaegerandi) Add back to the above once Kilo has branched:
   status="draft">
   -->
-    <title>OpenStack Installation Guide for
+    <title>OpenStack训练营实战手册
         <phrase os="rhel;centos;fedora">Red Hat Enterprise Linux 7, CentOS 7, and Fedora 21</phrase>
-        <phrase os="ubuntu">Ubuntu 14.04</phrase>
+        <phrase os="ubuntu">Ubuntu</phrase>
         <phrase os="debian">Debian 7</phrase>
         <phrase os="opensuse">openSUSE 13.2 and SUSE Linux Enterprise Server 12</phrase>
+        版
     </title>
     <?rax
       status.bar.text.font.size="40px"
-      status.bar.text="Kilo"?>
-    <?rax subtitle.font.size="17px" title.font.size="32px"?>
-    <titleabbrev>OpenStack Installation Guide for
+      status.bar.text="99cloud"?>
+    <?rax subtitle.font.size="16px" title.font.size="28px"?>
+    <titleabbrev>OpenStack训练营(Kilo)
         <phrase os="rhel;centos;fedora">Red Hat Enterprise Linux, CentOS, and Fedora</phrase>
-        <phrase os="ubuntu">Ubuntu 14.04</phrase>
+        <phrase os="ubuntu">Ubuntu</phrase>
         <phrase os="opensuse">openSUSE and SUSE Linux Enterprise Server</phrase>
         <phrase os="debian">Debian 7</phrase>
     </titleabbrev>
     <info>
         <author>
             <personname>
-                <firstname/>
-                <surname/>
+                <firstname>永生</firstname>
+                <surname>龚</surname>
             </personname>
             <affiliation>
                 <orgname>OpenStack</orgname>
@@ -38,10 +39,10 @@
             <year>2013</year>
             <year>2014</year>
             <year>2015</year>
-            <holder>OpenStack Foundation</holder>
+            <holder>99cloud</holder>
         </copyright>
         <releaseinfo>kilo</releaseinfo>
-        <productname>OpenStack Installation Guide</productname>
+        <productname>OpenStack训练营</productname>
         <pubdate/>
         <legalnotice role="apache2">
             <annotation>
@@ -50,32 +51,9 @@
             </annotation>
         </legalnotice>
         <abstract>
-            <para>The OpenStack® system consists of several key
-                projects that you install separately. These projects work
-                together depending on your cloud needs. These projects
-                include Compute, Identity Service, Networking, Image
-                Service, Block Storage, Object Storage, Telemetry,
-                Orchestration, and Database. You can install any of these
-                projects separately and configure them stand-alone or
-                as connected entities. <phrase
-                    os="debian">This guide walks through an
-                    installation by using packages available through
-                    Debian 7 (code name: Wheezy).</phrase>
-                <phrase os="ubuntu">This guide walks through an
-                    installation by using packages available through
-                    Ubuntu 14.04.</phrase>
-                <phrase os="rhel;centos;fedora">This guide shows you
-                    how to install OpenStack by using packages
-                    available through Fedora 21 as well as on Red Hat
-                    Enterprise Linux 7 and its derivatives through the
-                    EPEL repository.</phrase>
-                <phrase os="opensuse;sles">This guide shows you how to
-                    install OpenStack by using packages on openSUSE
-                    13.2 and SUSE Linux Enterprise Server 12
-                    through the Open Build Service Cloud
-                    repository.</phrase> Explanations of configuration
-                    options and sample configuration files are
-                    included.</para>
+            <para>OpenStack® 由数个项目组成，这些项目可以被独立安装，通过一些系统组件联系而工作在一起。
+            这些项目包括：计算，身份，网络，镜像服务，块存储，对象存储，计量，编排服务。本手册介绍各个成员
+            项目的独立安装过程及其配置。</para>
         </abstract>
     </info>
 

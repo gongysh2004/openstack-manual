@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>openstack-install-guide</artifactId>
     <packaging>jar</packaging>
-    <name>OpenStack Installation Guide</name>
+    <name>OpenStack训练营实战手册</name>
     <properties>
         <!-- This is set by Jenkins according to the branch. -->
         <release.path.name>local</release.path.name>
@@ -38,6 +38,10 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <!-- These parameters only apply to webhelp -->
+                            <localFontPath>/home/gongysh/fonts</localFontPath>
+                            <bodyFont>SimSun</bodyFont>
+                            <monospaceFont>NanumGothic</monospaceFont>
+
                             <enableDisqus>${comments.enabled}</enableDisqus>
                             <disqusShortname>os-install-${operating.system}</disqusShortname>
                             <enableGoogleAnalytics>1</enableGoogleAnalytics>

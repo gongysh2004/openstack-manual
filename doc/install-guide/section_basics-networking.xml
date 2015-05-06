@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="basics-networking">
   <?dbhtml stop-chunking?>
-  <title>Networking</title>
+  <title>网络</title>
   <para>After installing the operating system on each node for the
     architecture that you choose to deploy, you must configure the network
     interfaces. We recommend that you disable any automated network

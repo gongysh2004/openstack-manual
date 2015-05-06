@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="nova-controller-install">
-  <title>Install and configure controller node</title>
+  <title>安装和配置控制节点</title>
   <para>This section describes how to install and configure the
     Compute service, code-named nova, on the controller node.</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">

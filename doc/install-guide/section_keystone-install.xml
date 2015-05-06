@@ -8,7 +8,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="keystone-install">
-  <title>Install and configure</title>
+  <title>安装和配置</title>
   <para>This section describes how to install and configure the OpenStack
     Identity service, code-named keystone, on the controller node. For
     performance, this configuration deploys the Apache HTTP server to

@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="basics-message-queue">
   <?dbhtml stop-chunking?>
-  <title>Message queue</title>
+  <title>消息队列</title>
   <para>OpenStack uses a <glossterm>message queue</glossterm> to coordinate
     operations and status information among services. The message queue
     service typically runs on the controller node. OpenStack supports several

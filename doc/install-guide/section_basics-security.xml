@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="basics-security">
   <?dbhtml stop-chunking?>
-  <title>Security</title>
+  <title>安全</title>
   <para>OpenStack services support various security methods
     including password, policy, and encryption. Additionally,
     supporting services including the database server and

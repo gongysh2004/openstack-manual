@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="nova-compute-install">
-  <title>Install and configure a compute node</title>
+  <title>安装和配置计算节点</title>
   <para>This section describes how to install and configure the Compute
     service on a compute node. The service supports several
     <glossterm baseform="hypervisor">hypervisors</glossterm> to

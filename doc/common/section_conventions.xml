@@ -2,41 +2,36 @@
 <section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude"
   xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="section_conventions">
   <?dbhtml stop-chunking?>
-  <title>Conventions</title>
-  <para>The OpenStack documentation uses several typesetting conventions.</para>
+  <title>编写约定</title>
+  <para>本手册使用以下编写约定：</para>
   <simplesect xml:id="conventions-admonitions">
-    <title>Notices</title>
-    <para>Notices take these forms:</para>
+    <title>关注</title>
+    <para>关注采用以下几种方式:</para>
     <note>
-      <para>A handy tip or reminder.</para>
+      <para>小提示。</para>
     </note>
     <important>
-      <para>Something you must be aware of before proceeding.</para>
+      <para>进一步行动前必须注意的事情。</para>
     </important>
     <warning>
-      <para>Critical information about the risk of data loss or security
-       issues.</para>
+      <para>可能导致数据丢失或者安全的关键信息。</para>
     </warning>
   </simplesect>
   <simplesect xml:id="conventions-prompts">
-    <title>Command prompts</title>
+    <title>常见提示符</title>
     <variablelist>
       <varlistentry>
-        <term><emphasis role="bold"><prompt>$</prompt> prompt</emphasis></term>
+        <term><emphasis role="bold"><prompt>$</prompt> 提示符</emphasis></term>
         <listitem>
-          <para>Any user, including the <literal>root</literal> user,
-           can run commands that are
-           prefixed with the <prompt>$</prompt> prompt.</para>
+          <para>任意用户，包括 <literal>root</literal> 用户,
+           能在这个提示符 <prompt>$</prompt> 下执行命令。</para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><emphasis role="bold"><prompt>#</prompt> prompt</emphasis></term>
+        <term><emphasis role="bold"><prompt>#</prompt> 提示符</emphasis></term>
         <listitem>
-          <para>The <literal>root</literal> user must run commands
-           that are prefixed with the <prompt>#</prompt> prompt.
-           You can also prefix these commands with the
-           <command>sudo</command> command, if available,
-           to run them.</para>
+          <para><literal>root</literal> 用户在这个提示符下执行命令，当然也可以用
+           <command>sudo</command>。</para>
         </listitem>
       </varlistentry>
     </variablelist>

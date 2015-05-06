@@ -4,9 +4,9 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ch_preface">
-    <title>Preface</title>
+    <title>前言</title>
     <?dbhtml stop-chunking?>
 
   <xi:include href="section_conventions.xml"/>
-  <xi:include href="section_dochistory.xml"/>
+  <!-- <xi:include href="section_dochistory.xml"/> -->
 </preface>

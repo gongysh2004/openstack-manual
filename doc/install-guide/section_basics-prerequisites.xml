@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="basics-prerequisites">
   <?dbhtml stop-chunking?>
-  <title>Before you begin</title>
+  <title>机器配置</title>
   <para>For best performance, we recommend that your environment meets or
     exceeds the hardware requirements in
     <xref linkend="example-architecture-with-neutron-networking-hw"/> or

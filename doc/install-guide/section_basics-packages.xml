@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="basics-packages">
   <?dbhtml stop-chunking?>
-  <title>OpenStack packages</title>
+  <title>OpenStack 软件包</title>
   <para>Distributions release OpenStack packages as part of the distribution
     or using other methods because of differing release schedules. Perform
     these procedures on all nodes.</para>
