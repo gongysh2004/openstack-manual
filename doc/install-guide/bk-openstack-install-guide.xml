@@ -27,11 +27,20 @@
     <info>
         <author>
             <personname>
-                <firstname>永生</firstname>
-                <surname>龚</surname>
+                <firstname>龚</firstname>
+                <surname>永生</surname>
             </personname>
             <affiliation>
-                <orgname>OpenStack</orgname>
+                <orgname>99cloud</orgname>
+            </affiliation>
+        </author>
+        <author>
+            <personname>
+                <firstname>李</firstname>
+                <surname>锋</surname>
+            </personname>
+            <affiliation>
+                <orgname>99cloud</orgname>
             </affiliation>
         </author>
         <copyright>

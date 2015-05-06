@@ -91,47 +91,9 @@
         <para>Default gateway: 10.0.0.1</para>
       </step>
       <step>
-        <para>Reboot the system to activate the changes.</para>
-      </step>
-    </procedure>
-    <procedure>
-      <title>To configure name resolution:</title>
-      <step>
-        <para>Set the hostname of the node to
-          <code><replaceable>controller</replaceable></code>.</para>
-      </step>
-      <step>
-        <para>Edit the <filename>/etc/hosts</filename> file to contain the
-          following:</para>
-        <programlisting># controller
-10.0.0.11       controller
-
-# network
-10.0.0.21       network
-
-# compute1
-10.0.0.31       compute1</programlisting>
-        <warning os="ubuntu;debian">
-          <para>You must remove or comment the line beginning with
-            <literal>127.0.1.1</literal>.</para>
-        </warning>
-      </step>
-    </procedure>
-  </section>
-  <section xml:id="basics-neutron-networking-network-node">
-    <title>Network node</title>
-    <procedure>
-      <title>To configure networking:</title>
-      <step>
-        <para>Configure the first interface as the management interface:</para>
-        <para>IP address: 10.0.0.21</para>
-        <para>Network mask: 255.255.255.0 (or /24)</para>
-        <para>Default gateway: 10.0.0.1</para>
-      </step>
-      <step>
         <para>Configure the second interface as the instance tunnels
           interface:</para>
-        <para>IP address: 10.0.1.21</para>
+        <para>IP address: 10.0.1.11</para>
         <para>Network mask: 255.255.255.0 (or /24)</para>
       </step>
       <step>
@@ -171,6 +133,7 @@ BOOTPROTO='static'</programlisting>
           </step>
         </substeps>
       </step>
+
       <step>
         <para>Reboot the system to activate the changes.</para>
       </step>
@@ -178,17 +141,14 @@ BOOTPROTO='static'</programlisting>
     <procedure>
       <title>To configure name resolution:</title>
       <step>
-        <para>Set the hostname of the node to <code>network</code>.</para>
+        <para>Set the hostname of the node to
+          <code><replaceable>controller</replaceable></code>.</para>
       </step>
       <step>
         <para>Edit the <filename>/etc/hosts</filename> file to contain the
           following:</para>
-        <programlisting># network
-10.0.0.21       network
-
-# controller
+        <programlisting># controller
 10.0.0.11       controller
-
 # compute1
 10.0.0.31       compute1</programlisting>
         <warning os="ubuntu;debian">
@@ -239,9 +199,7 @@ BOOTPROTO='static'</programlisting>
 
 # controller
 10.0.0.11       controller
-
-# network
-10.0.0.21       network</programlisting>
+</programlisting>
         <warning os="ubuntu;debian">
           <para>You must remove or comment the line beginning with
             <literal>127.0.1.1</literal>.</para>
@@ -271,21 +229,6 @@ rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms</computeroutput></screen>
       <step>
         <para>From the <emphasis>controller</emphasis> node,
         <command>ping</command> the management interface on the
-        <emphasis>network</emphasis> node:</para>
-        <screen><prompt>#</prompt> <userinput>ping -c 4 <replaceable>network</replaceable></userinput>
-<computeroutput>PING network (10.0.0.21) 56(84) bytes of data.
-64 bytes from network (10.0.0.21): icmp_seq=1 ttl=64 time=0.263 ms
-64 bytes from network (10.0.0.21): icmp_seq=2 ttl=64 time=0.202 ms
-64 bytes from network (10.0.0.21): icmp_seq=3 ttl=64 time=0.203 ms
-64 bytes from network (10.0.0.21): icmp_seq=4 ttl=64 time=0.202 ms
-
---- network ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3000ms
-rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
-      </step>
-      <step>
-        <para>From the <emphasis>controller</emphasis> node,
-        <command>ping</command> the management interface on the
         <emphasis>compute</emphasis> node:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 <replaceable>compute1</replaceable></userinput>
 <computeroutput>PING compute1 (10.0.0.31) 56(84) bytes of data.
@@ -299,36 +242,7 @@ rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
 rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
       </step>
       <step>
-        <para>From the <emphasis>network</emphasis> node,
-          <command>ping</command> a site on the Internet:</para>
-        <screen><prompt>#</prompt> <userinput>ping -c 4 openstack.org</userinput>
-<computeroutput>PING openstack.org (174.143.194.225) 56(84) bytes of data.
-64 bytes from 174.143.194.225: icmp_seq=1 ttl=54 time=18.3 ms
-64 bytes from 174.143.194.225: icmp_seq=2 ttl=54 time=17.5 ms
-64 bytes from 174.143.194.225: icmp_seq=3 ttl=54 time=17.5 ms
-64 bytes from 174.143.194.225: icmp_seq=4 ttl=54 time=17.4 ms
-
---- openstack.org ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3022ms
-rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms</computeroutput></screen>
-      </step>
-      <step>
-        <para>From the <emphasis>network</emphasis> node,
-          <command>ping</command> the management interface on the
-          <emphasis>controller</emphasis> node:</para>
-        <screen><prompt>#</prompt> <userinput>ping -c 4 <replaceable>controller</replaceable></userinput>
-<computeroutput>PING controller (10.0.0.11) 56(84) bytes of data.
-64 bytes from controller (10.0.0.11): icmp_seq=1 ttl=64 time=0.263 ms
-64 bytes from controller (10.0.0.11): icmp_seq=2 ttl=64 time=0.202 ms
-64 bytes from controller (10.0.0.11): icmp_seq=3 ttl=64 time=0.203 ms
-64 bytes from controller (10.0.0.11): icmp_seq=4 ttl=64 time=0.202 ms
-
---- controller ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3000ms
-rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
-      </step>
-      <step>
-        <para>From the <emphasis>network</emphasis> node,
+        <para>From the <emphasis>controller</emphasis> node,
           <command>ping</command> the instance tunnels interface on the
           <emphasis>compute</emphasis> node:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 10.0.1.31</userinput>
@@ -374,13 +288,13 @@ rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
       <step>
         <para>From the <emphasis>compute</emphasis> node,
           <command>ping</command> the instance tunnels interface on the
-          <emphasis>network</emphasis> node:</para>
-        <screen><prompt>#</prompt> <userinput>ping -c 4 10.0.1.21</userinput>
-<computeroutput>PING 10.0.1.21 (10.0.1.21) 56(84) bytes of data.
-64 bytes from 10.0.1.21 (10.0.1.21): icmp_seq=1 ttl=64 time=0.263 ms
-64 bytes from 10.0.1.21 (10.0.1.21): icmp_seq=2 ttl=64 time=0.202 ms
-64 bytes from 10.0.1.21 (10.0.1.21): icmp_seq=3 ttl=64 time=0.203 ms
-64 bytes from 10.0.1.21 (10.0.1.21): icmp_seq=4 ttl=64 time=0.202 ms
+          <emphasis>controller</emphasis> node:</para>
+        <screen><prompt>#</prompt> <userinput>ping -c 4 10.0.1.11</userinput>
+<computeroutput>PING 10.0.1.11 (10.0.1.11) 56(84) bytes of data.
+64 bytes from 10.0.1.11 (10.0.1.11): icmp_seq=1 ttl=64 time=0.263 ms
+64 bytes from 10.0.1.11 (10.0.1.11): icmp_seq=2 ttl=64 time=0.202 ms
+64 bytes from 10.0.1.11 (10.0.1.11): icmp_seq=3 ttl=64 time=0.203 ms
+64 bytes from 10.0.1.11 (10.0.1.11): icmp_seq=4 ttl=64 time=0.202 ms
 
 --- 10.0.1.21 ping statistics ---
 4 packets transmitted, 4 received, 0% packet loss, time 3000ms
