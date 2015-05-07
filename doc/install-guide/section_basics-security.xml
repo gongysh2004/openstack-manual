@@ -7,7 +7,7 @@
   <?dbhtml stop-chunking?>
   <title>安全</title>
   <para>OpenStack服务支持多种安全手段，比如密码，策略和加密。
-  另外，支持服务，比如书局刻和消息队列也至少支持密码验证。</para>
+  另外，支持服务，比如数据库和消息队列也至少支持密码验证。</para>
   <para>为了简化安装步骤，本手册使用密码验证。要手动创建一个安全的密码，可以借助于工具
     <link xlink:href="http://sourceforge.net/projects/pwgen/">pwgen</link>,
     或者运行下面的命令:</para>
