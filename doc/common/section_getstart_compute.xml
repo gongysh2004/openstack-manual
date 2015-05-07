@@ -1,64 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="compute-service">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="compute-service">
   <title>OpenStack计算服务</title>
-  <para>Use OpenStack Compute to host and manage cloud computing
-    systems. OpenStack Compute is a major part of an
-    Infrastructure-as-a-Service (IaaS) system. The main modules are
-    implemented in Python.</para>
-  <para>OpenStack Compute interacts with OpenStack Identity for
-    authentication, OpenStack Image service for disk and server
-    images, and OpenStack dashboard for the user and administrative
-    interface. Image access is limited by projects, and by users;
-    quotas are limited per project (the number of instances, for
-    example). OpenStack Compute can scale horizontally on standard
-    hardware, and download images to launch instances.</para>
-  <para>OpenStack Compute consists of the following areas and their
-    components:</para>
+  <para>采用OpenStack计算组件来管理云计算系统。OpenStack计算组件是IAAS的重要部分。本组件主要采用python语言编写。</para>
+  <para>OpenStack计算组件还与其他主要的OpenStack组件交互，例如Keystone认证组件,软件镜像服务组件，仪表板用户界面等。
+OpenStack计算可以在标准硬件上水平扩展，下载软件镜像，并启动虚拟机。</para>
+  <para>OpenStack计算组件包括以下几部分：</para>
   <variablelist>
     <title>API</title>
     <varlistentry>
-      <term><systemitem class="service">nova-api</systemitem>
+      <term>
+        <systemitem class="service">nova-api</systemitem>
         service</term>
       <listitem>
-        <para>Accepts and responds to end user compute API calls. The
-          service supports the OpenStack Compute API, the Amazon EC2
-          API, and a special Admin API for privileged users to perform
-          administrative actions. It enforces some policies and
-          initiates most orchestration activities, such as running an
-          instance.</para>
+        <para>接受并响应用户的API请求。计算服务支持OpenStack Compute API, the Amazon EC2
+          API, 以及一个管理API，为管理员做管理工作。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-api-metadata</systemitem>
+      <term>
+        <systemitem class="service">nova-api-metadata</systemitem>
         service</term>
       <listitem>
-        <para>Accepts metadata requests from instances. The
-            <systemitem class="service">nova-api-metadata</systemitem>
-          service is generally used when you run in multi-host mode
-          with <systemitem class="service">nova-network</systemitem>
-          installations. For details, see <link
-            xlink:href="http://docs.openstack.org/admin-guide-cloud/content/section_metadata-service.html"
-            >Metadata service</link> in the <citetitle>OpenStack Cloud
-            Administrator Guide</citetitle>.</para>
-        <para>On Debian systems, it is included in the <systemitem
-            class="service">nova-api</systemitem> package, and can be
-          selected through <package>debconf</package>.</para>
+        <para>接受来自虚拟机的元数据请求。</para>
       </listitem>
     </varlistentry>
   </variablelist>
   <variablelist>
     <title>Compute core</title>
     <varlistentry>
-      <term><systemitem class="service">nova-compute</systemitem>
+      <term>
+        <systemitem class="service">nova-compute</systemitem>
         service</term>
       <listitem>
-        <para>A worker daemon that creates and terminates virtual
-          machine instances through hypervisor APIs. For
-          example:</para>
+        <para>一个工作守护进程能通过hypervisor的API创建和终止虚机。例如：</para>
         <itemizedlist>
           <listitem>
             <para>XenAPI for XenServer/XCP</para>
@@ -70,110 +44,86 @@
             <para>VMwareAPI for VMware</para>
           </listitem>
         </itemizedlist>
-        <para>Processing is fairly complex. Basically, the daemon
-          accepts actions from the queue and performs a series of
-          system commands such as launching a KVM instance and
-          updating its state in the database.</para>
+        <para>处理过程是相当复杂的。基本上，守护进程接受队列中的动作要求并执行一系列的系统命令，
+例如启动一个KVM虚机并将其状态更新到数据库。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-scheduler</systemitem>
+      <term>
+        <systemitem class="service">nova-scheduler</systemitem>
         service</term>
       <listitem>
-        <para>Takes a virtual machine instance request from the queue
-          and determines on which compute server host it runs.</para>
+        <para>接到一个管理虚机的需求并确定是在哪个物理机上运行。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-conductor</systemitem>
+      <term>
+        <systemitem class="service">nova-conductor</systemitem>
         module</term>
       <listitem>
-        <para>Mediates interactions between the <systemitem
-            class="service">nova-compute</systemitem> service and the
-          database. It eliminates direct accesses to the cloud
-          database made by the <systemitem class="service"
-            >nova-compute</systemitem> service. The <systemitem
-            class="service">nova-conductor</systemitem> module scales
-          horizontally. However, do not deploy it on nodes where the
-            <systemitem class="service">nova-compute</systemitem>
-          service runs. For more information, see <link
-            xlink:href="http://russellbryantnet.wordpress.com/2012/11/19/a-new-nova-service-nova-conductor/"
-            >A new Nova service: nova-conductor</link>.</para>
+        <para>作为<systemitem class="service">nova-compute</systemitem> 服务和数据库之间的沟通连接。防止了<systemitem class="service">nova-compute</systemitem>服务对数据库的直接操作。
+ <systemitem class="service">nova-conductor</systemitem> 模块能水平扩展。 </para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-cert</systemitem>
+      <term>
+        <systemitem class="service">nova-cert</systemitem>
         module</term>
       <listitem>
-        <para>A server daemon that serves the Nova Cert service for X509
-        certificates. Used to generate certificates for
-        <command>euca-bundle-image</command>. Only needed for the EC2 API.</para>
+        <para>一个守护进程，运行NOVA的X509认证服务。主要是用于为<command>euca-bundle-image</command>产生认证信息，只用于EC2 API。</para>
       </listitem>
     </varlistentry>
-
   </variablelist>
   <variablelist>
-    <title>Networking for VMs</title>
+    <title>VM 网络</title>
     <varlistentry>
-      <term><systemitem class="service">nova-network</systemitem>
+      <term>
+        <systemitem class="service">nova-network</systemitem>
         worker daemon</term>
       <listitem>
-        <para>Similar to the <systemitem class="service"
-            >nova-compute</systemitem> service, accepts networking
-          tasks from the queue and manipulates the network. Performs
-          tasks such as setting up bridging interfaces or changing
-          IPtables rules.</para>
+        <para>和<systemitem class="service">nova-compute</systemitem> 服务类似，接收网络相关任务，管理网络。比如设置一个桥接接口，或修改IPtables规则。</para>
       </listitem>
     </varlistentry>
   </variablelist>
   <?hard-pagebreak?>
   <variablelist>
-    <title>Console interface</title>
+    <title>控制台界面</title>
     <varlistentry>
-      <term><systemitem class="service">nova-consoleauth</systemitem>
+      <term>
+        <systemitem class="service">nova-consoleauth</systemitem>
         daemon</term>
       <listitem>
-        <para>Authorizes tokens for users that console proxies
-          provide. See <systemitem class="service"
-            >nova-novncproxy</systemitem> and <systemitem
-            class="service">nova-xvpnvcproxy</systemitem>. This
-          service must be running for console proxies to work. You can
-          run proxies of either type against a single <systemitem
-            class="service">nova-consoleauth</systemitem> service in a
-          cluster configuration. For information, see <link
-            xlink:href="http://docs.openstack.org/admin-guide-cloud/content/about-nova-consoleauth.html"
-            >About nova-consoleauth</link>.</para>
+        <para> 对控制台用户进行授权。请查看<systemitem class="service">nova-novncproxy</systemitem> 和<systemitem class="service">nova-xvpnvcproxy</systemitem>。
+这个服务必须运行以保证控制台代理的正常工作。在集群情况下，你可以运行多个代理来使用一个nova-consoleauth。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-novncproxy</systemitem>
+      <term>
+        <systemitem class="service">nova-novncproxy</systemitem>
         daemon</term>
       <listitem>
-        <para>Provides a proxy for accessing running instances through
-          a VNC connection. Supports browser-based novnc
-          clients.</para>
+        <para>通过VNC连接，提供一个代理去访问运行的虚拟机。支持基于web浏览器的novnc客户端。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-spicehtml5proxy</systemitem>
+      <term>
+        <systemitem class="service">nova-spicehtml5proxy</systemitem>
         daemon</term>
       <listitem>
-        <para>Provides a proxy for accessing running instances through
-          a SPICE connection. Supports browser-based HTML5
-          client.</para>
+        <para>为利用SPICE协议访问运行中的虚拟机提供代理，支持基于浏览器的HTML5客户端。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-xvpnvncproxy</systemitem>
+      <term>
+        <systemitem class="service">nova-xvpnvncproxy</systemitem>
         daemon</term>
       <listitem>
-        <para>Provides a proxy for accessing running instances through
-          a VNC connection. Supports an OpenStack-specific Java
-          client.</para>
+        <para>为利用VNC协议访问运行中的虚拟机提供代理，支持基于OpenStack-specific Java客户端。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><systemitem class="service">nova-cert</systemitem>
+      <term>
+        <systemitem class="service">nova-cert</systemitem>
         daemon</term>
       <listitem>
         <para>x509 certificates.</para>
@@ -191,80 +141,62 @@
     edit the <filename>/etc/default/nova-consoleproxy</filename> file,
     and stop and start the console daemons.</para>
   <variablelist>
-    <title>Image management (EC2 scenario)</title>
+    <title>Image管理(EC2 scenario)</title>
     <varlistentry>
-      <term><systemitem class="service">nova-objectstore</systemitem>
+      <term>
+        <systemitem class="service">nova-objectstore</systemitem>
         daemon</term>
       <listitem>
-        <para>An S3 interface for registering images with the
-          OpenStack Image service. Used primarily for installations
-          that must support euca2ools. The euca2ools tools talk to
+        <para>向OpenStack镜像服务注册软件镜像的S3接口。主要用于支持euca2ools。euca2ools 与           <systemitem class="service">nova-objectstore</systemitem>
+          用<emphasis role="italic">S3 language</emphasis>，
             <systemitem class="service">nova-objectstore</systemitem>
-          in <emphasis role="italic">S3 language</emphasis>, and
-            <systemitem class="service">nova-objectstore</systemitem>
-          translates S3 requests into Image service requests.</para>
+         将 S3 请求翻译为镜像服务请求。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
       <term>euca2ools client</term>
       <listitem>
-        <para>A set of command-line interpreter commands for managing
-          cloud resources. Although it is not an OpenStack module, you
-          can configure <systemitem class="service"
-            >nova-api</systemitem> to support this EC2 interface. For
-          more information, see the <link
-            xlink:href="https://www.eucalyptus.com/docs/eucalyptus/3.4/index.html"
-            >Eucalyptus 3.4 Documentation</link>.</para>
+        <para> 一组命令行，用于管理云资源。这不是OpenStack自身的模块，但可以配置<systemitem class="service">nova-api</systemitem> 去支持EC2 接口。 </para>
       </listitem>
     </varlistentry>
   </variablelist>
   <variablelist>
-    <title>Command-line clients and other interfaces</title>
+    <title>命令行工具和其它接口</title>
     <varlistentry>
-      <term>nova client</term>
+      <term>nova客户端</term>
       <listitem>
-        <para>Enables users to submit commands as a tenant
-          administrator or end user.</para>
+        <para>允许以租户或管理员身份运行命令。</para>
       </listitem>
     </varlistentry>
   </variablelist>
   <variablelist>
-    <title>Other components</title>
+    <title>其它组件</title>
     <varlistentry>
       <term>The queue</term>
       <listitem>
-        <para>A central hub for passing messages between daemons.
-          Usually implemented with <link
-            xlink:href="http://www.rabbitmq.com/">RabbitMQ</link>, but
-          can be implemented with an AMQP message queue, such as <link
-            xlink:href="http://qpid.apache.org/">Apache Qpid</link> or
-            <link xlink:href="http://www.zeromq.org/">Zero
-          MQ</link>.</para>
+        <para>一个集中器，可以把消息在守护进程之间传送。一般采用<link xlink:href="http://www.rabbitmq.com/">RabbitMQ</link>，也可以采用AMQP消息队列，比如 <link xlink:href="http://qpid.apache.org/">Apache Qpid</link> 或 <link xlink:href="http://www.zeromq.org/">Zero
+          MQ</link>。</para>
       </listitem>
     </varlistentry>
     <varlistentry>
       <term>SQL database</term>
       <listitem>
-        <para>Stores most build-time and run-time states for a cloud
-          infrastructure, including:</para>
+        <para> 保存状态信息。包括：</para>
         <itemizedlist>
           <listitem>
-            <para>Available instance types</para>
+            <para>可用的实例类型</para>
           </listitem>
           <listitem>
-            <para>Instances in use</para>
+            <para>在用的实例</para>
           </listitem>
           <listitem>
-            <para>Available networks</para>
+            <para>可用的网络</para>
           </listitem>
           <listitem>
-            <para>Projects</para>
+            <para>租户</para>
           </listitem>
         </itemizedlist>
-        <para>Theoretically, OpenStack Compute can support any
-          database that SQL-Alchemy supports. Common databases are
-          SQLite3 for test and development work, MySQL, and
-          PostgreSQL.</para>
+        <para>理论上，OpenStack 计算组件能支持任何SQL关系型数据库,一般用SQLite3，MySQL, 和PostgreSQL.</para>
       </listitem>
     </varlistentry>
   </variablelist>
