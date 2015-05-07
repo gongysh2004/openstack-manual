@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="launch-instance">
-  <title>Launch an instance</title>
+  <title>启动虚拟机</title>
   <para>An instance is a VM that OpenStack provisions on a compute node.
     This guide shows you how to launch a minimal instance using the
     <glossterm>CirrOS</glossterm> image that you added to your environment
@@ -14,20 +14,5 @@
     <link
       xlink:href="http://docs.openstack.org/user-guide/dashboard.html">
     <citetitle>OpenStack User Guide</citetitle></link>.</para>
-  <para>Launch an instance using
-    <link linkend="launch-instance-neutron">OpenStack Networking (neutron)
-      </link> or
-    <link linkend="launch-instance-nova">legacy networking (nova-network)
-      </link>. For more
-    information, see the
-    <link
-      xlink:href="http://docs.openstack.org/user-guide/enduser/cli_launch_instances.html">
-    <citetitle>OpenStack User Guide</citetitle></link>.</para>
-  <note>
-    <para>These steps reference example components created in previous
-      chapters. You must adjust certain values such as IP addresses to
-      match your environment.</para>
-  </note>
   <xi:include href="section_launch-instance-neutron.xml"/>
-  <xi:include href="section_launch-instance-nova.xml"/>
 </chapter>

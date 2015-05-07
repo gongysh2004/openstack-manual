@@ -75,8 +75,5 @@
       <link xlink:href="http://docs.openstack.org/sec/">OpenStack
       Security Guide</link>.</para>
   </note>
-  <para>Proceed to network configuration for the example
-    <link linkend="basics-networking-neutron">OpenStack Networking (neutron)
-    </link> architecture.</para>
   <xi:include href="section_basics-networking-neutron.xml"/>
 </section>

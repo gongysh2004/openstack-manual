@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="dashboard-system-requirements">
-    <title>System requirements</title>
+    <title>系统要求</title>
     <para>Before you install the OpenStack dashboard, you must meet
         the following system requirements:</para>
     <itemizedlist>

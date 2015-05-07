@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="cinder-install-storage-node">
   <?dbhtml stop-chunking?>
-  <title>Install and configure a storage node</title>
+  <title>安装和配置控制节点</title>
   <para>This section describes how to install and configure storage nodes
     for the Block Storage service. For simplicity, this configuration
     references one storage node with an empty local block storage device

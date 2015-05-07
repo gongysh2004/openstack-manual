@@ -13,7 +13,7 @@
   <section xml:id="architecture_overview">
     <title>概述</title>
     <para><glossterm>OpenStack</glossterm> 项目是个开源云计算计算平台，支持所有类型的云环境。
-    它的目标是提供一个实现简单，大型规模和易扩展和丰富功能的平台。几乎全世界的云计算专家都在这个项目
+    它的目标是提供一个实现简单，大型规模和易扩展和功能丰富的平台。几乎全世界的云计算专家都在这个项目
     中贡献。</para>
     <para>通过多个互相补充的软件和服务，OpenStack提供Infrastructure-as-a-Service
       (<glossterm>IaaS</glossterm>)方案。每个成员服务都有自己的编程接口
@@ -44,14 +44,14 @@
           <listitem>
             <para>
               <glossterm baseform="cloud controller node"
-              >控制节点</glossterm> 运行 身份服务，镜像服务，计算和网络的管理部分，dashboard。
+              >控制节点</glossterm> 运行身份服务，镜像服务，计算和网络的管理部分，仪表盘。
               另外还有数据库，
               <glossterm>消息队列</glossterm>，和
-              <glossterm>Network Time Protocol (NTP)</glossterm>.</para>
+              <glossterm>Network Time Protocol (NTP)</glossterm>。</para>
             <para>控制节点还运行块存储服务，对象存储服务，编排服务，计量服务</para>
              <para>控制节点还运行网络服务，包括：
               <glossterm baseform="Network Address Translation (NAT)"
-              >NAT</glossterm>, 和 <glossterm>DHCP</glossterm> 服务。</para>
+              >NAT</glossterm>,和<glossterm>DHCP</glossterm>服务。</para>
           </listitem>
           <listitem>
             <para><glossterm>计算节点</glossterm> 运行
@@ -59,14 +59,11 @@
               <glossterm baseform="virtual machine (VM)">虚拟机</glossterm>。
               计算服务使用
               <glossterm baseform="kernel-based VM (KVM)">KVM</glossterm>
-              作为<glossterm>hypervisor</glossterm>。计算节点还运行网络代理（Neutron的组件
+              作为<glossterm>hypervisor</glossterm>。计算节点还运行网络二层代理（Neutron的组件）
               来给租户的虚拟机提供
               (<glossterm baseform="security group"
-              >安全组</glossterm>)服务。</para>
-            <para>Optionally, the compute node runs a Telemetry
-              agent to collect meters. Also, it can contain a third
-              network interface on a separate storage network to improve
-              performance of storage services.</para>
+              >安全组</glossterm>)服务和保证虚拟机网络联通性。</para>
+            <para>计算节点还运行计量代理来收集度量数据。</para>
           </listitem>
           <listitem>
             <para>The optional Block Storage node contains the disks that

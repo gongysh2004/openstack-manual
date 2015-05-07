@@ -12,7 +12,7 @@
     the controller node to reference more accurate (lower stratum) servers and
     other nodes to reference the controller node.</para>
   <section xml:id="basics-ntp-controller-node">
-    <title>Controller node</title>
+    <title>控制节点</title>
     <procedure>
       <title>To install the NTP service</title>
       <step>
@@ -31,10 +31,10 @@
         <para>Edit the <filename>/etc/ntp.conf</filename> file and add,
           change, or remove the following keys as necessary for your
           environment:</para>
-        <programlisting language="ini">server <replaceable>NTP_SERVER</replaceable> iburst
+        <programlisting language="ini">server <replaceable>ntp.ubuntu.com</replaceable> iburst
 restrict -4 default kod notrap nomodify
 restrict -6 default kod notrap nomodify</programlisting>
-        <para>Replace <replaceable>NTP_SERVER</replaceable> with the
+        <para>Replace <replaceable>ntp.ubuntu.com</replaceable> with the
           hostname or IP address of a suitable more accurate (lower stratum)
           NTP server. The configuration supports multiple
           <literal>server</literal> keys.</para>
@@ -61,7 +61,7 @@ restrict -6 default kod notrap nomodify</programlisting>
     </procedure>
   </section>
   <section xml:id="basics-ntp-other-nodes">
-    <title>Other nodes</title>
+    <title>计算节点</title>
     <procedure>
       <title>To install the NTP service</title>
       <step>
@@ -97,7 +97,7 @@ restrict -6 default kod notrap nomodify</programlisting>
     </procedure>
   </section>
   <section xml:id="basics-ntp-verify">
-    <title>Verify operation</title>
+    <title>验证</title>
     <para>We recommend that you verify NTP synchronization before proceeding
       further. Some nodes, particularly those that reference the controller
       node, can take several minutes to synchronize.</para>

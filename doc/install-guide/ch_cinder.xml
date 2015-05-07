@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ch_cinder">
-  <title>Add the Block Storage service</title>
+  <title>块存储服务Cinder</title>
   <para>The OpenStack Block Storage service provides block storage devices
     to guest instances. The method in which the storage is provisioned and
     consumed is determined by the Block Storage driver, or drivers
@@ -22,12 +22,6 @@
   </note>
   <xi:include href="../common/section_getstart_block-storage.xml"/>
   <xi:include href="section_cinder-controller-node.xml"/>
-  <xi:include href="section_cinder-storage-node.xml"/>
+  <!--<xi:include href="section_cinder-storage-node.xml"/> -->
   <xi:include href="section_cinder-verify.xml"/>
-  <section xml:id="section_cinder_next_steps">
-    <title>Next steps</title>
-    <para>Your OpenStack environment now includes Block Storage. You can
-      <link linkend="launch-instance">launch an instance</link> or add more
-      services to your environment in the following chapters.</para>
-  </section>
 </chapter>

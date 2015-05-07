@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="heat-install-controller-node">
-  <title>Install and configure Orchestration</title>
+  <title>安装和配置</title>
   <para>This section describes how to install and configure the
     Orchestration module, code-named heat, on the controller node.</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">

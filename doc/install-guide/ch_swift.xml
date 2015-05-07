@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ch_swift">
-  <title>Add Object Storage</title>
+  <title>对象存储服务Swift</title>
   <para>The OpenStack Object Storage services (swift) work together to
     provide object storage and retrieval through a
     <glossterm baseform="RESTful">REST</glossterm> API. Your environment
@@ -16,10 +16,4 @@
   <xi:include href="section_swift-initial-rings.xml"/>
   <xi:include href="section_swift-finalize-installation.xml"/>
   <xi:include href="section_swift-verify.xml"/>
-  <section xml:id="section_swift_next_steps">
-    <title>Next steps</title>
-    <para>Your OpenStack environment now includes Object Storage. You can
-      <link linkend="launch-instance">launch an instance</link> or add more
-      services to your environment in the following chapters.</para>
-  </section>
 </chapter>

@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="swift-initial-rings">
-  <title>Create initial rings</title>
+  <title>创建起始rings</title>
   <para>Before starting the Object Storage services, you must create
     the initial account, container, and object rings. The ring builder
     creates configuration files that each node uses to determine and

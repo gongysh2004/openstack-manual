@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="ceilometer-nova">
   <?dbhtml stop-chunking?>
-  <title>Configure the Compute service</title>
+  <title>配置计算服务</title>
   <para>Telemetry uses a combination of notifications and an agent to
     collect Compute metrics. Perform these steps on each compute node.</para>
   <procedure>

@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="neutron-concepts">
-  <title>Networking concepts</title>
+  <title>网络服务概念</title>
   <para>OpenStack Networking (neutron) manages all networking facets
     for the Virtual Networking Infrastructure (VNI) and the access
     layer aspects of the Physical Networking Infrastructure (PNI) in

@@ -8,7 +8,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ceilometer-controller-install">
-  <title>Install and configure controller node</title>
+  <title>安装配置控制节点</title>
   <para>This section describes how to install and configure the Telemetry
     module, code-named ceilometer, on the controller node. The Telemetry
     module uses separate agents to collect measurements from each OpenStack

@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ceilometer-glance">
-  <title>Configure the Image service</title>
+  <title>配置镜像服务</title>
   <para>To retrieve image-oriented events and samples, configure
     the Image service to send notifications to the message bus.
     Perform these steps on the controller node.</para>

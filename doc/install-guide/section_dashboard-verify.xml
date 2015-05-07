@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="dashboard-verify">
   <?dbhtml stop-chunking?>
-  <title>Verify operation</title>
+  <title>验证</title>
   <para>This section describes how to verify operation of the
     dashboard.</para>
   <procedure>

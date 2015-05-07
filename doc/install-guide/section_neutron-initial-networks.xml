@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="neutron-initial-networks">
-  <title>Create initial networks</title>
+  <title>初始化网络</title>
   <para>Before launching your first instance, you must create the
     necessary virtual network infrastructure to which the instances
     connect, including the
@@ -29,7 +29,7 @@
     </mediaobject>
   </figure>
   <section xml:id="neutron_initial-external-network">
-    <title>External network</title>
+    <title>外部网络</title>
     <para>The external network typically provides Internet access for
       your instances. By default, this network only allows Internet
       access <emphasis>from</emphasis> instances using
@@ -123,7 +123,7 @@
     </procedure>
   </section>
   <section xml:id="neutron_initial-tenant-network">
-    <title>Tenant network</title>
+    <title>租户网络</title>
     <para>The tenant network provides internal network access for instances.
       The architecture isolates this type of network from other tenants. The
       <literal>demo</literal> tenant owns this network because it only
@@ -232,7 +232,7 @@
     </procedure>
   </section>
   <section xml:id="neutron_initial-networks-verify">
-    <title>Verify connectivity</title>
+    <title>验证联通性</title>
     <para>We recommend that you verify network connectivity and resolve any
       issues before proceeding further. Following the external network
       subnet example using <literal>203.0.113.0/24</literal>, the tenant

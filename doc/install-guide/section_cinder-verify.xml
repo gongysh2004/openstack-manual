@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="cinder-verify">
-  <title>Verify operation</title>
+  <title>验证</title>
   <para>This section describes how to verify operation of the Block Storage
     service by creating a volume.</para>
   <para>For more information about how to manage volumes, see the <link
@@ -80,12 +80,6 @@
       <para>If the status does not indicate <literal>available</literal>,
         check the logs in the <filename>/var/log/cinder</filename> directory
         on the controller and volume nodes for more information.</para>
-      <note>
-        <para>The
-          <link linkend="launch-instance">launch an instance</link>
-          chapter includes instructions for attaching this volume to an
-          instance.</para>
-      </note>
     </step>
   </procedure>
 </section>

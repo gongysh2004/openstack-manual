@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ceilometer-verify">
-  <title>Verify the Telemetry installation</title>
+  <title>验证</title>
   <para>This section describes how to verify operation of the Telemetry
     module.</para>
   <procedure>

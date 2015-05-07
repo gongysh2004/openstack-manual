@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="neutron-compute-node">
-  <title>Install and configure compute node</title>
+  <title>安装和配置计算节点</title>
   <para>The compute node handles connectivity and
     <glossterm baseform="security group">security groups</glossterm>
     for instances.</para>

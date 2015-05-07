@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="swift-install-controller-node">
-  <title>Install and configure the controller node</title>
+  <title>安装和配置</title>
   <para>This section describes how to install and configure the proxy
     service that handles requests for the account, container, and object
     services operating on the storage nodes. For simplicity, this

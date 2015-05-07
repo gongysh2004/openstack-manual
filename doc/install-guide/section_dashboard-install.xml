@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="install_dashboard">
   <?dbhtml stop-chunking?>
-  <title>Install and configure</title>
+  <title>安装和配置</title>
   <para>This section describes how to install and configure the dashboard
     on the controller node.</para>
   <para>Before you proceed, verify that your system meets the requirements

@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="swift-verify">
-  <title>Verify operation</title>
+  <title>验证</title>
   <para>This section describes how to verify operation of the Object
    Storage service.</para>
   <procedure>

@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="ceilometer-cinder">
   <?dbhtml stop-chunking?>
-  <title>Configure the Block Storage service</title>
+  <title>配置块存储服务</title>
   <para>To retrieve volume-oriented events and samples, you must
     configure the Block Storage service to send notifications to the
     message bus. Perform these steps on the controller and storage

@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="ceilometer-swift">
-  <title>Configure the Object Storage service</title>
+  <title>配置对象存储服务</title>
   <para>To retrieve storage-oriented events and samples, configure the
     Object Storage service to send notifications to the message bus.</para>
   <procedure>

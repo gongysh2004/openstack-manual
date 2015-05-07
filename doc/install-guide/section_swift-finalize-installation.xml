@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="swift-finalize-installation">
-  <title>Finalize installation</title>
+  <title>配置策略</title>
   <procedure>
     <title>Configure hashes and default storage policy</title>
     <note>
