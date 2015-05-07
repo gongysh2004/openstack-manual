@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="cinder-install-controller-node">
-  <title>安装和配置</title>
+  <title>控制节点安装和配置Cinder管理服务</title>
   <para>This section describes how to install and configure the Block
     Storage service, code-named cinder, on the controller node. This
     service requires at least one additional storage node that provides

@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="cinder-install-storage-node">
   <?dbhtml stop-chunking?>
-  <title>安装和配置控制节点</title>
+  <title>控制节点安装和配置Cinder磁盘服务</title>
   <para>This section describes how to install and configure storage nodes
     for the Block Storage service. For simplicity, this configuration
     references one storage node with an empty local block storage device
@@ -19,38 +19,6 @@
     additional storage nodes.</para>
   <procedure>
     <title>To configure prerequisites</title>
-    <para>You must configure the storage node before you install and
-      configure the volume service on it. Similar to the controller node,
-      the storage node contains one network interface on the
-      <glossterm>management network</glossterm>. The storage node also
-      needs an empty block storage device of suitable size for your
-      environment. For more information, see
-      <xref linkend="ch_basic_environment"/>.</para>
-    <step>
-      <para>Configure the management interface:</para>
-      <para>IP address: 10.0.0.41</para>
-      <para>Network mask: 255.255.255.0 (or /24)</para>
-      <para>Default gateway: 10.0.0.1</para>
-    </step>
-    <step>
-      <para>Set the hostname of the node to
-        <replaceable>block1</replaceable>.</para>
-    </step>
-    <step>
-      <para>Copy the contents of the <filename>/etc/hosts</filename> file from
-        the controller node to the storage node and add the following
-        to it:</para>
-      <programlisting language="ini"># block1
-10.0.0.41       block1</programlisting>
-      <para>Also add this content to the <filename>/etc/hosts</filename> file
-        on all other nodes in your environment.</para>
-    </step>
-    <step>
-      <para>Install and configure
-        <glossterm baseform="Network Time Protocol (NTP)">NTP</glossterm>
-        using the instructions in
-        <xref linkend="basics-ntp-other-nodes"/>.</para>
-    </step>
     <step>
       <para>Install the LVM packages:</para>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>apt-get install lvm2</userinput></screen>
@@ -142,71 +110,6 @@ filter = [ "a/sdb/", "r/.*/"]</programlisting>
         and complete the following actions:</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
-          <programlisting language="ini">[database]
-...
-connection = mysql://cinder:<replaceable>CINDER_DBPASS</replaceable>@<replaceable>controller</replaceable>/cinder</programlisting>
-          <para>Replace <replaceable>CINDER_DBPASS</replaceable> with
-            the password you chose for the Block Storage database.</para>
-        </step>
-        <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-rpc_backend = rabbit
-
-[oslo_messaging_rabbit]
-...
-rabbit_host = <replaceable>controller</replaceable>
-rabbit_userid = openstack
-rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account in
-            <application>RabbitMQ</application>.</para>
-        </step>
-        <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections,
-            configure Identity service access:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-auth_strategy = keystone
-
-[keystone_authtoken]
-...
-auth_uri = http://<replaceable>controller</replaceable>:5000
-auth_url = http://<replaceable>controller</replaceable>:35357
-auth_plugin = password
-project_domain_id = default
-user_domain_id = default
-project_name = service
-username = cinder
-password = <replaceable>CINDER_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>CINDER_PASS</replaceable> with the password
-            you chose for the <literal>cinder</literal> user in the Identity
-            service.</para>
-          <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
-          </note>
-        </step>
-        <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            <literal>my_ip</literal> option:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-my_ip = <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable></programlisting>
-          <para>Replace
-            <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable> with
-            the IP address of the management network interface on your
-            storage node, typically 10.0.0.41 for the first node in the
-            <link linkend="architecture_example-architectures">example
-            architecture</link>.</para>
-        </step>
-        <step>
           <para>In the <literal>[lvm]</literal> section, configure the LVM
             back end with the LVM driver, <literal>cinder-volumes</literal>
             volume group, iSCSI protocol, and appropriate iSCSI
@@ -241,21 +144,6 @@ enabled_backends = lvm</programlisting>
           <programlisting language="ini">[DEFAULT]
 ...
 glance_host = <replaceable>controller</replaceable></programlisting>
-        </step>
-        <step>
-          <para>In the <literal>[oslo_concurrency]</literal> section,
-            configure the lock path:</para>
-          <programlisting language="ini">[oslo_concurrency]
-...
-lock_path = /var/lock/cinder</programlisting>
-        </step>
-        <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-verbose = True</programlisting>
         </step>
       </substeps>
     </step>

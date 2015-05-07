@@ -22,6 +22,6 @@
   </note>
   <xi:include href="../common/section_getstart_block-storage.xml"/>
   <xi:include href="section_cinder-controller-node.xml"/>
-  <!--<xi:include href="section_cinder-storage-node.xml"/> -->
+  <xi:include href="section_cinder-storage-node.xml"/>
   <xi:include href="section_cinder-verify.xml"/>
 </chapter>
