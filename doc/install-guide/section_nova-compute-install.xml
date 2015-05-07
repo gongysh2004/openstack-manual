@@ -24,12 +24,10 @@
         <prompt>#</prompt><userinput>apt-get install nova-compute sysfsutils</userinput>
       </screen>
       <screen os="rhel;centos;fedora">
-        <prompt>#</prompt>
-        <userinput>yum install openstack-nova-compute sysfsutils</userinput>
+        <prompt>#</prompt><userinput>yum install openstack-nova-compute sysfsutils</userinput>
       </screen>
       <screen os="sles;opensuse">
-        <prompt>#</prompt>
-        <userinput>zypper install openstack-nova-compute genisoimage kvm</userinput>
+        <prompt>#</prompt><userinput>zypper install openstack-nova-compute genisoimage kvm</userinput>
       </screen>
     </step>
     <step>
@@ -120,8 +118,7 @@ verbose = True</programlisting>
         <step>
           <para>保证内核模块<literal>nbd</literal> 被正确装载。</para>
           <screen>
-            <prompt>#</prompt>
-            <userinput>modprobe nbd</userinput>
+            <prompt>#</prompt><userinput>modprobe nbd</userinput>
           </screen>
         </step>
         <step>
@@ -136,8 +133,7 @@ verbose = True</programlisting>
     <step>
       <para>安装软件包：</para>
       <screen>
-        <prompt>#</prompt>
-        <userinput>apt-get install nova-compute</userinput>
+        <prompt>#</prompt><userinput>apt-get install nova-compute</userinput>
       </screen>
     </step>
     <step>
@@ -156,8 +152,7 @@ verbose = True</programlisting>
     <step>
       <para>确认你的主机支持硬件加速的虚拟化：</para>
       <screen>
-        <prompt>$</prompt>
-        <userinput>egrep -c '(vmx|svm)' /proc/cpuinfo</userinput>
+        <prompt>$</prompt><userinput>egrep -c '(vmx|svm)' /proc/cpuinfo</userinput>
       </screen>
       <para>如果命令输出的值是<emphasis>one or greater</emphasis>, 你的机器支持硬件加速而且不需要额外配置。</para>
       <para>如果命令的输出是<emphasis>zero</emphasis>,你的机器不支持硬件加速，你必须配置<literal>libvirt</literal> 用QEMU 而非KVM。</para>
@@ -174,25 +169,21 @@ virt_type = qemu</programlisting>
     <step os="ubuntu;debian">
       <para>重启计算服务</para>
       <screen>
-        <prompt>#</prompt>
-        <userinput>service nova-compute restart</userinput>
+        <prompt>#</prompt><userinput>service nova-compute restart</userinput>
       </screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
       <para>启动计算服务和所需依赖，以便使其能在系统启动时自动启动：</para>
       <screen>
-        <prompt>#</prompt>
-        <userinput>systemctl enable libvirtd.service openstack-nova-compute.service</userinput>
-        <prompt>#</prompt>
-        <userinput>systemctl start libvirtd.service openstack-nova-compute.service</userinput>
+        <prompt>#</prompt><userinput>systemctl enable libvirtd.service openstack-nova-compute.service</userinput>
+        <prompt>#</prompt><userinput>systemctl start libvirtd.service openstack-nova-compute.service</userinput>
       </screen>
     </step>
     <step os="ubuntu">
       <para>缺省情况下， Ubuntu 启动一个 SQLite数据库。</para>
       <para>因为这个配置中使用了SQL数据库服务器，你可以移除SQLite 数据库文件：</para>
       <screen>
-        <prompt>#</prompt>
-        <userinput>rm -f /var/lib/nova/nova.sqlite</userinput>
+        <prompt>#</prompt><userinput>rm -f /var/lib/nova/nova.sqlite</userinput>
       </screen>
     </step>
   </procedure>

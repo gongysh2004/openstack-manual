@@ -9,15 +9,13 @@
     <step>
       <para>切换到<literal>admin</literal> 证书环境以获取管理员命令行的执行权：</para>
       <screen>
-        <prompt>$</prompt>
-        <userinput>source admin-openrc.sh</userinput>
+        <prompt>$</prompt><userinput>source admin-openrc.sh</userinput>
       </screen>
     </step>
     <step>
       <para>列出服务组件以检查服务正常启动并注册了服务：</para>
       <screen>
-        <prompt>$</prompt>
-        <userinput>nova service-list</userinput>
+        <prompt>$</prompt><userinput>nova service-list</userinput>
         <computeroutput>+----+------------------+------------+----------+---------+-------+----------------------------+-----------------+
 | Id | Binary           | Host       | Zone     | Status  | State | Updated_at                 | Disabled Reason |
 +----+------------------+------------+----------+---------+-------+----------------------------+-----------------+
@@ -32,8 +30,7 @@
     <step>
       <para>列出API端点来检测与认证服务的连接：</para>
       <screen>
-        <prompt>$</prompt>
-        <userinput>nova endpoints</userinput>
+        <prompt>$</prompt><userinput>nova endpoints</userinput>
         <computeroutput>+-----------+------------------------------------------------------------+
 | nova      | Value                                                      |
 +-----------+------------------------------------------------------------+
@@ -122,8 +119,7 @@
     <step>
       <para>列出镜像服务的镜像列表来检查与镜像服务的连接：</para>
       <screen>
-        <prompt>$</prompt>
-        <userinput>nova image-list</userinput>
+        <prompt>$</prompt><userinput>nova image-list</userinput>
         <computeroutput>+--------------------------------------+---------------------+--------+--------+
 | ID                                   | Name                | Status | Server |
 +--------------------------------------+---------------------+--------+--------+
