@@ -5,23 +5,21 @@
   version="5.0"
   xml:id="swift-verify">
   <title>验证</title>
-  <para>This section describes how to verify operation of the Object
-   Storage service.</para>
+  <para>本章节讲述了如何使用OpenStack中的对象存储服务。</para>
   <procedure>
     <note>
-      <para>The <literal>swift</literal> client requires the
-        <literal>-V 3</literal> parameter to use the Identity version 3
-        API.</para>
+      <para><literal>swift</literal> client 需要加
+        <literal>-V 3</literal> 参数去访问Identity Service V3 API。</para>
     </note>
     <note>
-      <para>Perform these steps on the controller node.</para>
+      <para>下列操作需要在控制节点上进行。</para>
     </note>
     <step>
-      <para>Source the <literal>demo</literal> credentials:</para>
+      <para>切换到demo账号:</para>
       <screen><prompt>$</prompt> <userinput>source demo-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>Show the service status:</para>
+      <para>查看服务状态:</para>
       <screen><prompt>$</prompt> <userinput>swift -V 3 stat</userinput>
 <computeroutput>Account: AUTH_c75cafb58f5049b8a976506737210756
      Containers: 0
@@ -33,25 +31,23 @@ X-Put-Timestamp: 1429736713.92936
    Content-Type: text/plain; charset=utf-8</computeroutput></screen>
     </step>
     <step>
-      <para>Upload a test file:</para>
+      <para>上传测试文件:</para>
       <screen><prompt>$</prompt> <userinput>swift -V 3 upload demo-container1 <replaceable>FILE</replaceable></userinput>
 <computeroutput><replaceable>FILE</replaceable></computeroutput></screen>
-      <para>Replace <replaceable>FILE</replaceable> with the name of a local
-        file to upload to the <literal>demo-container1</literal>
-        container.</para>
+      <para>将 <replaceable>FILE</replaceable> 替换成本地的文件上传到 <literal>demo-container1</literal>
+        容器.</para>
     </step>
     <step>
-      <para>List containers:</para>
+      <para>列出容器:</para>
       <screen><prompt>$</prompt> <userinput>swift -V 3 list</userinput>
 <computeroutput>demo-container1</computeroutput></screen>
     </step>
     <step>
-      <para>Download a test file:</para>
+      <para>下载测试文件:</para>
       <screen><prompt>$</prompt> <userinput>swift -V 3 download demo-container1 <replaceable>FILE</replaceable></userinput>
 <computeroutput><replaceable>FILE</replaceable> [auth 0.295s, headers 0.339s, total 0.339s, 0.005 MB/s]</computeroutput></screen>
-      <para>Replace <replaceable>FILE</replaceable> with the name of the
-        file uploaded to the <literal>demo-container1</literal>
-        container.</para>
+      <para>将 <replaceable>FILE</replaceable> 替换成刚刚上传到容器 <literal>demo-container1</literal>
+        中的文件.</para>
     </step>
   </procedure>
 </section>

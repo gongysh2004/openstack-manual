@@ -5,11 +5,8 @@
   version="5.0"
   xml:id="ch_swift">
   <title>对象存储服务Swift</title>
-  <para>The OpenStack Object Storage services (swift) work together to
-    provide object storage and retrieval through a
-    <glossterm baseform="RESTful">REST</glossterm> API. Your environment
-    must at least include the Identity service (keystone) prior to
-    deploying Object Storage.</para>
+  <para>OpenStack对象存储服务(swift)提供了一系列<glossterm baseform="RESTful">REST</glossterm> API来存取文件对象， 在对象存储的环境中， 我们至少需要包含一个身份认证服务(Identity Service - Keystone)。
+      </para>
   <xi:include href="../common/section_getstart_object-storage.xml"/>
   <xi:include href="section_swift-controller-node.xml"/>
   <xi:include href="section_swift-storage-node.xml"/>

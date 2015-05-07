@@ -5,17 +5,13 @@
   version="5.0"
   xml:id="ch_horizon">
   <title>仪表盘界面组件Horizon</title>
-  <para>The OpenStack dashboard, also known as <link
+  <para>OpenStack的仪表盘, 也叫做 <link
       xlink:href="https://git.openstack.org/cgit/openstack/horizon"
-      >Horizon</link>, is a Web interface that enables cloud
-      administrators and users to manage various OpenStack resources and
-      services.</para>
-  <para>The dashboard enables web-based interactions with the
-      OpenStack Compute cloud controller through the OpenStack
-      APIs.</para>
-  <para>Horizon enables you to customize the brand of the dashboard.</para>
-  <para>Horizon provides a set of core classes and reusable templates and tools.</para>
-  <para>This example deployment uses an Apache web server.</para>
+      >Horizon</link>, 这是一个网页界面，能够使用户和管理者去管理不同的OpenStack资源和服务。</para>
+  <para>仪表盘通过OpenStack的API接口和控制器上的各种服务组件打交道，为用户提供界面。</para>
+  <para>Horizon使你能定做仪表盘的商标。 </para>
+  <para>Horizon提供了一套核心类和可再用的模板和工具。</para>
+  <para>这个手册的部署使用的是Apache网页服务器。</para>
 
   <xi:include href="section_dashboard-system-reqs.xml"/>
   <xi:include href="section_dashboard-install.xml"/>

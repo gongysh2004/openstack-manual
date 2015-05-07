@@ -5,51 +5,36 @@
   version="5.0"
   xml:id="dashboard-system-requirements">
     <title>系统要求</title>
-    <para>Before you install the OpenStack dashboard, you must meet
-        the following system requirements:</para>
+    <para>在你安装OpenStack仪表盘之前, 你的系统必须满足满足
+               以下的条件:</para>
     <itemizedlist>
         <listitem>
-            <para>OpenStack Compute installation. Enable the Identity
-                Service for user and project management.</para>
-            <para>Note the URLs of the Identity Service and Compute
-                endpoints.</para>
-        </listitem>
-        <listitem>
-            <para>Identity Service user with sudo privileges. Because
-                Apache does not serve content from a root user, users
-                must run the dashboard as an Identity Service user
-                with sudo privileges.</para>
+          <para>记录身份服务的URLs</para>
         </listitem>
         <listitem>
             <para>Python 2.7.
-                The Python version must support
-                Django. The Python version should run on any
-                system, including Mac OS X. Installation prerequisites
-                might differ by platform.</para>
+                Python的版本必须支持Django。 Python的版本需要在任何系
+                统上都能运行，包括Mac OS X。安装的先决条件可能会因为
+               平台的关系而不同。</para>
         </listitem>
     </itemizedlist>
-    <para>Then, install and configure the dashboard on a node that
-        can contact the Identity Service.</para>
-    <para>Provide users with the following information so that they
-        can access the dashboard through a web browser on their local
-        machine:</para>
+    <para>然后，在一个节点上，安装并配置dashboard,使它能够连接身
+                份服务。</para>
+    <para>提供用户以下的信息，使他们在他们的机器上能够通过网页浏
+               览器进入仪表盘:</para>
     <itemizedlist>
         <listitem>
-            <para>The public IP address from which they can access the
-                dashboard</para>
+            <para>能够进入仪表盘的公共IP地址</para>
         </listitem>
         <listitem>
-            <para>The user name and password with which they can
-                access the dashboard</para>
+            <para>能够进入仪表盘的用户名和密码</para>
         </listitem>
     </itemizedlist>
-    <para>Your web browser, and that of your users,
-         must support HTML5 and have cookies and
-        JavaScript enabled.</para>
+    <para>用户的网页浏览器必须支持，并且能够使用cookies和JavaScript。</para>
     <note>
-        <para>To use the VNC client with the dashboard, the browser
-            must support HTML5 Canvas and HTML5 WebSockets.</para>
-        <para>For details about browsers that support noVNC, see <link
+        <para>要通过dashboard使用VNC客户端，浏览器必须支持THTML5 Canvas
+                 和HTML5 WebSockets.</para>
+        <para>需要了解更多信息，查看 <link
                 xlink:href="https://github.com/kanaka/noVNC/blob/master/README.md"
                 >https://github.com/kanaka/noVNC/blob/master/README.md</link>,
             and <link

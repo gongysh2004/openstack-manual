@@ -5,51 +5,39 @@
   version="5.0"
   xml:id="swift-initial-rings">
   <title>创建起始rings</title>
-  <para>Before starting the Object Storage services, you must create
-    the initial account, container, and object rings. The ring builder
-    creates configuration files that each node uses to determine and
-    deploy the storage architecture. For simplicity, this guide uses one
-    region and zone with 2^10 (1024) maximum partitions, 3 replicas of each
-    object, and 1 hour minimum time between moving a partition more than
-    once. For Object Storage, a partition indicates a directory on a storage
-    device rather than a conventional partition table. For more information,
-    see the
+  <para>
+      在启动对象存储的服务之前， 我们必须初始化account, container和object的ring, 我们可以使用ring builder来创建ring的初始文件， 由此让每个存储确定对象存储的部署架构和拓扑。 例如该课程中使用2^10(1024)个分区， 3份数据拷贝. 更多内容， 参考,
+
     <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
     >Deployment Guide</link>.</para>
   <section xml:id="swift-initial-rings-account">
     <title>Account ring</title>
-    <para>The account server uses the account ring to maintain lists
-      of containers.</para>
+    <para>account server使用account ring来维护和管理account信息。</para>
     <procedure>
-      <title>To create the ring</title>
+      <title>创建Ring</title>
       <note>
-        <para>Perform these steps on the controller node.</para>
+          <para>在控制节点上执行下列操作:</para>
       </note>
       <step>
-        <para>Change to the <literal>/etc/swift</literal> directory.</para>
+        <para>cd到 <literal>/etc/swift</literal> 目录.</para>
       </step>
       <step>
-        <para>Create the base <filename>account.builder</filename> file:</para>
+        <para>创建<filename>account.builder</filename> 文件:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder account.builder create 10 3 1</userinput></screen>
         <note>
-          <para>This command provides no output.</para>
+          <para>执行该命令后无输出内容。</para>
         </note>
       </step>
       <step>
-        <para>Add each storage node to the ring:</para>
+        <para>将每个存储节点加入到ring:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder account.builder \
   add r1z1-<replaceable>STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>:6002/<replaceable>DEVICE_NAME</replaceable> <replaceable>DEVICE_WEIGHT</replaceable></userinput></screen>
-        <para>Replace
+        <para>替换
           <replaceable>STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-          with the IP address of the management network on the storage node.
-          Replace <replaceable>DEVICE_NAME</replaceable> with a storage
-          device name on the same storage node. For example, using the first
-          storage node in
-          <xref linkend="swift-install-storage-node"/> with the
-          <literal>/dev/sdb1</literal> storage device and weight of 100:</para>
+          为存储节点的管理网络IP.
+          替换 <replaceable>DEVICE_NAME</replaceable> 为存储节点上同名的设备名称:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder account.builder add r1z1-10.0.0.51:6002/sdb1 100</userinput></screen>
-        <para>Repeat this command for each storage device on each storage
-          node. In the example architecture, use the command in four variations:</para>
+        <para>为每个存储节点上每个设备重复执行该命令， 该课程环境中， 执行如下命令:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder account.builder add r1z1-10.0.0.51:6002/sdb1 100</userinput>
 <computeroutput>Device d0r1z1-10.0.0.51:6002R10.0.0.51:6002/sdb1_"" with 100.0 weight got id 0</computeroutput>
 <prompt>#</prompt> <userinput>swift-ring-builder account.builder add r1z2-10.0.0.51:6002/sdc1 100</userinput>
@@ -60,7 +48,7 @@
 <computeroutput>Device d3r1z4-10.0.0.52:6002R10.0.0.52:6002/sdc1_"" with 100.0 weight got id 3</computeroutput></screen>
       </step>
       <step>
-        <para>Verify the ring contents:</para>
+        <para>验证ring的内容:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder account.builder</userinput>
 <computeroutput>account.builder, build version 4
 1024 partitions, 3.000000 replicas, 1 regions, 4 zones, 4 devices, 100.00 balance, 0.00 dispersion
@@ -81,39 +69,33 @@ Devices:    id  region  zone      ip address  port  replication ip  replication 
   </section>
   <section xml:id="swift-initial-rings-container">
     <title>Container ring</title>
-    <para>The container server uses the container ring to maintain lists
-      of objects. However, it does not track object locations.</para>
+    <para>container server使用container ring来维护和管理所有的容器.</para>
     <procedure>
-      <title>To create the ring</title>
+      <title>创建ring</title>
       <note>
-        <para>Perform these steps on the controller node.</para>
+        <para>在控制节点上执行下列操作。</para>
       </note>
       <step>
-        <para>Change to the <literal>/etc/swift</literal> directory.</para>
+        <para>cd到 <literal>/etc/swift</literal> 目录.</para>
       </step>
       <step>
-        <para>Create the base <filename>container.builder</filename>
-          file:</para>
+        <para>创建 <filename>container.builder</filename>
+          文件:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder container.builder create 10 3 1</userinput></screen>
         <note>
-          <para>This command provides no output.</para>
+          <para>该命令无输出内容.</para>
         </note>
       </step>
       <step>
-        <para>Add each storage node to the ring:</para>
+        <para>将每个存储节点加入到ring:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder container.builder \
   add r1z1-<replaceable>STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>:6001/<replaceable>DEVICE_NAME</replaceable> <replaceable>DEVICE_WEIGHT</replaceable></userinput></screen>
-        <para>Replace
+        <para>替换
           <replaceable>STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-          with the IP address of the management network on the storage node.
-          Replace <replaceable>DEVICE_NAME</replaceable> with a storage
-          device name on the same storage node. For example, using the first
-          storage node in
-          <xref linkend="swift-install-storage-node"/> with the
-          <literal>/dev/sdb1</literal> storage device and weight of 100:</para>
+          为存储节点管理网络IP.
+          替换 <replaceable>DEVICE_NAME</replaceable> 为存储节点上同名的设备名称:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder container.builder add r1z1-10.0.0.51:6001/sdb1 100</userinput></screen>
-        <para>Repeat this command for each storage device on each storage
-          node. In the example architecture, use the command in four variations:</para>
+        <para>在每个存储节点上为每个存储设备重复执行该命令， 在该课程中， 执行如下命令:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder container.builder add r1z1-10.0.0.51:6001/sdb1 100</userinput>
 <computeroutput>Device d0r1z1-10.0.0.51:6001R10.0.0.51:6001/sdb1_"" with 100.0 weight got id 0</computeroutput>
 <prompt>#</prompt> <userinput>swift-ring-builder container.builder add r1z2-10.0.0.51:6001/sdc1 100</userinput>
@@ -124,7 +106,7 @@ Devices:    id  region  zone      ip address  port  replication ip  replication 
 <computeroutput>Device d3r1z4-10.0.0.52:6001R10.0.0.52:6001/sdc1_"" with 100.0 weight got id 3</computeroutput></screen>
       </step>
       <step>
-        <para>Verify the ring contents:</para>
+        <para>验证ring的内容:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder container.builder</userinput>
 <computeroutput>container.builder, build version 4
 1024 partitions, 3.000000 replicas, 1 regions, 4 zones, 4 devices, 100.00 balance, 0.00 dispersion
@@ -137,7 +119,7 @@ Devices:    id  region  zone      ip address  port  replication ip  replication 
              3       1     4       10.0.0.52  6001       10.0.0.52              6001      sdc1 100.00          0 -100.00</computeroutput></screen>
       </step>
       <step>
-        <para>Rebalance the ring:</para>
+        <para>Rebalance:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder container.builder rebalance</userinput>
 <computeroutput>Reassigned 1024 (100.00%) partitions. Balance is now 0.00.  Dispersion is now 0.00</computeroutput></screen>
       </step>
@@ -145,38 +127,32 @@ Devices:    id  region  zone      ip address  port  replication ip  replication 
   </section>
   <section xml:id="swift-initial-rings-object">
     <title>Object ring</title>
-    <para>The object server uses the object ring to maintain lists
-      of object locations on local devices.</para>
+    <para>object server使用object ring来维护和管理存储节点的设备路径.</para>
     <procedure>
-      <title>To create the ring</title>
+      <title>创建ring</title>
       <note>
-        <para>Perform these steps on the controller node.</para>
+        <para>在控制器上执行下列操作。</para>
       </note>
       <step>
-        <para>Change to the <literal>/etc/swift</literal> directory.</para>
+        <para>cd到 <literal>/etc/swift</literal> 目录.</para>
       </step>
       <step>
-        <para>Create the base <filename>object.builder</filename> file:</para>
+        <para>创建<filename>object.builder</filename>文件:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder object.builder create 10 3 1</userinput></screen>
         <note>
-          <para>This command provides no output.</para>
+          <para>该命令执行后没有输出.</para>
         </note>
       </step>
       <step>
-        <para>Add each storage node to the ring:</para>
+        <para>将所有存储节点加入到ring:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder object.builder \
   add r1z1-<replaceable>STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>:6000/<replaceable>DEVICE_NAME</replaceable> <replaceable>DEVICE_WEIGHT</replaceable></userinput></screen>
-        <para>Replace
+        <para>替换
           <replaceable>STORAGE_NODE_MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-          with the IP address of the management network on the storage node.
-          Replace <replaceable>DEVICE_NAME</replaceable> with a storage
-          device name on the same storage node. For example, using the first
-          storage node in
-          <xref linkend="swift-install-storage-node"/> with the
-          <literal>/dev/sdb1</literal> storage device and weight of 100:</para>
+          为存储节点管理网络的IP.
+          替换 <replaceable>DEVICE_NAME</replaceable>为存储节点上同名的设备名称。</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder object.builder add r1z1-10.0.0.51:6000/sdb1 100</userinput></screen>
-        <para>Repeat this command for each storage device on each storage
-          node. In the example architecture, use the command in four variations:</para>
+        <para>在每个存储节点上为每个存储设备重复执行该命令, 在本课程环境中， 使用如下命令:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder object.builder add r1z1-10.0.0.51:6000/sdb1 100</userinput>
 <computeroutput>Device d0r1z1-10.0.0.51:6000R10.0.0.51:6000/sdb1_"" with 100.0 weight got id 0</computeroutput>
 <prompt>#</prompt> <userinput>swift-ring-builder object.builder add r1z2-10.0.0.51:6000/sdc1 100</userinput>
@@ -187,7 +163,7 @@ Devices:    id  region  zone      ip address  port  replication ip  replication 
 <computeroutput>Device d3r1z4-10.0.0.52:6000R10.0.0.52:6000/sdc1_"" with 100.0 weight got id 3</computeroutput></screen>
       </step>
       <step>
-        <para>Verify the ring contents:</para>
+        <para>验证ring的内容:</para>
         <screen><prompt>#</prompt> <userinput>swift-ring-builder object.builder</userinput>
 <computeroutput>object.builder, build version 4
 1024 partitions, 3.000000 replicas, 1 regions, 4 zones, 4 devices, 100.00 balance, 0.00 dispersion
@@ -207,11 +183,10 @@ Devices:    id  region  zone      ip address  port  replication ip  replication 
     </procedure>
   </section>
   <section xml:id="swift-initial-rings-distribute">
-    <title>Distribute ring configuration files</title>
-    <para>Copy the <filename>account.ring.gz</filename>,
-      <filename>container.ring.gz</filename>, and
-      <filename>object.ring.gz</filename> files to the
-      <literal>/etc/swift</literal> directory on each storage node and
-       any additional nodes running the proxy service.</para>
+    <title>分发ring配置文件</title>
+    <para>将<filename>account.ring.gz</filename>,
+      <filename>container.ring.gz</filename>, 和
+      <filename>object.ring.gz</filename> 文件拷贝至所有存储节点的
+      <literal>/etc/swift</literal>目录中。</para>
   </section>
 </section>

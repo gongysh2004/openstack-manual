@@ -5,59 +5,53 @@
   version="5.0"
   xml:id="glance-install">
   <title>安装和配置</title>
-  <para>This section describes how to install and configure the Image service,
-    code-named glance, on the controller node. For simplicity, this
-    configuration stores images on the local file system.</para>
+  <para>本章节介绍如何在控制器节点上安装和配置镜像服务，代码名为:Glance。为简单起见，此配置将镜像存储在本地文件系统上。</para>
   <note>
-    <para>This section assumes proper installation, configuration, and
-      operation of the Identity service as described in
-      <xref linkend="keystone-install"/> and <xref
-      linkend="keystone-verify"/> as well as setup of the
-      <filename>admin-openrc.sh</filename> script as described in
+    <para>本节假设身份服务的正确安装，配置和运行，请参阅
+      <xref linkend="keystone-install"/> 和 <xref
+      linkend="keystone-verify"/> 。正确设置管理员身份环境脚本
+      <filename>admin-openrc.sh</filename> 。
       <xref linkend="keystone-client-environment-scripts"/>.</para>
   </note>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure the Image service, you must
-      create a database, service credentials, and API endpoint.</para>
+    <title>先决条件</title>
+    <para>在安装和配置镜像服务前，您必须创建数据库，服务凭证，以及API端点。</para>
     <step>
-      <para>To create the database, complete these steps:</para>
+      <para>要创建数据库，完成这些步骤:</para>
       <substeps>
         <step>
-          <para>Use the database access client to connect to the database
-            server as the <literal>root</literal> user:</para>
+          <para>使用数据库访问客户端用 <literal>root</literal> 用户连接到数据库服务器:</para>
           <screen><prompt>$</prompt> <userinput>mysql -u root -p</userinput></screen>
         </step>
         <step>
-          <para>Create the <literal>glance</literal> database:</para>
+          <para>创建<literal>glance</literal> 数据库:</para>
           <screen><userinput>CREATE DATABASE glance;</userinput></screen>
         </step>
         <step>
-          <para>Grant proper access to the <literal>glance</literal>
-            database:</para>
+          <para>调整 <literal>glance</literal>
+            数据库适当的访问权限:</para>
           <screen><userinput>GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' \
   IDENTIFIED BY '<replaceable>GLANCE_DBPASS</replaceable>';</userinput>
 <userinput>GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' \
   IDENTIFIED BY '<replaceable>GLANCE_DBPASS</replaceable>';</userinput></screen>
-          <para>Replace <replaceable>GLANCE_DBPASS</replaceable> with a suitable
-        password.</para>
+          <para>更换<replaceable>GLANCE_DBPASS</replaceable> 为合适的密码。
+        </para>
         </step>
         <step>
-          <para>Exit the database access client.</para>
+          <para>退出数据库客户端。</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>切换到 <literal>管理员</literal> 身份:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>To create the service credentials, complete these steps:</para>
+      <para>要创建服务凭据，请完成以下步骤:</para>
       <substeps>
         <step>
-          <para>Create the <literal>glance</literal> user:</para>
-          <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt glance</userinput>
+          <para>创建 <literal>glance</literal> 用户:</para>
+<screen><prompt>$</prompt> <userinput>openstack user create --password-prompt glance</userinput>
 <computeroutput>User Password:
 Repeat User Password:
 +----------+----------------------------------+
@@ -71,9 +65,9 @@ Repeat User Password:
 +----------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>glance</literal> user and <literal>service</literal>
-            project:</para>
+          <para>添加<literal>admin</literal> 角色到
+            <literal>glance</literal> 用户和 <literal>service</literal>
+            租户:</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project service --user glance admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -83,7 +77,7 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>glance</literal> service entity:</para>
+          <para>创建<literal>glance</literal> 服务实体:</para>
           <screen><prompt>$</prompt> <userinput>openstack service create --type image \
   --description "OpenStack Image service" glance</userinput>
 <computeroutput>+-------------+----------------------------------+
@@ -99,7 +93,7 @@ Repeat User Password:
       </substeps>
     </step>
     <step>
-      <para>Create the Image service API endpoint:</para>
+      <para>创建镜像服务API端点:</para>
       <screen><prompt>$</prompt> <userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:9292 \
   --internalurl http://<replaceable>controller</replaceable>:9292 \
@@ -121,16 +115,9 @@ Repeat User Password:
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install and configure the Image service components</title>
-    <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
-    </note>
+    <title>要安装和配置镜像服务组件</title>
     <step>
-      <para>Install the packages:</para>
+      <para>安装包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install glance python-glanceclient</userinput></screen>
       <!-- The installation of python-glance is a workaround
            for bug: https://bugzilla.redhat.com/show_bug.cgi?id=1213545  -->
@@ -139,24 +126,21 @@ Repeat User Password:
       <screen os="opensuse;sles"><prompt>#</prompt> <userinput>zypper install openstack-glance python-glanceclient</userinput></screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/glance/glance-api.conf</filename>
-        file and complete the following actions:</para>
+      <para>编辑<filename>/etc/glance/glance-api.conf</filename>
+        文件并完成下列操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
+          <para>在 <literal>[database]</literal> 部分中，配置
+数据库访问:</para>
           <programlisting language="ini">[database]
 ...
 connection = mysql://glance:<replaceable>GLANCE_DBPASS</replaceable>@<replaceable>controller</replaceable>/glance</programlisting>
-          <para>Replace <replaceable>GLANCE_DBPASS</replaceable> with the
-          password you chose for the Image service database.</para>
+
         </step>
         <step>
-          <para>In the <literal>[keystone_authtoken]</literal> and
-            <literal>[paste_deploy]</literal> sections, configure Identity
-            service access:</para>
-          <programlisting language="ini">[keystone_authtoken]
-...
+          <para>在<literal>[keystone_authtoken]</literal> 和
+            <literal>[paste_deploy]</literal> 节点，配置身份服务访问：</para>
+         <programlisting language="ini">[keystone_authtoken]
 auth_uri = http://<replaceable>controller</replaceable>:5000
 auth_url = http://<replaceable>controller</replaceable>:35357
 auth_plugin = password
@@ -169,37 +153,26 @@ password = <replaceable>GLANCE_PASS</replaceable>
 [paste_deploy]
 ...
 flavor = keystone</programlisting>
-          <para>Replace <replaceable>GLANCE_PASS</replaceable> with the
-            password you chose for the <literal>glance</literal> user in the
-            Identity service.</para>
-          <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
+           <note>
+            <para>注释或删除的任何其他选项
+              <literal>[keystone_authtoken]</literal> 部分.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[glance_store]</literal> section, configure
-            the local file system store and location of image files:</para>
+          <para>在 <literal>[glance_store]</literal> 部分中，配置镜像文件的本地文件系统的存储和位置:</para>
           <programlisting language="ini">[glance_store]
 ...
 default_store = file
 filesystem_store_datadir = /var/lib/glance/images/</programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-          the <literal>noop</literal> notification driver to disable
-          notifications because they only pertain to the optional
-          Telemetry service:</para>
+          <para>在<literal>[DEFAULT]</literal> 部分中，配置<literal>noop</literal> 通知驱动来禁用通知:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 notification_driver = noop</programlisting>
-          <para>The Telemetry chapter provides an Image service configuration
-            that enables notifications.</para>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+          <para>（可选）为帮助排除故障，启用详细日志记录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -207,22 +180,20 @@ verbose = True</programlisting>
       </substeps>
     </step>
     <step>
-      <para>Edit the <filename>/etc/glance/glance-registry.conf</filename>
-        file and complete the following actions:</para>
+      <para>编辑 <filename>/etc/glance/glance-registry.conf</filename>
+        文件并完成下列操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
-          <programlisting language="ini">[database]
+          <para>在<literal>[database]</literal> 部分中，配置
+            数据库访问:</para>
+ <programlisting language="ini">[database]
 ...
 connection = mysql://glance:<replaceable>GLANCE_DBPASS</replaceable>@<replaceable>controller</replaceable>/glance</programlisting>
-          <para>Replace <replaceable>GLANCE_DBPASS</replaceable> with the
-          password you chose for the Image service database.</para>
         </step>
         <step>
-          <para>In the <literal>[keystone_authtoken]</literal> and
-            <literal>[paste_deploy]</literal> sections, configure Identity
-            service access:</para>
+          <para>在 <literal>[keystone_authtoken]</literal> 和
+            <literal>[paste_deploy]</literal> 节点，配置身份服务的访问:
+          </para>
           <programlisting language="ini">[keystone_authtoken]
 ...
 auth_uri = http://<replaceable>controller</replaceable>:5000
@@ -237,29 +208,15 @@ password = <replaceable>GLANCE_PASS</replaceable>
 [paste_deploy]
 ...
 flavor = keystone</programlisting>
-          <para>Replace <replaceable>GLANCE_PASS</replaceable> with the
-            password you chose for the <literal>glance</literal> user in the
-            Identity service.</para>
-          <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
-          </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-          the <literal>noop</literal> notification driver to disable
-          notifications because they only pertain to the optional
-          Telemetry service:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分，配置 <literal>noop</literal> 通知驱动来禁用通知:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 notification_driver = noop</programlisting>
-          <para>The Telemetry chapter provides an Image service configuration
-            that enables notifications.</para>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+          <para>为帮助排除故障，启用详细日志记录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -267,7 +224,7 @@ verbose = True</programlisting>
       </substeps>
     </step>
     <step os="rhel;centos;fedora;ubuntu">
-      <para>Populate the Image service database:</para>
+      <para>填充镜像服务数据库:</para>
       <screen><prompt>#</prompt> <userinput>su -s /bin/sh -c "glance-manage db_sync" glance</userinput></screen>
     </step>
   </procedure>
@@ -300,9 +257,9 @@ verbose = True</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu;debian">
-      <para>Restart the Image service services:</para>
+      <para>重启镜像服务业务:</para>
       <screen><prompt>#</prompt> <userinput>service glance-registry restart</userinput>
 <prompt>#</prompt> <userinput>service glance-api restart</userinput></screen>
     </step>
@@ -313,9 +270,8 @@ verbose = True</programlisting>
 <prompt>#</prompt> <userinput>systemctl start openstack-glance-api.service openstack-glance-registry.service</userinput></screen>
     </step>
     <step os="ubuntu">
-      <para>By default, the Ubuntu packages create an SQLite database.</para>
-      <para>Because this configuration uses a SQL database server, you can
-        remove the SQLite database file:</para>
+      <para>默认情况下，Ubuntu的软件包创建SQLite数据库。</para>
+      <para>由于这种配置使用SQL数据库服务器，你可以删除SQLite数据库文件:</para>
       <screen><prompt>#</prompt> <userinput>rm -f /var/lib/glance/glance.sqlite</userinput></screen>
     </step>
   </procedure>

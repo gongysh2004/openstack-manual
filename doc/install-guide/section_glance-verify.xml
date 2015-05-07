@@ -5,41 +5,25 @@
   version="5.0"
   xml:id="glance-verify">
   <title>验证</title>
-  <para>Verify operation of the Image service using
-    <link xlink:href="http://launchpad.net/cirros">CirrOS</link>, a small
-    Linux image that helps you test your OpenStack deployment.</para>
-  <para>For more information about how to download and build images,
-    see <link
-      xlink:href="http://docs.openstack.org/image-guide/content/index.html"
-        ><citetitle>OpenStack Virtual Machine Image
-      Guide</citetitle></link>. For information about how to manage
-    images, see the <link
-      xlink:href="http://docs.openstack.org/user-guide/index.html"
-        ><citetitle>OpenStack User Guide</citetitle></link>.</para>
   <procedure>
     <step>
-      <para>In each client environment script, configure the Image service
-        client to use API version 2.0:</para>
+      <para>在每个客户端环境脚本，配置镜像服务客户端使用API2.0版本:</para>
       <screen><prompt>$</prompt> <userinput>echo "export OS_IMAGE_API_VERSION=2" | tee -a admin-openrc.sh demo-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>切换到 <literal>admin</literal> 身份:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>Create a temporary local directory:</para>
+      <para>创建一个临时的本地目录:</para>
       <screen><prompt>$</prompt> <userinput>mkdir /tmp/images</userinput></screen>
     </step>
     <step>
-      <para>Download the source image into it:</para>
+      <para>下载源镜像:</para>
       <screen><prompt>$</prompt> <userinput>wget -P /tmp/images http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img</userinput></screen>
     </step>
     <step>
-      <para>Upload the image to the Image service using the
-        <glossterm baseform="QEMU Copy On Write 2 (QCOW2)">QCOW2</glossterm>
-        disk format, <glossterm>bare</glossterm> container format, and
-        public visibility so all projects can access it:</para>
+      <para>将镜像上传至镜像服务:</para>
       <screen><prompt>$</prompt> <userinput>glance image-create --name "cirros-0.3.3-x86_64" --file /tmp/images/cirros-0.3.3-x86_64-disk.img \
   --disk-format qcow2 --container-format bare --visibility public --progress</userinput>
 <computeroutput>[=============================>] 100%
@@ -63,34 +47,20 @@
 | virtual_size     | None                                 |
 | visibility       | public                               |
 +------------------+--------------------------------------+</computeroutput></screen>
-      <para>For information about the <command>glance image-create</command>
-        parameters, see <link
-        xlink:href="http://docs.openstack.org/cli-reference/content/glanceclient_commands.html#glanceclient_subcommand_image-create"
-        >Image service command-line client</link> in the
-        <citetitle>OpenStack Command-Line Interface
-        Reference</citetitle>.</para>
-      <para>For information about disk and container formats for
-        images, see <link
-        xlink:href="http://docs.openstack.org/image-guide/content/image-formats.html"
-        >Disk and container formats for images</link> in the
-        <citetitle>OpenStack Virtual Machine Image Guide</citetitle>.</para>
-      <note>
-        <para>OpenStack generates IDs dynamically, so you will see
-          different values in the example command output.</para>
-      </note>
+
     </step>
     <step>
-      <para>Confirm upload of the image and validate
-        attributes:</para>
+      <para>确认上传的镜像:</para>
       <screen><prompt>$</prompt> <userinput>glance image-list</userinput>
 <computeroutput>+--------------------------------------+---------------------+
 | ID                                   | Name                |
 +--------------------------------------+---------------------+
 | 38047887-61a7-41ea-9b49-27987d5e8bb9 | cirros-0.3.3-x86_64 |
 +--------------------------------------+---------------------+</computeroutput></screen>
+
     </step>
     <step>
-      <para>Remove the temporary local directory and source image:</para>
+      <para>删除临时本地目录和源镜像:</para>
       <screen><prompt>$</prompt> <userinput>rm -r /tmp/images</userinput></screen>
     </step>
   </procedure>

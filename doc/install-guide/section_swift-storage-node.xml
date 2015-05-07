@@ -5,111 +5,93 @@
   version="5.0"
   xml:id="swift-install-storage-node">
   <title>配置存储</title>
-  <para>This section describes how to install and configure storage nodes
-    that operate the account, container, and object services. For
-    simplicity, this configuration references two storage nodes, each
-    containing two empty local block storage devices. Each of the
-    devices, <literal>/dev/sdb</literal> and <literal>/dev/sdc</literal>,
-    must contain a suitable partition table with one partition occupying
-    the entire device. Although the Object Storage service supports any
-    file system with <glossterm>extended attributes (xattr)</glossterm>,
-    testing and benchmarking indicate the best performance and reliability
-    on <glossterm>XFS</glossterm>. For more information on horizontally
-    scaling your environment, see the
-    <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
-    >Deployment Guide</link>.</para>
+  <para>本章节讲述了如何安装和配置OpenStack中的对象存储节点， 对象存储节点中包含了Account, Container和Object服务，
+  简单的说， 我们将配置一个有两个节点的对象存储服务， 并将内容存储到两个磁盘中， 它们分别是<literal>/dev/sdb</literal>和
+  <literal>/dev/sdc</literal>。 在安装对象存储之前， 我们需要将这两个磁盘分区并且格式化成<glossterm>XFS</glossterm>格式，
+  更多横向扩展的内容可以参考<link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
+      >Deployment Guide</link>。</para>
   <procedure>
-    <title>To configure prerequisites</title>
-    <para>You must configure each storage node before you install and
-      configure the Object Storage service on it. Similar to the controller
-      node, each storage node contains one network interface on the
-      <glossterm>management network</glossterm>. Optionally, each storage
-      node can contain a second network interface on a separate network for
-      replication. For more information, see
-      <xref linkend="ch_basic_environment"/>.</para>
+    <title>配置的前置条件</title>
+    <para>我们需要在安装及配置对象存储之前配置好每个存储节点的设备， 类似控制节点， 每个存储节点都需要包含一个管理网络（<glossterm>management network</glossterm>）， 每个存储节点可以额外包含一个用于数据同步的网络， 更多内容可以参考<xref linkend="ch_basic_environment"/>.
+</para>
     <step>
-      <para>Configure unique items on the first storage node:</para>
+      <para>配置第一个存储节点:</para>
       <substeps>
         <step>
-          <para>Configure the management interface:</para>
-          <para>IP address: 10.0.0.51</para>
-          <para>Network mask: 255.255.255.0 (or /24)</para>
-          <para>Default gateway: 10.0.0.1</para>
+          <para>配置管理网络:</para>
+          <para>IP地址: 10.0.0.51</para>
+          <para>自网掩码: 255.255.255.0 (or /24)</para>
+          <para>默认网关: 10.0.0.1</para>
         </step>
         <step>
-          <para>Set the hostname of the node to
+          <para>将hostname设置成
             <replaceable>object1</replaceable>.</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Configure unique items on the second storage node:</para>
+      <para>配置第二个存储节点:</para>
       <substeps>
         <step>
-          <para>Configure the management interface:</para>
-          <para>IP address: 10.0.0.52</para>
-          <para>Network mask: 255.255.255.0 (or /24)</para>
-          <para>Default gateway: 10.0.0.1</para>
+          <para>配置管理网络:</para>
+          <para>IP地址: 10.0.0.52</para>
+          <para>自网掩码: 255.255.255.0 (or /24)</para>
+          <para>默认网关: 10.0.0.1</para>
         </step>
         <step>
-          <para>Set the hostname of the node to
+          <para>将hostname设置成
             <replaceable>object2</replaceable>.</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Configure shared items on both storage nodes:</para>
+      <para>在所有存储节点上配置:</para>
       <substeps>
         <step>
-          <para>Copy the contents of the <filename>/etc/hosts</filename> file
-            from the controller node and add the following to it:</para>
+          <para>在 <filename>/etc/hosts</filename>文件中添加一下内容, 包括控制节点:</para>
           <programlisting language="ini"># object1
 10.0.0.51        object1
 
 # object2
 10.0.0.52        object2</programlisting>
-          <para>Also add this content to the <filename>/etc/hosts</filename>
-            file on all other nodes in your environment.</para>
         </step>
         <step>
-          <para>Install and configure
+          <para>安装并配置
             <glossterm baseform="Network Time Protocol (NTP)">NTP</glossterm>
-            using the instructions in
+            参考
             <xref linkend="basics-ntp-other-nodes"/>.</para>
         </step>
         <step>
-          <para>Install the supporting utility packages:</para>
+          <para>安装依赖包:</para>
           <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>apt-get install xfsprogs rsync</userinput></screen>
           <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install xfsprogs rsync</userinput></screen>
           <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install xfsprogs rsync</userinput></screen>
         </step>
         <step>
-          <para>Format the <literal>/dev/sdb1</literal> and
-            <literal>/dev/sdc1</literal> partitions as XFS:</para>
+          <para>格式化 <literal>/dev/sdb1</literal> 和
+            <literal>/dev/sdc1</literal> 成XFS文件系统:</para>
           <screen><prompt>#</prompt> <userinput>mkfs.xfs /dev/sdb1</userinput>
 <prompt>#</prompt> <userinput>mkfs.xfs /dev/sdc1</userinput></screen>
         </step>
         <step>
-          <para>Create the mount point directory structure:</para>
+          <para>配置磁盘设备的挂载点:</para>
           <screen><prompt>#</prompt> <userinput>mkdir -p /srv/node/sdb1</userinput>
 <prompt>#</prompt> <userinput>mkdir -p /srv/node/sdc1</userinput></screen>
         </step>
         <step>
-          <para>Edit the <filename>/etc/fstab</filename> file and add the
-            following to it:</para>
+          <para>编辑 <filename>/etc/fstab</filename> 文件并添加以下内容:</para>
           <programlisting language="ini">/dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 2
 /dev/sdc1 /srv/node/sdc1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 2</programlisting>
         </step>
         <step>
-          <para>Mount the devices:</para>
+          <para>挂载磁盘:</para>
           <screen><prompt>#</prompt> <userinput>mount /srv/node/sdb1</userinput>
 <prompt>#</prompt> <userinput>mount /srv/node/sdc1</userinput></screen>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Edit the <filename>/etc/rsyncd.conf</filename> file and add the
-        following to it:</para>
+      <para>编辑 <filename>/etc/rsyncd.conf</filename> 文件并添加以下内容:</para>
       <programlisting language="ini">uid = swift
 gid = swift
 log file = /var/log/rsyncd.log
@@ -133,46 +115,39 @@ max connections = 2
 path = /srv/node/
 read only = false
 lock file = /var/lock/object.lock</programlisting>
-      <para>Replace <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-        with the IP address of the management network on the storage
-        node.</para>
+      <para>将 <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
+        替换成存储节点上的管理网络的IP地址。</para>
       <note>
-        <para>The <systemitem role="service">rsync</systemitem> service
-          requires no authentication, so consider running it on a private
-          network.</para>
+        <para> <systemitem role="service">rsync</systemitem> 服务
+          无需身份认证, 所以我们可以考虑将它运行在一个内部的私有网络里面。</para>
       </note>
     </step>
     <step os="ubuntu;debian">
-      <para>Edit the <filename>/etc/default/rsync</filename> file and enable
-        the <systemitem role="service">rsync</systemitem> service:</para>
+      <para>编辑 <filename>/etc/default/rsync</filename> 开启
+         <systemitem role="service">rsync</systemitem> 服务:</para>
       <programlisting language="ini">RSYNC_ENABLE=true</programlisting>
     </step>
     <step os="ubuntu;debian">
-      <para>Start the <systemitem class="service">rsync</systemitem>
-        service:</para>
+      <para>启动 <systemitem class="service">rsync</systemitem>
+        服务:</para>
       <screen><prompt>#</prompt> <userinput>service rsync start</userinput></screen>
     </step>
     <step os="rhel;centos;fedora;opensuse;sles">
-      <para>Start the <systemitem class="service">rsyncd</systemitem> service
-        and configure it to start when the system boots:</para>
+      <para>启动 <systemitem class="service">rsyncd</systemitem> 服务并将其配置成开机启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable rsyncd.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start rsyncd.service</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>Install and configure storage node components</title>
+    <title>安装并配置OpenStack中的对象存储组件</title>
     <note>
-      <para>Default configuration files vary by distribution. You might need
-        to add these sections and options rather than modifying existing
-        sections and options. Also, an ellipsis (...) in the configuration
-        snippets indicates potential default configuration options that you
-        should retain.</para>
+      <para>默认的配置文件用于通用的软件分发需求， 你需要添加一个额外的配置文件而不是在原有的文件中进行编辑， 并且一些无需配置的配置项应该保留成默认配置。</para>
     </note>
     <note>
-      <para>Perform these steps on each storage node.</para>
+      <para>在存储节点中执行下列操作.</para>
     </note>
     <step>
-      <para>Install the packages:</para>
+      <para>安装软件包:</para>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>apt-get install swift swift-account swift-container swift-object</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-swift-account openstack-swift-container \
   openstack-swift-object</userinput></screen>
@@ -180,8 +155,7 @@ lock file = /var/lock/object.lock</programlisting>
   openstack-swift-object python-xml</userinput></screen>
     </step>
     <step os="ubuntu;debian;rhel;centos;fedora">
-      <para>Obtain the accounting, container, object, container-reconciler, and object-expirer
-        service configuration files from the Object Storage source repository:</para>
+      <para>从对象存储的软件仓库中获取实例的配置文件， 包括accounting, container, object, container-reconciler和object-expirer:</para>
       <screen><prompt>#</prompt> <userinput>curl -o /etc/swift/account-server.conf \
   https://git.openstack.org/cgit/openstack/swift/plain/etc/account-server.conf-sample?h=stable/kilo</userinput></screen>
       <screen><prompt>#</prompt> <userinput>curl -o /etc/swift/container-server.conf \
@@ -194,14 +168,11 @@ lock file = /var/lock/object.lock</programlisting>
   https://git.openstack.org/cgit/openstack/swift/plain/etc/object-expirer.conf-sample?h=stable/kilo</userinput></screen>
     </step>
     <step>
-      <para>Edit the
-        <filename>/etc/swift/account-server.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑
+        <filename>/etc/swift/account-server.conf</filename> 文件并执行如下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            bind IP address, bind port, user, configuration directory, and
-            mount point directory:</para>
+          <para>在 <literal>[DEFAULT]</literal> 配置组中, 配置bind IP Address, bind port, user, 配置目录和设备挂载目录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 bind_ip = <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
@@ -209,26 +180,22 @@ bind_port = 6002
 user = swift
 swift_dir = /etc/swift
 devices = /srv/node</programlisting>
-          <para>Replace
+          <para>将
             <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-            with the IP address of the management network on the storage
-            node.</para>
+            替换成存储节点管理网络IP.</para>
         </step>
         <step>
-          <para>In the <literal>[pipeline:main]</literal> section, enable
-            the appropriate modules:</para>
+          <para>在 <literal>[pipeline:main]</literal> 配置组中, 开启如下模块:</para>
           <programlisting language="ini">[pipeline:main]
 pipeline = healthcheck recon account-server</programlisting>
           <note>
-            <para>For more information on other modules that enable
-             additional features, see the
+            <para>关于开启额外的功能模块， 参考
              <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
              >Deployment Guide</link>.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[filter:recon]</literal> section, configure
-            the recon (metrics) cache directory:</para>
+          <para>在 <literal>[filter:recon]</literal> 配置组中, 配置recon(metrics)缓存目录:</para>
           <programlisting language="ini">[filter:recon]
 ...
 recon_cache_path = /var/cache/swift</programlisting>
@@ -236,14 +203,11 @@ recon_cache_path = /var/cache/swift</programlisting>
       </substeps>
     </step>
     <step>
-      <para>Edit the
-        <filename>/etc/swift/container-server.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑
+        <filename>/etc/swift/container-server.conf</filename> 并执行如下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            bind IP address, bind port, user, configuration directory, and
-            mount point directory:</para>
+          <para>在 <literal>[DEFAULT]</literal> 配置组中, 配置bind IP Address, bind port, user, 配置目录和设备挂载目录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 bind_ip = <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
@@ -251,26 +215,23 @@ bind_port = 6001
 user = swift
 swift_dir = /etc/swift
 devices = /srv/node</programlisting>
-          <para>Replace
+          <para>将
             <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-            with the IP address of the management network on the storage
-            node.</para>
+            替换成存储节点的管理网络IP.</para>
         </step>
         <step>
-          <para>In the <literal>[pipeline:main]</literal> section, enable
-            the appropriate modules:</para>
+          <para>在 <literal>[pipeline:main]</literal> 配置组中, 开启如下功能模块:</para>
           <programlisting language="ini">[pipeline:main]
 pipeline = healthcheck recon container-server</programlisting>
           <note>
-            <para>For more information on other modules that enable
-             additional features, see the
+            <para>关于开启额外的功能模块， 参考
              <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
              >Deployment Guide</link>.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[filter:recon]</literal> section, configure
-            the recon (metrics) cache directory:</para>
+          <para>在 <literal>[filter:recon]</literal> 配置组中, 配置
+            recon (metrics)缓存目录:</para>
           <programlisting language="ini">[filter:recon]
 ...
 recon_cache_path = /var/cache/swift</programlisting>
@@ -278,14 +239,11 @@ recon_cache_path = /var/cache/swift</programlisting>
       </substeps>
     </step>
     <step>
-      <para>Edit the
-        <filename>/etc/swift/object-server.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑
+        <filename>/etc/swift/object-server.conf</filename> 文件并执行如下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            bind IP address, bind port, user, configuration directory, and
-            mount point directory:</para>
+          <para>在 <literal>[DEFAULT]</literal> 配置组中, 配置bind IP Address, bind port, user, 配置目录和设备挂载目录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 bind_ip = <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
@@ -293,26 +251,22 @@ bind_port = 6000
 user = swift
 swift_dir = /etc/swift
 devices = /srv/node</programlisting>
-          <para>Replace
+          <para>将
             <replaceable>MANAGEMENT_INTERFACE_IP_ADDRESS</replaceable>
-            with the IP address of the management network on the storage
-            node.</para>
+            替换成存储节点的管理网络IP.</para>
         </step>
         <step>
-          <para>In the <literal>[pipeline:main]</literal> section, enable
-            the appropriate modules:</para>
+          <para>在 <literal>[pipeline:main]</literal> 配置组中, 开启如下功能模块:</para>
           <programlisting language="ini">[pipeline:main]
 pipeline = healthcheck recon object-server</programlisting>
           <note>
-            <para>For more information on other modules that enable
-             additional features, see the
+            <para>关于开启额外的功能模块， 参考
              <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
              >Deployment Guide</link>.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[filter:recon]</literal> section, configure
-            the recon (metrics) cache and lock directories:</para>
+          <para>在 <literal>[filter:recon]</literal> 配置组中, 配置(metrics) 缓存和锁(lock)目录:</para>
           <programlisting language="ini">[filter:recon]
 ...
 recon_cache_path = /var/cache/swift
@@ -321,13 +275,11 @@ recon_lock_path = /var/lock</programlisting>
       </substeps>
     </step>
     <step>
-      <para>Ensure proper ownership of the mount point directory
-        structure:</para>
+      <para>设置每个挂载目录的权限(owner):</para>
       <screen><prompt>#</prompt> <userinput>chown -R swift:swift /srv/node</userinput></screen>
     </step>
     <step>
-      <para>Create the <literal>recon</literal> directory and ensure proper
-        ownership of it:</para>
+      <para>创建 <literal>recon</literal> 目录并且将文件目录的owner设置为swift:</para>
       <screen><prompt>#</prompt> <userinput>mkdir -p /var/cache/swift</userinput>
 <prompt>#</prompt> <userinput>chown -R swift:swift /var/cache/swift</userinput></screen>
     </step>

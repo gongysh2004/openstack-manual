@@ -6,32 +6,26 @@
   xml:id="install_dashboard">
   <?dbhtml stop-chunking?>
   <title>安装和配置</title>
-  <para>This section describes how to install and configure the dashboard
-    on the controller node.</para>
-  <para>Before you proceed, verify that your system meets the requirements
-    in <xref linkend="dashboard-system-requirements"/>. Also, the dashboard
-    relies on functional core services including Identity, Image service,
-    Compute, and either Networking (neutron) or legacy networking
-    (nova-network). Environments with stand-alone services such as Object
-    Storage cannot use the dashboard. For more information, see the
-    <link xlink:href="http://docs.openstack.org/developer/horizon/topics/deployment.html">developer documentation</link>.</para>
-  <para>This section assumes proper installation, configuration, and
-      operation of the Identity service using the Apache HTTP server and
-      Memcached as described in <xref linkend="keystone-install"/>.</para>
+  <para>这个章节说明了如何在控制节点上安装和配置仪表盘。
+  </para>
+  <para>在你继续之前，确认你的系统满足以下的要求
+  <xref linkend="dashboard-system-requirements"/>。另外，仪表盘依赖核心服务，包括身份、镜像服务，
+    计算，和网络(neutron)。独立服务的环境，比如对象存储不能使用仪表盘。如需获得更多信息，查看
+    <link xlink:href="http://docs.openstack.org/developer/horizon/topics/deployment.html">开发文档</link>.</para>
+  <para>这个章节假设已经完成了正确的安装、配置和身份服务的操作，并像以下链接中描述的使用Apache HTTP服务器和缓存</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install the dashboard components</title>
+    <title>安装仪表盘组件</title>
     <step>
-      <para>Install the packages:</para>
+      <para>安装包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install openstack-dashboard</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-dashboard httpd mod_wsgi memcached python-memcached</userinput></screen>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install openstack-dashboard apache2-mod_wsgi memcached python-python-memcached \
   openstack-dashboard-test</userinput></screen>
       <note os="ubuntu">
-        <para>Ubuntu installs the
-          <package>openstack-dashboard-ubuntu-theme</package> package
-          as a dependency. Some users reported issues with this theme in
-          previous releases. If you encounter issues, remove this package
-          to restore the original OpenStack theme.</para>
+        <para>Ubuntu必须安装
+          <package>openstack-dashboard-ubuntu-theme</package> 包。
+          一些用户在先前发布的版本中反馈了一些问题。如果你也碰到了这样的问题，删除这个包，
+          恢复原生的 OpenStack。</para>
       </note>
     </step>
   </procedure>
@@ -51,7 +45,7 @@
      </step>
    </procedure>
    <procedure>
-     <title>To configure the dashboard</title>
+     <title>配置仪表盘</title>
      <step os="sles;opensuse">
        <para>Configure the web server:</para>
        <screen><prompt>#</prompt> <userinput>cp /etc/apache2/conf.d/openstack-dashboard.conf.sample \
@@ -59,9 +53,9 @@
 <prompt>#</prompt> <userinput>a2enmod rewrite;a2enmod ssl;a2enmod wsgi</userinput></screen>
      </step>
      <step>
-       <para os="ubuntu;debian">Edit the
+       <para os="ubuntu;debian">编辑
          <filename>/etc/openstack-dashboard/local_settings.py</filename>
-         file and complete the following actions:</para>
+         并完成以下的操作:</para>
        <para os="rhel;centos;fedora">Edit the
          <filename>/etc/openstack-dashboard/local_settings</filename>
          file and complete the following actions:</para>
@@ -70,17 +64,17 @@
          file and complete the following actions:</para>
        <substeps>
          <step>
-           <para>Configure the dashboard to use OpenStack services on the
-             <literal>controller</literal> node:</para>
+           <para>配置仪表盘来使用<literal>控制</literal> 节点上的OpenStack服务
+             :</para>
            <programlisting language="python">OPENSTACK_HOST = "<replaceable>controller</replaceable>"</programlisting>
          </step>
          <step>
-           <para>Allow all hosts to access the dashboard:</para>
+           <para>允许所有的主机都能访问仪表盘:</para>
            <programlisting language="python">ALLOWED_HOSTS = '*'</programlisting>
          </step>
          <step>
-           <para>Configure the <application>memcached</application> session
-             storage service:</para>
+           <para>配置 <application>memcached</application> 会话
+             存储服务:</para>
            <programlisting language="python">CACHES = {
    'default': {
        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -88,7 +82,7 @@
    }
 }</programlisting>
            <note>
-             <para>Comment out any other session storage configuration.</para>
+             <para>注释掉其它的会话存储配置。</para>
            </note>
            <note os="sles;opensuse">
              <para>By default, SLES and openSUSE use a SQL database for session
@@ -98,10 +92,9 @@
           </note>
         </step>
         <step>
-          <para>Optionally, configure the time zone:</para>
+          <para>(可选)配置时区:</para>
           <programlisting language="python">TIME_ZONE = "<replaceable>TIME_ZONE</replaceable>"</programlisting>
-          <para>Replace <replaceable>TIME_ZONE</replaceable> with an
-            appropriate time zone identifier. For more information, see the
+          <para>替换 <replaceable>TIME_ZONE</replaceable> 成一个恰当的时区ID。如需获得更多信息，查看
            <link xlink:href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
            >list of time zones</link>.</para>
         </step>
@@ -109,7 +102,7 @@
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="rhel;centos;fedora">
       <para>On RHEL and CentOS, configure SELinux to permit the web server
         to connect to OpenStack services:</para>
@@ -124,7 +117,7 @@
         >bug report</link>.</para>
     </step>
     <step os="ubuntu;debian">
-      <para>Reload the web server configuration:</para>
+      <para>重新加载网页服务器配置:</para>
       <screen><prompt>#</prompt> <userinput>service apache2 reload</userinput></screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">

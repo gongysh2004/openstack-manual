@@ -5,25 +5,16 @@
   version="5.0"
   xml:id="ch_glance">
   <title>镜像服务Glance</title>
-  <para>The OpenStack Image service (glance) enables users to discover,
-    register, and retrieve virtual machine images. It offers a <glossterm
-      baseform="RESTful">REST</glossterm> API that enables you to
-    query virtual machine image metadata and retrieve an actual image.
-    You can store virtual machine images made available through the
-    Image service in a variety of locations, from simple file systems
-    to object-storage systems like OpenStack Object Storage.</para>
+  <para>OpenStack的镜像服务（Glance）使用户能够发现，注册，并检索虚拟机镜像。它提供了一个<glossterm
+      baseform="RESTful">REST</glossterm> API，使您能够查询虚拟机镜像元数据和获取实际镜像。
+      您可以存储虚拟机镜像到不同的地方，包括简单的文件系统，OpenStack对象存储类似的对象存储系统。</para>
   <important>
-    <para>For simplicity, this guide describes configuring the Image service to
-      use the <literal>file</literal> back end, which uploads and stores in a
-      directory on the controller node hosting the Image service. By
-      default, this directory is <filename>/var/lib/glance/images/</filename>.
+    <para>为简单起见，本指南使用 <literal>file</literal> 后端配置镜像服务，目录是 <filename>/var/lib/glance/images/</filename>.
     </para>
-    <para>Before you proceed, ensure that the controller node has at least
-      several gigabytes of space available in this directory.</para>
-    <para>For information on requirements for other back ends, see <link
+    <para>在开始之前，确保控制器节点至少在此目录上的空间有数千兆字节。</para>
+    <para>有关其他后端要求的信息，请参阅 <link
         xlink:href="http://docs.openstack.org/trunk/config-reference/content/ch_configuring-openstack-image-service.html"
-          ><citetitle>Configuration
-      Reference</citetitle></link>.</para>
+          ><citetitle>配置参考</citetitle></link>.</para>
   </important>
   <xi:include href="../common/section_getstart_image.xml"/>
   <xi:include href="section_glance-install.xml"/>

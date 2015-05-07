@@ -5,46 +5,34 @@
   version="5.0"
   xml:id="image-service-overview">
       <title>OpenStack镜像服务</title>
-      <para>The OpenStack Image service is central to Infrastructure-as-a-Service (IaaS)
-        as shown in <xref linkend="conceptual-architecture"/>. It accepts API requests
-        for disk or server images, and image metadata from end users or OpenStack Compute
-        components. It also supports the storage of disk or server images on various
-        repository types, including OpenStack Object Storage.
+      <para>OpenStack镜像服务是基础设施服务（IaaS）的核心，
+        如图 <xref linkend="conceptual-architecture"/>。它接受从用户端或从Openstack计算服务来的API请求。
+        它也支持把虚拟机镜像放到各种磁盘或线上存储库类型，包括OpenStack对象存储。
         </para>
-      <para>A number of periodic processes run on the OpenStack Image service to
-        support caching. Replication services ensure consistency and
-        availability through the cluster. Other periodic processes
-        include auditors, updaters, and reapers.</para>
-      <para>The OpenStack Image service includes the following
-        components:</para>
+      <para>一些周期性过程对OpenStack的镜像服务运行支持高速缓存。
+      复制服务在集群内确保一致性和可用性。其他周期性过程包括审计(auditor)，
+      更新程序(updater)，以及收割(reaper)。</para>
+      <para>OpenStack的镜像服务包括以下组件:</para>
       <variablelist>
         <varlistentry>
           <term><systemitem class="service">glance-api</systemitem></term>
-          <listitem><para>Accepts Image API calls for image discovery,
-           retrieval, and storage.</para></listitem>
+          <listitem><para>接受API调用</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><systemitem class="service">glance-registry</systemitem></term>
-          <listitem><para>Stores, processes, and retrieves metadata about
-           images. Metadata includes items such as size and type.</para>
-          <note><title>Security note</title>
-          <para>The registry is a private internal service meant for use
-           by OpenStack Image service. Do not disclose it to
-           users.</para></note>
+          <listitem><para>存储，处理和检索镜像元数据，元数据包括诸如大小和类型等属性。</para>
+          <note><title>安全说明</title>
+          <para>glance-registry是一个私有的内部服务，只被OpenStack镜像服务使用。不要透露给用户。</para></note>
         </listitem>
         </varlistentry>
         <varlistentry>
-          <term>Database</term>
-          <listitem><para>Stores image metadata and you can choose your database
-           depending on your preference. Most deployments use MySQL or
-           SQLite.</para></listitem>
+          <term>数据库</term>
+          <listitem><para>存储镜像元数据，你可以根据您的喜好选择你的数据库。大多数部署使用MySQL或SQLite。</para></listitem>
         </varlistentry>
         <varlistentry>
-          <term>Storage repository for image files</term>
-          <listitem><para>Various repository types are supported including
-           normal file systems, Object Storage, RADOS block devices, HTTP, and
-           Amazon S3. Note that some repositories will only support
-           read-only usage.</para></listitem>
+          <term>镜像文件存储库</term>
+          <listitem><para>多种类型的数据仓库的支持，包括正常的文件系统，对象存储，
+          RADOS块设备，HTTP和亚马逊S3。请注意，某些存储库将只支持只读使用。</para></listitem>
        </varlistentry>
       </variablelist>
     </section>

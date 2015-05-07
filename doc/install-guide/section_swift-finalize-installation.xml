@@ -6,42 +6,34 @@
   xml:id="swift-finalize-installation">
   <title>配置策略</title>
   <procedure>
-    <title>Configure hashes and default storage policy</title>
+    <title>配置哈希(hashes)和默认存储策略</title>
     <note>
-      <para>Default configuration files vary by distribution. You might need
-        to add these sections and options rather than modifying existing
-        sections and options. Also, an ellipsis (...) in the configuration
-        snippets indicates potential default configuration options that you
-        should retain.</para>
+      <para>
+          默认的配置文件用于通用的软件分发需求， 你需要添加一个额外的配置文件而不是在原有的文件中进行编辑， 并且一些无需配置的配置项应该保留成默认配置。</para>
     </note>
     <step os="ubuntu;debian;rhel;centos;fedora">
-      <para>Obtain the <filename>/etc/swift/swift.conf</filename> file from
-        the Object Storage source repository:</para>
+      <para>从swift的代码仓库中获取 <filename>/etc/swift/swift.conf</filename> 文件:</para>
       <screen><prompt>#</prompt> <userinput>curl -o /etc/swift/swift.conf \
   https://git.openstack.org/cgit/openstack/swift/plain/etc/swift.conf-sample?h=stable/kilo</userinput></screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/swift/swift.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑 <filename>/etc/swift/swift.conf</filename> 文件并执行如下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[swift-hash]</literal> section, configure
-            the hash path prefix and suffix for your environment.</para>
+          <para>在 <literal>[swift-hash]</literal> 配置组中, 配置路径的前缀和后缀.</para>
           <programlisting language="ini">[swift-hash]
 ...
 swift_hash_path_suffix = <replaceable>HASH_PATH_PREFIX</replaceable>
 swift_hash_path_prefix = <replaceable>HASH_PATH_SUFFIX</replaceable></programlisting>
-          <para>Replace <replaceable>HASH_PATH_PREFIX</replaceable> and
-            <replaceable>HASH_PATH_SUFFIX</replaceable> with unique
-            values.</para>
+          <para>将 <replaceable>HASH_PATH_PREFIX</replaceable> 和
+            <replaceable>HASH_PATH_SUFFIX</replaceable> 替换成一个相互不重复的hash字符串.</para>
           <warning>
-            <para>Keep these values secret and do not change or lose
-              them.</para>
+            <para>保管好这两个值， 不要公开给别人也不要修改这两个配置项的值。 </para>
           </warning>
         </step>
         <step>
-          <para>In the <literal>[storage-policy:0]</literal> section,
-            configure the default storage policy:</para>
+          <para>在 <literal>[storage-policy:0]</literal> 配置组中,
+            配置默认的存储策略:</para>
           <programlisting language="ini">[storage-policy:0]
 ...
 name = Policy-0
@@ -50,19 +42,14 @@ default = yes</programlisting>
       </substeps>
     </step>
     <step>
-      <para>Copy the <filename>swift.conf</filename> file to
-        the <literal>/etc/swift</literal> directory on each storage node
-        and any additional nodes running the proxy service.</para>
+      <para>将 <filename>swift.conf</filename> 文件拷贝到每个存储节点以及proxy节点的 <literal>/etc/swift</literal> 目录中.</para>
     </step>
     <step>
-      <para>On all nodes, ensure proper ownership of the configuration
-        directory:</para>
+      <para>将所有swift的节点的配置文件目录的owner设置为swift:</para>
       <screen><prompt>#</prompt> <userinput>chown -R swift:swift /etc/swift</userinput></screen>
     </step>
     <step os="ubuntu;debian">
-      <para>On the controller node and any other nodes running the proxy
-        service, restart the Object Storage proxy service including
-        its dependencies:</para>
+      <para>在控制节点（包含运行swift proxy的节点）上重启proxy服务及依赖的相关服务:</para>
       <screen><prompt>#</prompt> <userinput>service memcached restart</userinput>
 <prompt>#</prompt> <userinput>service swift-proxy restart</userinput></screen>
     </step>
@@ -74,13 +61,10 @@ default = yes</programlisting>
 <prompt>#</prompt> <userinput>systemctl start openstack-swift-proxy.service memcached.service</userinput></screen>
     </step>
     <step os="ubuntu;debian">
-      <para>On the storage nodes, start the Object Storage services:</para>
+      <para>在每个存储节点上启动对象存储相关的服务:</para>
       <screen><prompt>#</prompt> <userinput>swift-init all start</userinput></screen>
       <note>
-        <para>The storage node runs many Object Storage services and the
-          <command>swift-init</command> command makes them easier to
-          manage. You can ignore errors from services not running on the
-          storage node.</para>
+        <para>存储节点运行了多个对象存储相关的服务， 我们可以使用<command>swift-init</command>命令来简化服务的启动和重启。 当使用这个命令的时候，如果没有运行存储服务的节点可能会报错， 我们可以忽略这些错误。 </para>
       </note>
     </step>
     <step os="rhel;centos;fedora;opensuse;sles">

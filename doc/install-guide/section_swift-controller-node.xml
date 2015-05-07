@@ -5,36 +5,20 @@
   version="5.0"
   xml:id="swift-install-controller-node">
   <title>安装和配置</title>
-  <para>This section describes how to install and configure the proxy
-    service that handles requests for the account, container, and object
-    services operating on the storage nodes. For simplicity, this
-    guide installs and configures the proxy service on the controller node.
-    However, you can run the proxy service on any node with network
-    connectivity to the storage nodes. Additionally, you can install and
-    configure the proxy service on multiple nodes to increase performance
-    and redundancy. For more information, see the
+  <para>本章节讲述了如何安装和配置proxy service来处理来自客户端对account, container和object等运行在存储节点上的服务的访问。我们将通过本章节来学习在OpenStack控制节点上安装和配置proxy service， 不过在真实的场景中， 我们可以将proxy service运行在其他的节点上， 我们通常也会在多个存储节点上部署proxy service来做冗余。 更多资料， 参考
     <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
     >Deployment Guide</link>.</para>
   <procedure>
-    <title>To configure prerequisites</title>
-    <para>The proxy service relies on an authentication and authorization
-      mechanism such as the Identity service. However, unlike other services,
-      it also offers an internal mechanism that allows it to operate without
-      any other OpenStack services. However, for simplicity, this guide
-      references the Identity service in <xref linkend="ch_keystone"/>. Before
-      you configure the Object Storage service, you must create service
-      credentials and an API endpoint.</para>
+    <title>配置proxy service的前置条件</title>
+    <para>proxy service会转发用户的身份认证请求和授权请求到Identity Service, 不过， 和其他的组件不同， swift可以独立于OpenStack的其他组件来运行， 我们可以单独部署一个仅有swift的存储集群， 但是在这次的课程中， 我们还是引入了OpenStack Identity Service - Keystone, 所以我们必须在Keystone中创建相关的Service和Endpoint。</para>
     <note>
-      <para>The Object Storage service does not use a SQL database on
-        the controller node. Instead, it uses distributed SQLite databases
-        on each storage node.</para>
+      <para>对象存储服务无需SQL数据库的支持， 我们仅需要用到一个轻量级的数据库 SQLite。</para>
     </note>
     <step>
-      <para>To create the Identity service credentials, complete these
-        steps:</para>
+      <para>执行如下步骤来创建身份认证所需要的身份凭据:</para>
       <substeps>
         <step>
-          <para>Create the <literal>swift</literal> user:</para>
+          <para>创建 <literal>swift</literal> 用户:</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt swift</userinput>
 <computeroutput>User Password:
 Repeat User Password:
@@ -49,8 +33,7 @@ Repeat User Password:
 +----------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>swift</literal> user:</para>
+          <para>将<literal>swift</literal>用户添加到<literal>admin</literal> role中:</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project service --user swift admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -60,7 +43,7 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>swift</literal> service entity:</para>
+          <para>添加 <literal>swift</literal> service:</para>
           <screen><prompt>$</prompt> <userinput>openstack service create --type object-store \
   --description "OpenStack Object Storage" swift</userinput>
 <computeroutput>+-------------+----------------------------------+
@@ -76,7 +59,7 @@ Repeat User Password:
       </substeps>
     </step>
     <step>
-      <para>Create the Object Storage service API endpoint:</para>
+      <para>添加对象存储服务的Endpoint:</para>
       <screen><prompt>$</prompt> <userinput>openstack endpoint create \
   --publicurl 'http://<replaceable>controller</replaceable>:8080/v1/AUTH_%(tenant_id)s' \
   --internalurl 'http://<replaceable>controller</replaceable>:8080/v1/AUTH_%(tenant_id)s' \
@@ -98,19 +81,14 @@ Repeat User Password:
     </step>
   </procedure>
   <procedure>
-    <title>To install and configure the controller node components</title>
+    <title>安装和配置控制节点的组件</title>
     <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
+       <para>默认的配置文件用于通用的软件分发需求， 你需要添加一个额外的配置文件而不是在原有的文件中进行编辑， 并且一些无需配置的配置项应该保留成默认配置。</para>
     </note>
     <step>
-      <para>Install the packages:</para>
+      <para>安装软件包:</para>
       <note>
-        <para>Complete OpenStack environments already include some of these
-          packages.</para>
+        <para>如果已经配置了OpenStack的运行环境， 系统可能已经包含了这些组件。</para>
       </note>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>apt-get install swift swift-proxy python-swiftclient python-keystoneclient \
   python-keystonemiddleware memcached</userinput></screen>
@@ -123,18 +101,16 @@ Repeat User Password:
       <para>Create the <literal>/etc/swift</literal> directory.</para>
     </step>
     <step os="ubuntu;debian;rhel;centos;fedora">
-      <para>Obtain the proxy service configuration file from the Object
-        Storage source repository:</para>
+      <para>从swift代码仓库获取proxy service的实例配置文件:</para>
       <screen><prompt>#</prompt> <userinput>curl -o /etc/swift/proxy-server.conf \
   https://git.openstack.org/cgit/openstack/swift/plain/etc/proxy-server.conf-sample?h=stable/kilo</userinput></screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/swift/proxy-server.conf</filename>
-        file and complete the following actions:</para>
+      <para>编辑 <filename>/etc/swift/proxy-server.conf</filename>
+        文件并执行如下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-           the bind port, user, and configuration directory:</para>
+          <para>在 <literal>[DEFAULT]</literal> 配置组中,配置bind IP Address, bind port, user和配置目录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 bind_port = 8080
@@ -142,35 +118,30 @@ user = swift
 swift_dir = /etc/swift</programlisting>
         </step>
         <step>
-          <para>In the <literal>[pipeline:main]</literal> section, enable
-            the appropriate modules:</para>
+          <para>在 <literal>[pipeline:main]</literal> 配置组中, 开启依赖的模块:</para>
           <programlisting language="ini">[pipeline:main]
 pipeline = catch_errors gatekeeper healthcheck proxy-logging cache container_sync bulk ratelimit authtoken keystoneauth container-quotas account-quotas slo dlo proxy-logging proxy-server</programlisting>
           <note>
-            <para>For more information on other modules that enable
-             additional features, see the
+            <para>更多功能模块信息， 参考
              <link xlink:href="http://docs.openstack.org/developer/swift/deployment_guide.html"
              >Deployment Guide</link>.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[app:proxy-server]</literal> section, enable
-            automatic account creation:</para>
+          <para>在 <literal>[app:proxy-server]</literal> 配置组中, 开启账号自动创建:</para>
           <programlisting language="ini">[app:proxy-server]
 ...
 account_autocreate = true</programlisting>
         </step>
         <step>
-          <para>In the <literal>[filter:keystoneauth]</literal> section,
-            configure the operator roles:</para>
+          <para>在 <literal>[filter:keystoneauth]</literal> 配置组中,配置swift操作者所需要的role:</para>
           <programlisting language="ini">[filter:keystoneauth]
 use = egg:swift#keystoneauth
 ...
 operator_roles = admin,_member_</programlisting>
         </step>
         <step>
-          <para>In the <literal>[filter:authtoken]</literal> section,
-            configure Identity service access:</para>
+          <para>在 <literal>[filter:authtoken]</literal> 配置组中,配置使用keystone作为Identity Service:</para>
           <programlisting language="ini">[filter:authtoken]
 paste.filter_factory = keystonemiddleware.auth_token:filter_factory
 ...
@@ -183,17 +154,13 @@ project_name = service
 username = swift
 password = <replaceable>SWIFT_PASS</replaceable>
 delay_auth_decision = true</programlisting>
-          <para>Replace <replaceable>SWIFT_PASS</replaceable> with the
-            password you chose for the <literal>swift</literal> user in the
-            Identity service.</para>
+          <para>将 <replaceable>SWIFT_PASS</replaceable> 替换成之前创建的 <literal>swift</literal> 用户的密码。</para>
           <note>
-            <para>Comment out or remove any other options in the
-              <literal>[filter:authtoken]</literal> section.</para>
+            <para>注释掉或者删除<literal>[filter:authtoken]</literal>中的其他的选项。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[filter:cache]</literal> section, configure
-            the <application>memcached</application> location:</para>
+          <para>在 <literal>[filter:cache]</literal> 配置组中, 配置 <application>memcached</application>:</para>
           <programlisting language="ini">[filter:cache]
 ...
 memcache_servers = 127.0.0.1:11211</programlisting>

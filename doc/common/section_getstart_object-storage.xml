@@ -4,49 +4,37 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="object-storage-service">
-  <title>OpenStack Object Storage</title>
-  <para>The OpenStack Object Storage is a multi-tenant object storage system.
-        It is highly scalable and can manage large amounts of unstructured data
-        at low cost through a RESTful HTTP API.</para>
-  <para>It includes the following components:</para>
+  <title>OpenStack对象存储</title>
+  <para>OpenStack对象存储是一个多租户环境中的对象存储系统， 通过廉价的X86 Server, 使其具备高可扩展性和管理大量的非结构化数据的能力，并提供了一系列RESTful HTTP API。</para>
+  <para>它包含了下列组件:</para>
   <variablelist>
     <varlistentry><term>Proxy servers (<systemitem
         class="service">swift-proxy-server</systemitem>)</term>
-      <listitem><para>Accepts OpenStack Object Storage API and raw HTTP
-         requests to upload files, modify metadata, and create containers. It
-         also serves file or container listings to web browsers. To improve
-         performance, the proxy server can use an optional cache that
-         is usually deployed with memcache.</para></listitem>
+      <listitem><para>
+          用来处理来自对象存储API和raw HTTP的请求， 具备上传文件、修改metadata和创建容器的功能。 它还可以通过web浏览器来访问容器和文件， 为了提高对象存储的性能, proxy server可以使用额外的缓存组件， 例如memcache.</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>Account servers (<systemitem class="service"
             >swift-account-server</systemitem>)</term>
-          <listitem><para>Manages accounts defined with Object
-            Storage.</para></listitem>
+          <listitem><para>管理对象存储中定义的Accounts。</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>Container servers (<systemitem class="service"
         >swift-container-server</systemitem>)</term>
-      <listitem><para>Manages the mapping of containers or folders, within
-        Object Storage.</para></listitem>
+      <listitem><para>管理对象存储中映射的容器或者文档目录。</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>Object servers (<systemitem class="service"
         >swift-object-server</systemitem>)</term>
-      <listitem><para>Manages actual objects,such as files, on the
-       storage nodes.</para></listitem>
+      <listitem><para>在存储节点上管理实际的文件对象。</para></listitem>
   </varlistentry>
     <varlistentry>
-     <term>Various periodic processes</term>
-     <listitem><para>Performs housekeeping tasks on the large data store.
-        The replication services ensure consistency and availability through
-        the cluster. Other periodic processes include auditors, updaters, and
-        reapers.</para></listitem>
+     <term>附加组件</term>
+     <listitem><para>提供类似于管家的服务， 例如定期执行特定的任务， 节点间的文件同步， 在集群中检查文件的一致性等。 其他的周期运行的组件还包括文件的auditors, updaters和reapers.</para></listitem>
     </varlistentry>
     <varlistentry>
-      <term>WSGI middleware</term>
-          <listitem><para>Handles authentication and is usually OpenStack
-            Identity.</para></listitem>
+      <term>WSGI 中间件</term>
+          <listitem><para>用于处理身份认证， 通常使用OpenStack Identity Service来进行验证。</para></listitem>
   </varlistentry>
 </variablelist>
 </section>

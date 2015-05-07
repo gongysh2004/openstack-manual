@@ -6,19 +6,18 @@
   xml:id="dashboard-verify">
   <?dbhtml stop-chunking?>
   <title>验证</title>
-  <para>This section describes how to verify operation of the
-    dashboard.</para>
+  <para>这个章节说明了如何去确认仪表盘的正常运行。</para>
   <procedure>
     <step>
-      <para>Access the dashboard using a web browser:
+      <para>通过网页浏览器进入仪表盘:
       <uri os="ubuntu">http://controller/horizon</uri>
       <uri os="debian">https://controller/</uri>
       <uri os="rhel;centos;fedora">http://controller/dashboard</uri>
       <uri os="sles;opensuse">http://controller</uri>.</para>
     </step>
     <step>
-      <para>Authenticate using <literal>admin</literal> or
-        <literal>demo</literal> user credentials.</para>
+      <para>用<literal>admin</literal> 或者
+        <literal>demo</literal> 用户凭证进行登录。</para>
     </step>
   </procedure>
 </section>
