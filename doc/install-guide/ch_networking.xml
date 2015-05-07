@@ -5,20 +5,6 @@
   version="5.0"
   xml:id="ch_networking">
   <title>网络服务Neutron</title>
-  <para>This chapter explains how to install and configure either
-    OpenStack Networking (neutron), or the legacy <systemitem
-      class="service">nova-network</systemitem> component.
-    The <systemitem class="service">nova-network</systemitem> service
-    enables you to deploy one network type per instance and is
-    suitable for basic network functionality. OpenStack Networking
-    enables you to deploy multiple network types per instance and
-    includes <glossterm baseform="plug-in">plug-ins</glossterm> for a
-    variety of products that support <glossterm>virtual
-    networking</glossterm>.</para>
-  <para>For more information, see the <link
-      xlink:href="http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html"
-      >Networking</link> chapter of the <citetitle>OpenStack Cloud
-      Administrator Guide</citetitle>.</para>
   <!--<section xml:id="section_neutron-networking">
     <title>OpenStack Networking (neutron)</title>  -->
     <xi:include parse="xml" href="../common/section_getstart_networking.xml"/>

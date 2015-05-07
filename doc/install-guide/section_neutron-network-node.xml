@@ -4,8 +4,8 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="neutron-network-node">
-  <title>Install and configure network node</title>
-  <para>The network node primarily handles internal and external routing
+  <title>控制节点安装和配置三层网络服务</title>
+  <para>三层网络服务primarily handles internal and external routing
     and <glossterm>DHCP</glossterm> services for virtual networks.</para>
   <procedure>
     <title>To configure prerequisites</title>
@@ -26,7 +26,7 @@ net.ipv4.conf.default.rp_filter=0</programlisting>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
     <title>To install the Networking components</title>
     <step>
-      <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent \
+      <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent
   neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-neutron openstack-neutron-ml2 openstack-neutron-openvswitch</userinput></screen>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install --no-recommends openstack-neutron-openvswitch-agent openstack-neutron-l3-agent \

@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="neutron-controller-node">
-  <title>安装和配置控制节点</title>
+  <title>控制节点安装和配置网络API服务</title>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
     <title>To configure prerequisites</title>
     <para>Before you configure the OpenStack Networking (neutron) service,
