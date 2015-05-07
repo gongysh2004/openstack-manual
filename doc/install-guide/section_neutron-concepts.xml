@@ -5,59 +5,27 @@
   version="5.0"
   xml:id="neutron-concepts">
   <title>网络服务概念</title>
-  <para>OpenStack Networking (neutron) manages all networking facets
-    for the Virtual Networking Infrastructure (VNI) and the access
-    layer aspects of the Physical Networking Infrastructure (PNI) in
-    your OpenStack environment. OpenStack Networking enables tenants
-    to create advanced virtual network topologies including services
-    such as <glossterm baseform="firewall">firewalls</glossterm>,
-      <glossterm baseform="load balancer">load balancers</glossterm>,
-    and <glossterm baseform="virtual private network (VPN)">virtual
-      private networks (VPNs)</glossterm>.</para>
-  <para>Networking provides the networks, subnets, and routers object
-    abstractions. Each abstraction has functionality that mimics its
-    physical counterpart: networks contain subnets, and routers route
-    traffic between different subnet and networks.</para>
-  <para>Each router has one gateway that connects to a network, and
-    many interfaces connected to subnets. Subnets can access machines
-    on other subnets connected to the same router.</para>
-  <para>Any given Networking set up has at least one external network.
-    Unlike the other networks, the external network is not merely a
-    virtually defined network. Instead, it represents a view into a
-    slice of the physical, external network accessible outside the
-    OpenStack installation. IP addresses on the external network are
-    accessible by anybody physically on the outside network. Because
-    the external network merely represents a view into the outside
-    network, DHCP is disabled on this network.</para>
-  <para>In addition to external networks, any Networking set up has
-    one or more internal networks. These software-defined networks
-    connect directly to the VMs. Only the VMs on any given internal
-    network, or those on subnets connected through interfaces to a
-    similar router, can access VMs connected to that network
-    directly.</para>
-  <para>For the outside network to access VMs, and vice versa, routers
-    between the networks are needed. Each router has one gateway that
-    is connected to a network and many interfaces that are connected
-    to subnets. Like a physical router, subnets can access machines on
-    other subnets that are connected to the same router, and machines
-    can access the outside network through the gateway for the
-    router.</para>
-  <para>Additionally, you can allocate IP addresses on external
-    networks to ports on the internal network. Whenever something is
-    connected to a subnet, that connection is called a port.You can
-    associate external network IP addresses with ports to VMs. This
-    way, entities on the outside network can access VMs.</para>
-  <para>Networking also supports <emphasis role="italic">security
-      groups</emphasis>. Security groups enable administrators to
-    define firewall rules in groups. A VM can belong to one or more
-    security groups, and Networking applies the rules in those
-    security groups to block or unblock ports, port ranges, or traffic
-    types for that VM.</para>
-  <para>Each plug-in that Networking uses has its own concepts. While
-    not vital to operating the VNI and OpenStack environment,
-    understanding these concepts can help you set up Networking.
-    All Networking installations use a core plug-in and a security group
-    plug-in (or just the No-Op security group plug-in). Additionally,
-    Firewall-as-a-Service (FWaaS) and Load-Balancer-as-a-Service (LBaaS)
-    plug-ins are available.</para>
+  <para>OpenStack网络服务（neutron）管理所有的虚拟网络，并且让OpenStack
+环境可以连接到物理网络。OpenStack网络服务可以让租户创建灵活的虚拟网络拓扑，还有一些服务，
+比如<glossterm baseform="firewall">防火墙</glossterm>，
+    <glossterm baseform="load balancer">负载均衡</glossterm>,
+    <glossterm baseform="virtual private network (VPN)">VPN</glossterm>。</para>
+  <para>OpenStack网络服务提供了虚拟的网络、子网、路由。网络中包含子网，不同网络
+    之间的通信使用路由器来通信。</para>
+  <para>每个路由器都有一个网关连接到网络，有很多接口连接到子网。在同一个路由器
+    中，子网可以连接其他子网中的实例。</para>
+  <para>在OpenStack网络中至少需要一个外部网络，外部网络是用来连接物理网络的，
+    创建外部网络的时候需要禁止DHCP。</para>
+  <para>除了外部网络，其他软件定义的内部网络都会直接连接到虚拟机。</para>
+  <para>虚拟机要能连接外部网络需要连接到虚拟网络和虚拟路由。每个路由器
+    都有一个网关连接到网络，有很多接口连接到子网。和物理路由器一样，
+    子网可以连接其他子网中的主机。主要需要通过网关才能上网。</para>
+  <para>另外虚拟机只有绑定外部网络IP之后，外部才可以访问虚拟机。绑定操作主要是将
+    外部网络IP和虚拟机的端口绑定。</para>
+  <para>OpenStack网络服务还提供 <emphasis role="italic">安全组 </emphasis>。
+    在安全组中，管理员可以定义一些防火墙规则，虚拟机可以应用一个或多个安全组。
+    安全组可以用来阻塞或解除阻塞虚拟机端口和流量。</para>
+  <para>每个插件都提供自己的服务。虽然对OpenStack网络不是很重要，但是了解
+    这些插件便于理解OpenStack网络。安装OpenStack网络会用到一个核心插件和安全组。
+    其他插件还有防火墙服务（FWaaS）和负载均衡服务（LBaaS）。</para>
 </section>

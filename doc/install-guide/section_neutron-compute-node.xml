@@ -5,26 +5,23 @@
   version="5.0"
   xml:id="neutron-compute-node">
   <title>安装和配置计算节点</title>
-  <para>The compute node handles connectivity and
-    <glossterm baseform="security group">security groups</glossterm>
-    for instances.</para>
+  <para>计算节点负责处理云主机之间的连通和
+    <glossterm baseform="security group">安全组</glossterm>。</para>
   <procedure>
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure OpenStack Networking, you
-      must configure certain kernel networking parameters.</para>
+    <title>配置之前的准备</title>
+    <para>在你安装和配置OpenStack的网络之前，你必须配置一些内核的网络参数。</para>
     <step>
-      <para>Edit the <filename>/etc/sysctl.conf</filename> file to
-        contain the following parameters:</para>
+      <para>编辑 <filename>/etc/sysctl.conf</filename> 文件，并如下设置参数:</para>
       <programlisting>net.ipv4.conf.all.rp_filter=0
 net.ipv4.conf.default.rp_filter=0</programlisting>
     </step>
     <step>
-      <para>Implement the changes:</para>
+      <para>应用変更:</para>
       <screen><prompt>#</prompt> <userinput>sysctl -p</userinput></screen>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install the Networking components</title>
+    <title>安装网络组件</title>
     <step>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-neutron openstack-neutron-ml2 openstack-neutron-openvswitch</userinput></screen>
@@ -72,29 +69,22 @@ net.ipv4.conf.default.rp_filter=0</programlisting>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure the Networking common components</title>
-    <para>The Networking common component configuration includes the
-      authentication mechanism, message queue, and plug-in.</para>
+    <title>配置网络组件</title>
+    <para>网络组件配置包括认证机制,消息队列和插件。</para>
     <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
+       <para>我们默认的配置文件会和发布的不太一样。你也许需要加入这些节或者选项，而不是修改已经存在的节或者选项。
+       当然，配置片段中的省略号(...)表示你要保留这些默认的配置。</para>
     </note>
     <step>
-      <para>Edit the <filename>/etc/neutron/neutron.conf</filename> file
-        and complete the following actions:</para>
+      <para>编辑 <filename>/etc/neutron/neutron.conf</filename> 文件，完成如下步骤:</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, comment out
-            any <literal>connection</literal> options because compute nodes
-            do not directly access the database.</para>
+          <para>在 <literal>[database]</literal> 节中, 注释掉所有 <literal>connection</literal> 选项，因为计算节点不需要直接连接数据库。</para>
         </step>
         <step>
-         <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
+         <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[oslo_messaging_rabbit]</literal> 节中, 配置
+            <application>RabbitMQ</application> 消息队列:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 rpc_backend = rabbit
@@ -104,14 +94,12 @@ rpc_backend = rabbit
 rabbit_host = <replaceable>controller</replaceable>
 rabbit_userid = openstack
 rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account in
-            <application>RabbitMQ</application>.</para>
+          <para>把 <replaceable>RABBIT_PASS</replaceable> 替换成 <application>RabbitMQ</application> 中<literal>openstack</literal> 账户的密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections,
-            configure Identity service access:</para>
+          <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[keystone_authtoken]</literal> 节中,
+            配置认证信息:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 auth_strategy = keystone
@@ -126,18 +114,15 @@ user_domain_id = default
 project_name = service
 username = neutron
 password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NEUTRON_PASS</replaceable> with the
-            password you chose or the <literal>neutron</literal> user in the
-            Identity service.</para>
+          <para>把 <replaceable>NEUTRON_PASS</replaceable> 替换成认证系统中 <literal>neutron</literal> 用户的密码。</para>
           <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
+            <para>注释掉或者删掉
+              <literal>[keystone_authtoken]</literal> 节中的其他所有选项。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, enable the
-            Modular Layer 2 (ML2) plug-in, router service, and overlapping
-            IP addresses:</para>
+          <para>在 <literal>[DEFAULT]</literal> 节中, 启动
+            Modular Layer 2 (ML2) 插件, 路由器服务, 和IP地址重叠:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 core_plugin = ml2
@@ -145,9 +130,7 @@ service_plugins = router
 allow_overlapping_ips = True</programlisting>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+          <para>(可选) 为了帮助调试, 在 <literal>[DEFAULT]</literal> 节中开启日志服务:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -156,22 +139,20 @@ verbose = True</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To configure the Modular Layer 2 (ML2) plug-in</title>
-    <para>The ML2 plug-in uses the Open vSwitch (OVS) mechanism (agent) to
-      build the virtual networking framework for instances.</para>
+    <title>配置Modular Layer 2 (ML2)插件</title>
+    <para>ML2插件使用Open vSwitch (OVS) 机制 (agent) 来给云主机创建虚拟网络。</para>
     <step>
-      <para>Edit the
+      <para>编辑
         <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>
-        file and complete the following actions:</para>
+        文件，完成如下步骤:</para>
       <substeps>
         <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[ml2]</literal> section, enable the
+          <para>在 <literal>[ml2]</literal> 节中, 启用
             <glossterm baseform="flat network">flat</glossterm>,
             <glossterm baseform="VLAN network">VLAN</glossterm>,
-            <glossterm>generic routing encapsulation (GRE)</glossterm>, and
+            <glossterm>generic routing encapsulation (GRE)</glossterm>, 和
             <glossterm>virtual extensible LAN (VXLAN)</glossterm>
-            network type drivers, GRE tenant networks, and the OVS
-            mechanism driver:</para>
+             网络类型，GRE租户网络，和OVS驱动:</para>
           <programlisting language="ini">[ml2]
 ...
 type_drivers = flat,vlan,gre,vxlan
@@ -179,16 +160,15 @@ tenant_network_types = gre
 mechanism_drivers = openvswitch</programlisting>
         </step>
         <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[ml2_type_gre]</literal> section, configure
-            the tunnel identifier (id) range:</para>
+          <para>在 <literal>[ml2_type_gre]</literal> 节中, 配置隧道id范围:</para>
           <programlisting language="ini">[ml2_type_gre]
 ...
 tunnel_id_ranges = 1:1000</programlisting>
         </step>
         <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[securitygroup]</literal> section, enable
-            security groups, enable <glossterm>ipset</glossterm>, and
-            configure the OVS <glossterm>iptables</glossterm> firewall
+          <para>在 <literal>[securitygroup]</literal> 节中, 启动
+            security groups, 启用 <glossterm>ipset</glossterm>, 和
+            配置 OVS <glossterm>iptables</glossterm> firewall
             driver:</para>
           <programlisting language="ini">[securitygroup]
 ...
@@ -197,19 +177,17 @@ enable_ipset = True
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver</programlisting>
         </step>
        <step>
-          <para>In the <literal>[ovs]</literal> section, enable tunnels
-            and configure the local tunnel endpoint:</para>
+          <para>在<literal>[ovs]</literal> 节中, 启用隧道
+            然后配置本地隧道端点:</para>
           <programlisting language="ini">[ovs]
 ...
 local_ip = <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable></programlisting>
-          <para>Replace
-            <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable>
-            with the IP address of the instance tunnels network interface
-            on your compute node.</para>
+          <para>把
+            <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable>替换成计算节点上云主机隧道网络接口的IP地址。</para>
         </step>
         <step>
-          <para>In the <literal>[agent]</literal> section, enable GRE
-            tunnels:</para>
+          <para>在 <literal>[agent]</literal> 节中, 启用 GRE
+            隧道:</para>
           <programlisting language="ini">[agent]
 ...
 tunnel_types = gre</programlisting>
@@ -218,28 +196,23 @@ tunnel_types = gre</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To configure the Open vSwitch (OVS) service</title>
-    <para>The OVS service provides the underlying virtual networking framework
-      for instances.</para>
+    <title>配置 Open vSwitch (OVS) 服务</title>
+    <para>OVS服务提供了云主机的虚拟网络底层框架。</para>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the OVS service and configure it to start when the
-        system boots:</para>
+      <para>启动OVS服务，并且配置开机启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable openvswitch.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start openvswitch.service</userinput></screen>
     </step>
     <step os="debian;ubuntu">
-      <para>Restart the OVS service:</para>
+      <para>重启OVS服务:</para>
       <screen><prompt>#</prompt> <userinput>service openvswitch-switch restart</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>To configure Compute to use Networking</title>
-    <para>By default, distribution packages configure Compute to use
-      legacy networking. You must reconfigure Compute to manage
-      networks through Networking.</para>
+    <title>配置计算服务来使用网络</title>
+    <para>默认情况下，各个发行版本会使用旧的配置，你需要重新配置下计算服务来使用网络。</para>
     <step>
-      <para>Edit the <filename>/etc/nova/nova.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑文件 <filename>/etc/nova/nova.conf</filename>:</para>
       <substeps>
         <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
           <para>In the <literal>[DEFAULT]</literal> section, configure
@@ -251,16 +224,13 @@ security_group_api = neutron
 linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 firewall_driver = nova.virt.firewall.NoopFirewallDriver</programlisting>
           <note>
-            <para>By default, Compute uses an internal firewall service.
-              Since Networking includes a firewall service, you must
-              disable the Compute firewall service by using the
-              <literal>nova.virt.firewall.NoopFirewallDriver</literal>
-              firewall driver.</para>
+	    <para>默认情况下，计算服务会使用自己的防火墙服务，因为网络服务有了防火墙功能，
+             所以我们需要使用<literal>nova.virt.firewall.NoopFirewallDriver</literal>这个防火墙驱动
+             来禁止计算服务的防火墙功能。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[neutron]</literal> section, configure
-            access parameters:</para>
+          <para>在 <literal>[neutron]</literal> 部分, 配置访问权限:</para>
           <programlisting language="ini">[neutron]
 ...
 url = http://<replaceable>controller</replaceable>:9696
@@ -269,9 +239,7 @@ admin_auth_url = http://<replaceable>controller</replaceable>:35357/v2.0
 admin_tenant_name = service
 admin_username = neutron
 admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NEUTRON_PASS</replaceable> with the
-            password you chose for the <literal>neutron</literal> user
-            in the Identity service.</para>
+	  <para>把 <replaceable>NEUTRON_PASS</replaceable> 替换成合适的密码</para>
         </step>
       </substeps>
     </step>
@@ -279,62 +247,48 @@ admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
   <procedure>
     <title>To finalize the installation</title>
     <step os="rhel;centos;fedora">
-      <para>The Networking service initialization scripts expect a
-        symbolic link <filename>/etc/neutron/plugin.ini</filename>
-        pointing to the ML2 plug-in configuration file,
-        <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>.
-        If this symbolic link does not exist, create it using the
-        following command:</para>
+      <para>网络服务初始化脚本会创建链接文件<filename>/etc/neutron/plugin.ini</filename>
+        指向ML2插件的配置文件<filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>。
+        如果连接文件不存在，使用下面命令来创建:</para>
       <screen><prompt>#</prompt> <userinput>ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini</userinput></screen>
-      <para>Due to a packaging bug, the Open vSwitch agent initialization
-        script explicitly looks for the Open vSwitch plug-in configuration
-        file rather than a symbolic link
-        <filename>/etc/neutron/plugin.ini</filename> pointing to the ML2
-        plug-in configuration file. Run the following commands to resolve this
-        issue:</para>
+      <para>因为包的bug，Open vSwitch初始化脚本会去找Open vSwitch插件配置，
+        而不是链接文件<filename>/etc/neutron/plugin.ini</filename>，使用
+        以下命令来解决这个问题:</para>
       <screen><prompt>#</prompt> <userinput>cp /usr/lib/systemd/system/neutron-openvswitch-agent.service \
   /usr/lib/systemd/system/neutron-openvswitch-agent.service.orig</userinput>
 <prompt>#</prompt> <userinput>sed -i 's,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g' \
   /usr/lib/systemd/system/neutron-openvswitch-agent.service</userinput></screen>
     </step>
     <step os="sles;opensuse">
-      <para>The Networking service initialization scripts expect the
-        variable <literal>NEUTRON_PLUGIN_CONF</literal> in the
-        <filename>/etc/sysconfig/neutron</filename> file to
-        reference the ML2 plug-in configuration file. Edit the
-        <filename>/etc/sysconfig/neutron</filename> file and add the
-        following:</para>
+      <para>网络服务初始化脚本会参考文件ML2插件配置文件来修改文件<filename>/etc/sysconfig/neutron</filename></para>
       <programlisting>NEUTRON_PLUGIN_CONF="/etc/neutron/plugins/ml2/ml2_conf.ini"</programlisting>
     </step>
     <step>
-      <para>Restart the Compute service:</para>
+      <para>重启计算服务:</para>
       <screen os="rhel;centos;fedora;opensuse;sles"><prompt>#</prompt> <userinput>systemctl restart openstack-nova-compute.service</userinput></screen>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>service nova-compute restart</userinput></screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the Open vSwitch (OVS) agent and configure it to
-        start when the system boots:</para>
+      <para>启动Open vSwitch (OVS)并且设置为开机自启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable neutron-openvswitch-agent.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start neutron-openvswitch-agent.service</userinput></screen>
     </step>
     <step os="ubuntu;debian">
-      <para>Restart the Open vSwitch (OVS) agent:</para>
+      <para>重启 Open vSwitch (OVS) :</para>
       <screen><prompt>#</prompt> <userinput>service neutron-plugin-openvswitch-agent restart</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>Verify operation</title>
+    <title>验证操作</title>
     <note>
-      <para>Perform these commands on the controller node.</para>
+      <para>在控制节点上执行下面操作</para>
     </note>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>导入 <literal>admin</literal> 认证:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>List agents to verify successful launch of the
-        neutron agents:</para>
+      <para>验证neutron agent是否启动成功:</para>
       <screen><prompt>$</prompt> <userinput>neutron agent-list</userinput>
 <computeroutput>+--------------------------------------+--------------------+----------+-------+----------------+---------------------------+
 | id                                   | agent_type         | host     | alive | admin_state_up | binary                    |
@@ -345,10 +299,6 @@ admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
 | 9c45473c-6d6d-4f94-8df1-ebd0b6838d5f | DHCP agent         | network  | :-)   | True           | neutron-dhcp-agent        |
 | a5a49051-05eb-4b4f-bfc7-d36235fe9131 | Open vSwitch agent | compute1 | :-)   | True           | neutron-openvswitch-agent |
 +--------------------------------------+--------------------+----------+-------+----------------+---------------------------+</computeroutput></screen>
-      <note>
-        <para>This output should indicate four agents alive on the
-          network node and one agent alive on the compute node.</para>
-      </note>
     </step>
   </procedure>
 </section>

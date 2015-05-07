@@ -5,26 +5,23 @@
   version="5.0"
   xml:id="neutron-network-node">
   <title>控制节点安装和配置三层网络服务</title>
-  <para>三层网络服务primarily handles internal and external routing
-    and <glossterm>DHCP</glossterm> services for virtual networks.</para>
+  <para>三层网络服务主要处理虚拟网络中的外部/内部路由和DHCP服务。</para>
   <procedure>
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure OpenStack Networking, you
-      must configure certain kernel networking parameters.</para>
+    <title>配置前提条件</title>
+    <para>安装OpenStack网络服务之前，你需要配置内核的网络参数。</para>
     <step>
-      <para>Edit the <filename>/etc/sysctl.conf</filename> file to
-        contain the following parameters:</para>
+      <para>编辑文件<filename>/etc/sysctl.conf</filename> 添加以下参数:</para>
       <programlisting>net.ipv4.ip_forward=1
 net.ipv4.conf.all.rp_filter=0
 net.ipv4.conf.default.rp_filter=0</programlisting>
     </step>
     <step>
-      <para>Implement the changes:</para>
+      <para>让变更生效:</para>
       <screen><prompt>#</prompt> <userinput>sysctl -p</userinput></screen>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install the Networking components</title>
+    <title>安装网络组件</title>
     <step>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent
   neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent</userinput></screen>
@@ -32,31 +29,31 @@ net.ipv4.conf.default.rp_filter=0</programlisting>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install --no-recommends openstack-neutron-openvswitch-agent openstack-neutron-l3-agent \
   openstack-neutron-dhcp-agent openstack-neutron-metadata-agent ipset</userinput></screen>
       <note os="sles;opensuse">
-        <para>SUSE does not use a separate ML2 plug-in package.</para>
+	<para>SUSE没有使用ML2创建</para>
       </note>
     </step>
   </procedure>
   <procedure os="debian">
-    <title>To install and configure the Networking components</title>
+    <title>安装和配置网络组件</title>
     <step>
       <screen><prompt>#</prompt> <userinput>apt-get install neutron-plugin-openvswitch-agent openvswitch-datapath-dkms \
   neutron-l3-agent neutron-dhcp-agent neutron-metadata-agent</userinput></screen>
       <note>
-        <para>Debian does not use a separate ML2 plug-in package.</para>
+	<para>Debian没有使用ML2插件</para>
       </note>
     </step>
     <step>
-      <para>Respond to prompts for
+      <para>提示符会出现
         <link linkend="debconf-dbconfig-common">database management</link>,
         <link linkend="debconf-keystone_authtoken">Identity service
         credentials</link>,
         <link linkend="debconf-api-endpoints">service endpoint
-        registration</link>, and
+        registration</link>, 和
         <link linkend="debconf-rabbitmq">message queue
         credentials</link>.</para>
     </step>
     <step>
-       <para>Select the ML2 plug-in:</para>
+       <para>选择ML2插件:</para>
        <informalfigure>
         <mediaobject>
           <imageobject>
@@ -67,200 +64,33 @@ net.ipv4.conf.default.rp_filter=0</programlisting>
         </mediaobject>
       </informalfigure>
       <note>
-        <para>Selecting the ML2 plug-in also populates the
-          <option>service_plugins</option> and
-          <option>allow_overlapping_ips</option> options in the
-          <filename>/etc/neutron/neutron.conf</filename> file with the
-          appropriate values.</para>
+	<para>还需要更改文件<filename>/etc/neutron/neutron.conf</filename>中的
+          <option>service_plugins</option>和<option>allow_overlapping_ips</option>选项。</para>
       </note>
     </step>
   </procedure>
-  <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure the Networking common components</title>
-    <para>The Networking common component configuration includes the
-      authentication mechanism, message queue, and plug-in.</para>
-    <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
-    </note>
-    <step>
-      <para>Edit the <filename>/etc/neutron/neutron.conf</filename> file
-        and complete the following actions:</para>
-      <substeps>
-        <step>
-          <para>In the <literal>[database]</literal> section, comment out
-            any <literal>connection</literal> options because network nodes
-            do not directly access the database.</para>
-        </step>
-        <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-rpc_backend = rabbit
 
-[oslo_messaging_rabbit]
-...
-rabbit_host = <replaceable>controller</replaceable>
-rabbit_userid = openstack
-rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account
-            in <application>RabbitMQ</application>.</para>
-        </step>
-        <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections,
-            configure Identity service access:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-auth_strategy = keystone
-
-[keystone_authtoken]
-...
-auth_uri = http://<replaceable>controller</replaceable>:5000
-auth_url = http://<replaceable>controller</replaceable>:35357
-auth_plugin = password
-project_domain_id = default
-user_domain_id = default
-project_name = service
-username = neutron
-password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NEUTRON_PASS</replaceable> with the
-            password you chose or the <literal>neutron</literal> user in the
-            Identity service.</para>
-          <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
-          </note>
-        </step>
-        <step>
-          <para>In the <literal>[DEFAULT]</literal> section,
-           enable the Modular Layer 2 (ML2) plug-in,
-           router service, and overlapping IP addresses:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-core_plugin = ml2
-service_plugins = router
-allow_overlapping_ips = True</programlisting>
-        </step>
-        <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-verbose = True</programlisting>
-        </step>
-      </substeps>
-    </step>
-  </procedure>
-  <procedure>
-    <title>To configure the Modular Layer 2 (ML2) plug-in</title>
-    <para>The ML2 plug-in uses the
-      <glossterm baseform="Open vSwitch">Open vSwitch (OVS)</glossterm>
-      mechanism (agent) to build the virtual networking framework for
-      instances.</para>
-    <step>
-      <para>Edit the
-        <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>
-        file and complete the following actions:</para>
-      <substeps>
-        <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[ml2]</literal> section, enable the
-            <glossterm baseform="flat network">flat</glossterm>,
-            <glossterm baseform="VLAN network">VLAN</glossterm>,
-            <glossterm>generic routing encapsulation (GRE)</glossterm>, and
-            <glossterm>virtual extensible LAN (VXLAN)</glossterm>
-            network type drivers, GRE tenant networks, and the OVS
-            mechanism driver:</para>
-          <programlisting language="ini">[ml2]
-...
-type_drivers = flat,vlan,gre,vxlan
-tenant_network_types = gre
-mechanism_drivers = openvswitch</programlisting>
-        </step>
-        <step>
-          <para>In the <literal>[ml2_type_flat]</literal> section,
-           configure the external flat provider network:</para>
-          <programlisting language="ini">[ml2_type_flat]
-...
-flat_networks = external</programlisting>
-        </step>
-        <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[ml2_type_gre]</literal> section,
-           configure the tunnel identifier (id) range:</para>
-          <programlisting language="ini">[ml2_type_gre]
-...
-tunnel_id_ranges = 1:1000</programlisting>
-        </step>
-        <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[securitygroup]</literal>
-           section, enable security groups, enable
-           <glossterm>ipset</glossterm>, and configure
-           the OVS <glossterm>iptables</glossterm> firewall
-           driver:</para>
-          <programlisting language="ini">[securitygroup]
-...
-enable_security_group = True
-enable_ipset = True
-firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver</programlisting>
-        </step>
-        <step>
-          <para>In the <literal>[ovs]</literal> section, enable tunnels,
-            configure the local tunnel endpoint, and map the external flat
-            provider network to the <literal>br-ex</literal> external
-            network bridge:</para>
-          <programlisting language="ini">[ovs]
-...
-local_ip = <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable>
-bridge_mappings = external:br-ex</programlisting>
-          <para>Replace
-            <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable>
-            with the IP address of the instance
-            tunnels network interface on your network node.</para>
-        </step>
-        <step>
-          <para>In the <literal>[agent]</literal> section, enable GRE
-            tunnels:</para>
-          <programlisting language="ini">[agent]
-...
-tunnel_types = gre</programlisting>
-        </step>
-      </substeps>
-    </step>
-  </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure the Layer-3 (L3) agent</title>
-    <para>The <glossterm>Layer-3 (L3) agent</glossterm> provides
-      routing services for virtual networks.</para>
+    <title>配置L3</title>
+    <para> <glossterm>Layer-3 (L3) agenat</glossterm> 主要提供虚拟网络的路由服务。</para>
     <step>
-      <para>Edit the <filename>/etc/neutron/l3_agent.ini</filename>
-       file and complete the following actions:</para>
+      <para>编辑文件 <filename>/etc/neutron/l3_agent.ini</filename>:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            the interface driver, external network bridge, and enable
-            deletion of defunct router namespaces:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分, 配置接口驱动，外部网桥，
+	    启用废旧router namespace自动删除:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 external_network_bridge =
 router_delete_namespaces = True</programlisting>
           <note>
-            <para>The <literal>external_network_bridge</literal> option
-              intentionally lacks a value to enable multiple external
-              networks on a single agent.</para>
+            <para> <literal>external_network_bridge</literal> 选项故意缺少值，
+	      这样在一个L3上就可以启用多个外部网络。</para>
           </note>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+	  <para>(可选) 在<literal>[DEFAULT]</literal>部分配置日志详情:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -269,18 +99,15 @@ verbose = True</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To configure the DHCP agent</title>
-    <para>The <glossterm>DHCP agent</glossterm> provides DHCP
-      services for virtual networks.</para>
+    <title>配置DHCP</title>
+    <para>The <glossterm>DHCP agent</glossterm> 虚拟网络的DHCP功能。</para>
     <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-      <para>Edit the
-       <filename>/etc/neutron/dhcp_agent.ini</filename> file
-       and complete the following actions:</para>
+      <para>编辑文件
+       <filename>/etc/neutron/dhcp_agent.ini</filename>:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            the interface and DHCP drivers and enable deletion of defunct
-            DHCP namespaces:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分, 配置接口和DHCP驱动，启用
+	    废旧DHCP namespace自动删除:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
@@ -288,9 +115,7 @@ dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
 dhcp_delete_namespaces = True</programlisting>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+	  <para>(可选) 在<literal>[DEFAULT]</literal>部分配置日志详情:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -298,44 +123,18 @@ verbose = True</programlisting>
       </substeps>
     </step>
     <step>
-      <para>(Optional)</para>
-      <para>Tunneling protocols such as GRE include additional packet
-        headers that increase overhead and decrease space available for the
-        payload or user data. Without knowledge of the virtual network
-        infrastructure, instances attempt to send packets using the default
-        Ethernet <glossterm>maximum transmission unit (MTU)</glossterm> of
-        1500 bytes. <glossterm>Internet protocol (IP)</glossterm> networks
-        contain the <glossterm>path MTU discovery (PMTUD)</glossterm>
-        mechanism to detect end-to-end MTU and adjust packet size
-        accordingly. However, some operating systems and networks block or
-        otherwise lack support for PMTUD causing performance degradation
-        or connectivity failure.</para>
-      <para>Ideally, you can prevent these problems by enabling
-        <glossterm baseform="jumbo frame">jumbo frames</glossterm> on the
-        physical network that contains your tenant virtual networks.
-        Jumbo frames support MTUs up to approximately 9000 bytes which
-        negates the impact of GRE overhead on virtual networks. However,
-        many network devices lack support for jumbo frames and OpenStack
-        administrators often lack control over network infrastructure.
-        Given the latter complications, you can also prevent MTU problems
-        by reducing the instance MTU to account for GRE overhead.
-        Determining the proper MTU value often takes experimentation,
-        but 1454 bytes works in most environments. You can configure the
-        DHCP server that assigns IP addresses to your instances to also
-        adjust the MTU.</para>
+      <para>像GRE这样的隧道协议会包含额外的数据包头，这样负载的空间就减小了。我们需要提高物理网络的PMTU或者减少云主机的MTU。
+        本手册使用DHCP通知云主机调整MTU。</para>
       <note>
-        <para>Some cloud images ignore the DHCP MTU option in which case
-          you should configure it using metadata, a script, or another suitable
-          method.</para>
+        <para>一些云主机镜像不支持DHCP MTU 选项。</para>
       </note>
       <substeps>
         <step>
-          <para>Edit the <filename>/etc/neutron/dhcp_agent.ini</filename>
-            file and complete the following action:</para>
+          <para>编辑文件 <filename>/etc/neutron/dhcp_agent.ini</filename>:</para>
           <substeps>
             <step>
-              <para>In the <literal>[DEFAULT]</literal> section, enable the
-                <glossterm>dnsmasq</glossterm> configuration file:</para>
+              <para>在 <literal>[DEFAULT]</literal> 部分, 启用
+                <glossterm>dnsmasq</glossterm> 配置文件:</para>
               <programlisting language="ini">[DEFAULT]
 ...
 dnsmasq_config_file = /etc/neutron/dnsmasq-neutron.conf</programlisting>
@@ -343,37 +142,32 @@ dnsmasq_config_file = /etc/neutron/dnsmasq-neutron.conf</programlisting>
           </substeps>
         </step>
         <step>
-          <para>Create and edit the
-            <filename>/etc/neutron/dnsmasq-neutron.conf</filename> file and
-            complete the following action:</para>
+          <para>创建和编辑文件
+            <filename>/etc/neutron/dnsmasq-neutron.conf</filename>:</para>
           <substeps>
             <step>
-              <para>Enable the DHCP MTU option (26) and configure it to
-                1454 bytes:</para>
+              <para>启用DHCP MTU选项(26)，把它配置成1454字节:</para>
               <programlisting language="ini">dhcp-option-force=26,1454</programlisting>
             </step>
           </substeps>
         </step>
         <step>
-          <para>Kill any existing
-            <systemitem role="process">dnsmasq</systemitem> processes:</para>
+          <para>杀掉
+            <systemitem role="process">dnsmasq</systemitem> 进程:</para>
             <screen><prompt>#</prompt> <userinput>pkill dnsmasq</userinput></screen>
         </step>
       </substeps>
     </step>
   </procedure>
   <procedure>
-    <title>To configure the metadata agent</title>
-    <para>The <glossterm baseform="Metadata agent">metadata agent</glossterm>
-      provides configuration information such as credentials to
-      instances.</para>
+    <title>配置metadata</title>
+    <para><glossterm baseform="Metadata agent">metadata agent</glossterm>
+      用来配置云主机的信息，比如主机名和密码。</para>
     <step>
-      <para>Edit the <filename>/etc/neutron/metadata_agent.ini</filename>
-        file and complete the following actions:</para>
+      <para>编辑文件 <filename>/etc/neutron/metadata_agent.ini</filename>:</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            access parameters:</para>
+          <para>在<literal>[DEFAULT]</literal> 部分, 配置访问权限:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 auth_uri = http://<replaceable>controller</replaceable>:5000
@@ -385,30 +179,23 @@ user_domain_id = default
 project_name = service
 username = neutron
 password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NEUTRON_PASS</replaceable> with the
-            password you chose for the <literal>neutron</literal> user in
-            the Identity service.</para>
+          <para>把 <replaceable>NEUTRON_PASS</replaceable> 替换成合适的密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            metadata host:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分, 配置metadata主机IP地址:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 nova_metadata_ip = <replaceable>controller</replaceable></programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            metadata proxy shared secret:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分, 配置metadata代理共享密码:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 metadata_proxy_shared_secret = <replaceable>METADATA_SECRET</replaceable></programlisting>
-          <para>Replace <replaceable>METADATA_SECRET</replaceable> with a
-            suitable secret for the metadata proxy.</para>
+          <para>把 <replaceable>METADATA_SECRET</replaceable> 替换成合适的密码。</para>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+	  <para>(可选) 在<literal>[DEFAULT]</literal>部分配置日志详情:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -416,118 +203,94 @@ verbose = True</programlisting>
       </substeps>
     </step>
     <step>
-      <para>On the <emphasis>controller</emphasis> node, edit the
-        <filename>/etc/nova/nova.conf</filename> file and complete the
-        following action:</para>
+      <para>在 <emphasis>控制</emphasis> 节点上, 编辑文件
+        <filename>/etc/nova/nova.conf</filename>:</para>
       <substeps>
         <step>
-          <para>In the <literal>[neutron]</literal> section, enable the
-            metadata proxy and configure the secret:</para>
+          <para>在 <literal>[neutron]</literal> 部分, 启动metadata代理并且配置密码:</para>
           <programlisting language="ini">[neutron]
 ...
 service_metadata_proxy = True
 metadata_proxy_shared_secret = <replaceable>METADATA_SECRET</replaceable></programlisting>
-          <para>Replace <replaceable>METADATA_SECRET</replaceable> with
-            the secret you chose for the metadata proxy.</para>
+          <para>把 <replaceable>METADATA_SECRET</replaceable> 替换成合适的密码。</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>On the <emphasis>controller</emphasis> node, restart the
-        Compute <glossterm>API</glossterm> service:</para>
+      <para>在 <emphasis>控制</emphasis> 节点上, 重启计算
+         <glossterm>API</glossterm> 服务:</para>
       <screen os="rhel;centos;fedora;sles;opensuse"><prompt>#</prompt> <userinput>systemctl restart openstack-nova-api.service</userinput></screen>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>service nova-api restart</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>To configure the Open vSwitch (OVS) service</title>
-    <para>The OVS service provides the underlying virtual networking
-      framework for instances. The integration bridge
-      <literal>br-int</literal> handles internal instance network
-      traffic within OVS. The external bridge <literal>br-ex</literal>
-      handles external instance network traffic within OVS. The
-      external bridge requires a port on the physical external network
-      interface to provide instances with external network access. In
-      essence, this port connects the virtual and physical external
-      networks in your environment.</para>
+    <title>配置 Open vSwitch (OVS) 服务</title>
+    <para>OVS服务为云主机提供了底层的虚拟网络。内部网桥<literal>br-int</literal>
+      处理云主机之间的网络流量，外部网桥<literal>br-ex</literal>处理云主机到外部网络
+      的流量，外部网桥需要有一个物理的端口，虚拟机通过这个端口来访问外网。事实上，
+      这个端口连接了虚拟和物理网络。</para>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the OVS service and configure it to start when the
-        system boots:</para>
+      <para>启动OVS 服务并且设置为开机自启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable openvswitch.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start openvswitch.service</userinput></screen>
     </step>
     <step os="debian;ubuntu">
-      <para>Restart the OVS service:</para>
+      <para>重启 OVS 服务:</para>
       <screen><prompt>#</prompt> <userinput>service openvswitch-switch restart</userinput></screen>
     </step>
     <step>
-      <para>Add the external bridge:</para>
+      <para>添加外部网桥:</para>
       <screen><prompt>#</prompt> <userinput>ovs-vsctl add-br br-ex</userinput></screen>
     </step>
     <step>
-      <para>Add a port to the external bridge that connects to the
-        physical external network interface:</para>
-      <para>Replace <replaceable>INTERFACE_NAME</replaceable> with the
-        actual interface name. For example, <emphasis>eth2</emphasis>
-        or <emphasis>ens256</emphasis>.</para>
+      <para>在外部网桥中添加一个端口:</para>
+      <para>把 <replaceable>INTERFACE_NAME</replaceable> 替换成真实的网卡接口，比如<emphasis>eth2</emphasis>，
+	或者<emphasis>ens256</emphasis>。</para>
       <screen><prompt>#</prompt> <userinput>ovs-vsctl add-port br-ex <replaceable>INTERFACE_NAME</replaceable></userinput></screen>
       <note>
-        <para>Depending on your network interface driver, you may need
-          to disable <glossterm>generic receive offload
-            (GRO)</glossterm> to achieve suitable throughput between
-          your instances and the external network.</para>
-        <para>To temporarily disable GRO on the external network
-          interface while testing your environment:</para>
+        <para>根据网络接口驱动，你可以禁用<glossterm>generic receive offload(GRO)</glossterm>
+	  这样外部网络和云主机之间可以达到合适的网络吞吐。</para>
+        <para>测试的时候可以暂时禁用外部网络接口的GRO:</para>
         <screen><prompt>#</prompt> <userinput>ethtool -K <replaceable>INTERFACE_NAME</replaceable> gro off</userinput></screen>
       </note>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize the installation</title>
+    <title>完成安装</title>
     <step os="rhel;centos;fedora">
-      <para>The Networking service initialization scripts expect a
-        symbolic link <filename>/etc/neutron/plugin.ini</filename>
-        pointing to the ML2 plug-in configuration file,
-        <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>.
-        If this symbolic link does not exist, create it using the
-        following command:</para>
+      <para>网络服务初始化脚本会创建链接文件<filename>/etc/neutron/plugin.ini</filename>
+        指向ML2插件的配置文件<filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>。
+        如果连接文件不存在，使用下面命令来创建:</para>
       <screen><prompt>#</prompt> <userinput>ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini</userinput></screen>
-      <para>Due to a packaging bug, the Open vSwitch agent initialization
-        script explicitly looks for the Open vSwitch plug-in configuration
-        file rather than a symbolic link
-        <filename>/etc/neutron/plugin.ini</filename> pointing to the ML2
-        plug-in configuration file. Run the following commands to resolve this
-        issue:</para>
+      <para>因为包的bug，Open vSwitch初始化脚本会去找Open vSwitch插件配置，
+	而不是链接文件<filename>/etc/neutron/plugin.ini</filename>，使用
+	以下命令来解决这个问题:</para>
       <screen><prompt>#</prompt> <userinput>cp /usr/lib/systemd/system/neutron-openvswitch-agent.service \
   /usr/lib/systemd/system/neutron-openvswitch-agent.service.orig</userinput>
 <prompt>#</prompt> <userinput>sed -i 's,plugins/openvswitch/ovs_neutron_plugin.ini,plugin.ini,g' \
   /usr/lib/systemd/system/neutron-openvswitch-agent.service</userinput></screen>
     </step>
     <step os="sles;opensuse">
-      <para>The Networking service initialization scripts expect the
-        variable <literal>NEUTRON_PLUGIN_CONF</literal> in the
-        <filename>/etc/sysconfig/neutron</filename> file to
-        reference the ML2 plug-in configuration file. Edit the
-        <filename>/etc/sysconfig/neutron</filename> file and add the
-        following:</para>
+      <para>网络服务初始化脚本会参考文件ML2插件配置文件来修改文件<filename>/etc/sysconfig/neutron</filename>
+        中的<literal>NEUTRON_PLUGIN_CONF</literal>配置。编辑<filename>/etc/sysconfig/neutron</filename>，增加
+        以下行:</para>
       <programlisting>NEUTRON_PLUGIN_CONF="/etc/neutron/plugins/ml2/ml2_conf.ini"</programlisting>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the Networking services and configure them to start
-        when the system boots:</para>
+      <para>启动网络服务，并且配置开机自启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable neutron-openvswitch-agent.service neutron-l3-agent.service \
   neutron-dhcp-agent.service neutron-metadata-agent.service \
   neutron-ovs-cleanup.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start neutron-openvswitch-agent.service neutron-l3-agent.service \
   neutron-dhcp-agent.service neutron-metadata-agent.service</userinput></screen>
       <note>
-        <para>Do not explicitly start the
+        <para>不需要运行
           <systemitem class="service">neutron-ovs-cleanup</systemitem>
-          service.</para>
+          服务</para>
       </note>
     </step>
     <step os="ubuntu;debian">
-      <para>Restart the Networking services:</para>
+      <para>重启网络服务:</para>
       <screen><prompt>#</prompt> <userinput>service neutron-plugin-openvswitch-agent restart</userinput>
 <prompt>#</prompt> <userinput>service neutron-l3-agent restart</userinput>
 <prompt>#</prompt> <userinput>service neutron-dhcp-agent restart</userinput>
@@ -535,18 +298,16 @@ metadata_proxy_shared_secret = <replaceable>METADATA_SECRET</replaceable></progr
     </step>
   </procedure>
   <procedure>
-    <title>Verify operation</title>
+    <title>验证操作</title>
     <note>
-      <para>Perform these commands on the controller node.</para>
+      <para>在控制节点上执行以下命令</para>
     </note>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>导入 <literal>admin</literal> 认证:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>List agents to verify successful launch of the
-        neutron agents:</para>
+      <para>列出客户端来验证neutron客户端正常启动:</para>
       <screen><prompt>$</prompt> <userinput>neutron agent-list</userinput>
 <computeroutput>+--------------------------------------+--------------------+---------+-------+----------------+---------------------------+
 | id                                   | agent_type         | host    | alive | admin_state_up | binary                    |

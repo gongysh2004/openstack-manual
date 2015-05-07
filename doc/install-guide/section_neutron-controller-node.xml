@@ -6,47 +6,41 @@
   xml:id="neutron-controller-node">
   <title>控制节点安装和配置网络API服务</title>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you configure the OpenStack Networking (neutron) service,
-      you must create a database, service credentials, and API
-      endpoint.</para>
+    <title>配置前提条件</title>
+    <para>在配置网络之前需要先创建数据库，服务认证信息，API服务端点。</para>
     <step>
-      <para>To create the database, complete these steps:</para>
+      <para>创建数据库，完成下面步骤:</para>
       <substeps>
         <step>
-          <para>Use the database access client to connect to the database
-            server as the <literal>root</literal> user:</para>
+          <para>使用<literal>root</literal>用户连接数据库:</para>
           <screen><prompt>$</prompt> <userinput>mysql -u root -p</userinput></screen>
         </step>
         <step>
-          <para>Create the <literal>neutron</literal> database:</para>
+          <para>创建 <literal>neutron</literal> 数据库:</para>
           <screen><userinput>CREATE DATABASE neutron;</userinput></screen>
         </step>
         <step>
-          <para>Grant proper access to the <literal>neutron</literal>
-            database:</para>
+          <para>给 <literal>neutron</literal>数据库添加用户:</para>
           <screen><userinput>GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' \
   IDENTIFIED BY '<replaceable>NEUTRON_DBPASS</replaceable>';</userinput>
 <userinput>GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' \
   IDENTIFIED BY '<replaceable>NEUTRON_DBPASS</replaceable>';</userinput></screen>
-          <para>Replace <replaceable>NEUTRON_DBPASS</replaceable> with a
-            suitable password.</para>
+          <para>把 <replaceable>NEUTRON_DBPASS</replaceable> 替换成合适的密码</para>
         </step>
         <step>
-          <para>Exit the database access client.</para>
+          <para>退出数据库</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>导入 <literal>admin</literal> 凭证:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>To create the service credentials, complete these steps:</para>
+      <para>创建服务认证信息，完成如下步骤:</para>
       <substeps>
         <step>
-          <para>Create the <literal>neutron</literal> user:</para>
+          <para>创建 <literal>neutron</literal> 用户:</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt neutron</userinput>
 <computeroutput>User Password:
 Repeat User Password:
@@ -61,8 +55,7 @@ Repeat User Password:
 +----------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>neutron</literal> user:</para>
+          <para>给<literal>neutron</literal>用户添加 <literal>admin</literal> 角色:</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project service --user neutron admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -72,7 +65,7 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>neutron</literal> service entity:</para>
+          <para>创建 <literal>neutron</literal> 服务:</para>
           <screen><prompt>$</prompt> <userinput>openstack service create --type network \
   --description "OpenStack Networking" neutron</userinput>
 <computeroutput>+-------------+----------------------------------+
@@ -88,7 +81,7 @@ Repeat User Password:
       </substeps>
     </step>
     <step>
-      <para>Create the Networking service API endpoint:</para>
+      <para>创建网络服务端点:</para>
       <screen><prompt>$</prompt> <userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:9696 \
   --adminurl http://<replaceable>controller</replaceable>:9696 \
@@ -110,36 +103,36 @@ Repeat User Password:
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install the Networking components</title>
+    <title>安装网络服务组件</title>
     <step>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install neutron-server neutron-plugin-ml2 python-neutronclient</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-neutron openstack-neutron-ml2 python-neutronclient which</userinput></screen>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install openstack-neutron openstack-neutron-server</userinput></screen>
       <note os="sles;opensuse">
-        <para>SUSE does not use a separate ML2 plug-in package.</para>
+        <para>SUSE没有使用ML2插件</para>
       </note>
     </step>
   </procedure>
   <procedure os="debian">
-    <title>To install and configure the Networking components</title>
+    <title>安装和配置网络组件</title>
     <step>
       <screen><prompt>#</prompt> <userinput>apt-get install neutron-server</userinput></screen>
       <note>
-        <para>Debian does not use a separate ML2 plug-in package.</para>
+        <para>Debian没有使用ML2插件</para>
       </note>
     </step>
     <step>
-      <para>Respond to prompts for
+      <para>提示符会出现
         <link linkend="debconf-dbconfig-common">database management</link>,
         <link linkend="debconf-keystone_authtoken">Identity service
         credentials</link>,
         <link linkend="debconf-api-endpoints">service endpoint
-        registration</link>, and
+        registration</link>, 和
         <link linkend="debconf-rabbitmq">message queue
         credentials</link>.</para>
     </step>
     <step>
-       <para>Select the ML2 plug-in:</para>
+       <para>选择ML2插件:</para>
        <informalfigure>
         <mediaobject>
           <imageobject>
@@ -150,33 +143,23 @@ Repeat User Password:
         </mediaobject>
       </informalfigure>
       <note>
-        <para>Selecting the ML2 plug-in also populates the
-          <option>service_plugins</option> and
-          <option>allow_overlapping_ips</option> options in the
-          <filename>/etc/neutron/neutron.conf</filename> file with the
-          appropriate values.</para>
+        <para>还需要更改文件<filename>/etc/neutron/neutron.conf</filename>中的
+	  <option>service_plugins</option>和<option>allow_overlapping_ips</option>选项。</para>
       </note>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure the Networking server component</title>
-    <para>The Networking server component configuration includes the database,
-      authentication mechanism, message queue, topology change notifications,
-      and plug-in.</para>
+    <title>配置网络服务组件</title>
+    <para>配置网路服务组件包括数据库、认证机制、消息队列和插件。</para>
     <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
+       <para>配置文件因为发行版本可能不太一样，需要添加一些配置选项，
+	有些配置就保持默认的。</para>
     </note>
     <step>
-      <para>Edit the <filename>/etc/neutron/neutron.conf</filename> file
-        and complete the following actions:</para>
+      <para>编辑文件 <filename>/etc/neutron/neutron.conf</filename> :</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
+          <para>在 <literal>[database]</literal> 部分, 配置数据库:</para>
           <programlisting language="ini">[database]
 ...
 connection = mysql://neutron:<replaceable>NEUTRON_DBPASS</replaceable>@<replaceable>controller</replaceable>/neutron</programlisting>
@@ -184,9 +167,9 @@ connection = mysql://neutron:<replaceable>NEUTRON_DBPASS</replaceable>@<replacea
             password you chose for the database.</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
+          <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[oslo_messaging_rabbit]</literal> 部分, 配置
+            <application>RabbitMQ</application> 消息队列:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 rpc_backend = rabbit
@@ -196,14 +179,12 @@ rpc_backend = rabbit
 rabbit_host = <replaceable>controller</replaceable>
 rabbit_userid = openstack
 rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account
-            in <application>RabbitMQ</application>.</para>
+          <para>把 <replaceable>RABBIT_PASS</replaceable> 替换成合适的密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections,
-            configure Identity service access:</para>
+          <para>在 <literal>[DEFAULT]</literal> and
+            <literal>[keystone_authtoken]</literal> 部分,
+            配置认证服务:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 auth_strategy = keystone
@@ -218,18 +199,15 @@ user_domain_id = default
 project_name = service
 username = neutron
 password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NEUTRON_PASS</replaceable> with the
-            password you chose for the <literal>neutron</literal> user in the
-            Identity service.</para>
+          <para>把 <replaceable>NEUTRON_PASS</replaceable> 替换成合适的密码</para>
           <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
+            <para>注释或删除
+              <literal>[keystone_authtoken]</literal> 部分的其他配置。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, enable the
-            Modular Layer 2 (ML2) plug-in, router service, and overlapping
-            IP addresses:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分, 启用
+            Modular Layer 2 (ML2) 插件, 路由服务, 和重叠的IP地址 :</para>
           <programlisting language="ini">[DEFAULT]
 ...
 core_plugin = ml2
@@ -237,9 +215,8 @@ service_plugins = router
 allow_overlapping_ips = True</programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[nova]</literal> sections, configure
-            Networking to notify Compute of network topology changes:</para>
+          <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[nova]</literal> 部分, 配置网络用来通知计算服务网络拓扑的更改:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 notify_nova_on_port_status_changes = True
@@ -256,85 +233,85 @@ region_name = RegionOne
 project_name = service
 username = nova
 password = <replaceable>NOVA_PASS</replaceable></programlisting>
-          <para>Replace <literal>NOVA_PASS</literal> with the password
-            you chose for the <literal>nova</literal> user in the Identity
-            service.</para>
-        </step>
-        <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
-          <programlisting language="ini">[DEFAULT]
-...
-verbose = True</programlisting>
-        </step>
+          <para>把 <literal>NOVA_PASS</literal> 替换成合适的密码。</para>
+
+      </step>
       </substeps>
-    </step>
-  </procedure>
-  <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure the Modular Layer 2 (ML2) plug-in</title>
-    <para>The ML2 plug-in uses the
-      <glossterm baseform="Open vSwitch">Open vSwitch (OVS)</glossterm>
-      mechanism (agent) to build the virtual networking framework for
-      instances. However, the controller node does not need the OVS
-      components because it does not handle instance network traffic.</para>
-    <step>
-      <para>Edit the
-        <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>
-        file and complete the following actions:</para>
+      </step>
+      <step>
+      <para>编辑文件
+        <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>:</para>
       <substeps>
         <step>
-          <para>In the <literal>[ml2]</literal> section, enable the
+          <para>在 <literal>[ml2]</literal> 部分, 启用
             <glossterm baseform="flat network">flat</glossterm>,
             <glossterm baseform="VLAN network">VLAN</glossterm>,
-            <glossterm>generic routing encapsulation (GRE)</glossterm>, and
+            <glossterm>generic routing encapsulation (GRE)</glossterm>, 和
             <glossterm>virtual extensible LAN (VXLAN)</glossterm>
-            network type drivers, GRE tenant networks, and the OVS
-            mechanism driver:</para>
+            网络类型，GRE租户网络，和OVS驱动:</para>
           <programlisting language="ini">[ml2]
 ...
 type_drivers = flat,vlan,gre,vxlan
 tenant_network_types = gre
 mechanism_drivers = openvswitch</programlisting>
           <warning>
-            <para>Once you configure the ML2 plug-in, changing values in
-              the <literal>type_drivers</literal> option can lead to
-              database inconsistency.</para>
-          </warning>
+            <para>配置完 ML2插件后再修改
+              <literal>type_drivers</literal> 配置会导致数据库不一致。</para> </warning>
         </step>
         <step>
-          <para>In the <literal>[ml2_type_gre]</literal> section, configure
-            the tunnel identifier (id) range:</para>
+          <para>在 <literal>[ml2_type_gre]</literal> 部分, 配置隧道id范围:</para>
           <programlisting language="ini">[ml2_type_gre]
 ...
 tunnel_id_ranges = 1:1000</programlisting>
         </step>
         <step>
-          <para>In the <literal>[securitygroup]</literal> section, enable
-            security groups, enable <glossterm>ipset</glossterm>, and
-            configure the OVS <glossterm>iptables</glossterm> firewall
-            driver:</para>
+          <para>在 <literal>[ml2_type_flat]</literal> 部分,
+           配置外部flat_network:</para>
+          <programlisting language="ini">[ml2_type_flat]
+...
+flat_networks = external</programlisting>
+        </step>
+        <step>
+          <para>在 <literal>[securitygroup]</literal> 部分, 启用安全组,
+	    启动 <glossterm>ipset</glossterm>, 配置OVS
+             <glossterm>iptables</glossterm> 作为防火墙驱动:</para>
           <programlisting language="ini">[securitygroup]
 ...
 enable_security_group = True
 enable_ipset = True
 firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver</programlisting>
         </step>
+        <step>
+          <para>在 <literal>[ovs]</literal> 部分, 启用隧道,
+            配置本地隧道口, 和外部网桥<literal>br-ex</literal>相关联:</para>
+          <programlisting language="ini">[ovs]
+...
+local_ip = <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable>
+bridge_mappings = external:br-ex</programlisting>
+          <para>把
+            <replaceable>INSTANCE_TUNNELS_INTERFACE_IP_ADDRESS</replaceable>
+        替换成网络节点隧道接口的IP地址。</para>
+        </step>
+        <step>
+          <para>在 <literal>[agent]</literal> 部分, 启动 GRE
+            隧道:</para>
+          <programlisting language="ini">[agent]
+...
+tunnel_types = gre</programlisting>
+        </step>
       </substeps>
     </step>
+
   </procedure>
   <procedure>
-    <title>To configure Compute to use Networking</title>
-    <para>By default, distribution packages configure Compute to use legacy
-      networking. You must reconfigure Compute to manage networks through
-      Networking.</para>
+    <title>配置计算服务来使用网络</title>
+    <para>默认情况下，各个发行版本会使用旧的配置，你需要重新配置下计算服务来使用网络。</para>
     <step>
-      <para>Edit the <filename>/etc/nova/nova.conf</filename> file on the controller
-        node and complete the following actions:</para>
+      <para>在控制和计算节点上编辑文件 <filename>/etc/nova/nova.conf</filename> :</para>
       <substeps>
         <step os="ubuntu;rhel;centos;fedora;sles;opensuse">
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            the <glossterm baseform="API">APIs</glossterm> and drivers:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分, 配置
+             <glossterm baseform="API">APIs</glossterm> 和一些驱动:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 network_api_class = nova.network.neutronv2.api.API
@@ -342,16 +319,13 @@ security_group_api = neutron
 linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 firewall_driver = nova.virt.firewall.NoopFirewallDriver</programlisting>
           <note>
-            <para>By default, Compute uses an internal firewall service.
-              Since Networking includes a firewall service, you must
-              disable the Compute firewall service by using the
-              <literal>nova.virt.firewall.NoopFirewallDriver</literal>
-              firewall driver.</para>
+            <para>默认情况下，计算服务会使用自己的防火墙服务，因为网络服务有了防火墙功能，
+	     所以我们需要使用<literal>nova.virt.firewall.NoopFirewallDriver</literal>这个防火墙驱动
+	     来禁止计算服务的防火墙功能。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[neutron]</literal> section, configure
-            access parameters:</para>
+          <para>在 <literal>[neutron]</literal> 部分, 配置访问权限:</para>
           <programlisting language="ini">[neutron]
 ...
 url = http://<replaceable>controller</replaceable>:9696
@@ -360,75 +334,62 @@ admin_auth_url = http://<replaceable>controller</replaceable>:35357/v2.0
 admin_tenant_name = service
 admin_username = neutron
 admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NEUTRON_PASS</replaceable> with the
-            password you chose for the <literal>neutron</literal> user
-            in the Identity service.</para>
+          <para>把 <replaceable>NEUTRON_PASS</replaceable> 替换成合适的密码。</para>
         </step>
       </substeps>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="rhel;centos;fedora">
-      <para>The Networking service initialization scripts expect a
-        symbolic link <filename>/etc/neutron/plugin.ini</filename>
-        pointing to the ML2 plug-in configuration file,
-        <filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>.
-        If this symbolic link does not exist, create it using the
-        following command:</para>
+      <para>网络服务初始化脚本会创建链接文件<filename>/etc/neutron/plugin.ini</filename>
+	指向ML2插件的配置文件<filename>/etc/neutron/plugins/ml2/ml2_conf.ini</filename>。
+	如果连接文件不存在，使用下面命令来创建:</para>
     <screen><prompt>#</prompt> <userinput>ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini</userinput></screen>
     </step>
     <step os="sles;opensuse">
-      <para>The Networking service initialization scripts expect the
-        variable <literal>NEUTRON_PLUGIN_CONF</literal> in the
-        <filename>/etc/sysconfig/neutron</filename> file to
-        reference the ML2 plug-in configuration file. Edit the
-        <filename>/etc/sysconfig/neutron</filename> file and add the
-        following:</para>
+      <para>网络服务初始化脚本会参考文件ML2插件配置文件来修改文件<filename>/etc/sysconfig/neutron</filename>
+	中的<literal>NEUTRON_PLUGIN_CONF</literal>配置。编辑<filename>/etc/sysconfig/neutron</filename>，增加
+	以下行:</para>
       <programlisting>NEUTRON_PLUGIN_CONF="/etc/neutron/plugins/ml2/ml2_conf.ini"</programlisting>
     </step>
     <step os="ubuntu;rhel;centos;fedora">
-      <para>Populate the database:</para>
+      <para>填充数据库:</para>
       <!-- FIXME: Change database version from 'head' to 'kilo' after
            release. -->
       <screen><prompt>#</prompt> <userinput>su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
   --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron</userinput></screen>
       <note>
-        <para>Database population occurs later for Networking because the
-          script requires complete server and plug-in configuration
-          files.</para>
+        <para>因为需要完整的服务器和插件配置文件，所以数据库填充在最后进行。</para>
       </note>
     </step>
     <step>
-      <para>Restart the Compute services:</para>
+      <para>重启计算服务:</para>
       <screen os="rhel;centos;fedora;opensuse;sles"><prompt>#</prompt> <userinput>systemctl restart openstack-nova-api.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service</userinput></screen>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>service nova-api restart</userinput></screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the Networking service and configure it to start when the
-        system boots:</para>
+      <para>启动网络服务，并且配置开机自启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable neutron-server.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start neutron-server.service</userinput></screen>
     </step>
     <step os="ubuntu;debian">
-      <para>Restart the Networking service:</para>
+      <para>重启网络服务:</para>
       <screen><prompt>#</prompt> <userinput>service neutron-server restart</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>Verify operation</title>
+    <title>验证操作</title>
     <note>
-      <para>Perform these commands on the controller node.</para>
+      <para>在计算节点执行以下命令。</para>
     </note>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>导入 <literal>admin</literal> 认证:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>List loaded extensions to verify successful launch of the
-        <literal>neutron-server</literal> process:</para>
+      <para>列出加载的插件来验证<literal>neutron-server</literal> 正常启动:</para>
       <screen><prompt>$</prompt> <userinput>neutron ext-list</userinput>
 <computeroutput>+-----------------------+-----------------------------------------------+
 | alias                 | name                                          |
