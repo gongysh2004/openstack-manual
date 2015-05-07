@@ -6,48 +6,37 @@
   xml:id="basics-database">
   <?dbhtml stop-chunking?>
   <title>SQL 数据库</title>
-  <para>Most OpenStack services use an SQL database to store information.
-    The database typically runs on the controller node. The procedures in
-    this guide use <application>MariaDB</application> or
-    <application>MySQL</application> depending on the distribution.
-    OpenStack services also support other SQL databases including
-    <link xlink:href="http://www.postgresql.org/">PostgreSQL</link>.</para>
+  <para>大多数OpenStack服务使用一个 SQL数据库去存储信息。数据库通常运行在控制节点上。在这个指南里的步骤使用的是 
+    <application>MariaDB</application> 或是
+    <application>MySQL</application> 取决于发行版本。</para>
   <procedure>
-    <title>To install and configure the database server</title>
+    <title>安装和配置数据库服务器</title>
     <step>
-      <para>Install the packages:</para>
-      <note os="ubuntu;rhel;centos;fedora;opensuse">
-        <para>The Python MySQL library is compatible with MariaDB.</para>
-      </note>
+      <para>安装包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install mariadb-server python-mysqldb</userinput></screen>
       <screen os="debian"><prompt>#</prompt> <userinput>apt-get install mysql-server python-mysqldb</userinput></screen>
       <screen os="rhel;fedora;centos"><prompt>#</prompt> <userinput>yum install mariadb mariadb-server MySQL-python</userinput></screen>
       <screen os="opensuse;sles"><prompt>#</prompt> <userinput>zypper install mariadb-client mariadb python-mysql</userinput></screen>
     </step>
     <step os="ubuntu;debian">
-      <para>Choose a suitable password for the database root account.</para>
+      <para>给数据库的root账号选择一个合适的密码。</para>
     </step>
     <step>
-      <para os="ubuntu;debian">Create and edit the
-        <filename>/etc/mysql/conf.d/mysqld_openstack.cnf</filename> file and
-        complete the following actions:</para>
+      <para os="ubuntu;debian">创建并编辑
+        <filename>/etc/mysql/conf.d/mysqld_openstack.cnf</filename> 文件并完成以下操作:</para>
       <para os="opensuse;sles;rhel;centos;fedora">Create and edit the
         <filename>/etc/my.cnf.d/mariadb_openstack.cnf</filename> file and
         complete the following actions:</para>
       <substeps>
         <step>
-          <para>In the <literal>[mysqld]</literal> section, set the
-            <literal>bind-address</literal> key to the management IP
-            address of the controller node to enable access by other
-            nodes via the management network:</para>
+          <para>在<literal>[mysqld]</literal> 部分, 设置
+            <literal>bind-address</literal> 到控制节点的管理IP:</para>
           <programlisting language="ini">[mysqld]
 ...
 bind-address = 10.0.0.11</programlisting>
         </step>
         <step>
-          <para>In the <literal>[mysqld]</literal> section, set the
-            following keys to enable useful options and the UTF-8
-            character set:</para>
+          <para>在<literal>[mysqld]</literal> 部分, 设置下列配置项:</para>
           <programlisting language="ini">[mysqld]
 ...
 default-storage-engine = innodb
@@ -60,9 +49,9 @@ character-set-server = utf8</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu;debian">
-      <para>Restart the database service:</para>
+      <para>重启数据库服务:</para>
       <screen><prompt>#</prompt> <userinput>service mysql restart</userinput></screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
@@ -74,7 +63,7 @@ character-set-server = utf8</programlisting>
 <prompt>#</prompt> <userinput>systemctl start mysql.service</userinput></screen>
     </step>
     <step>
-      <para os="ubuntu;debian">Secure the database service:</para>
+      <para os="ubuntu;debian">设置数据库服务的安全性:</para>
       <para os="rhel;centos;fedora;sles;opensuse">Secure the database
         service including choosing a suitable password for the root
         account:</para>

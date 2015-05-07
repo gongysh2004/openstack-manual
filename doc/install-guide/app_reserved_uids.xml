@@ -4,28 +4,25 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="reserved_user_ids">
-  <title>Reserved user IDs</title>
+  <title>保留的用户ID</title>
 
   <para>
-    OpenStack reserves certain user IDs to run specific services and
-    own specific files. These user IDs are set up according to the
-    distribution packages. The following table gives an overview.
+    OpenStack保留了一些用户ID去运行特定的服务和拥有特定的文件。一般地各个发行版的包
+会设置这些用户ID。下面的表格给出了一个概要。
   </para>
 
   <note os="debian;opensuse;sles;ubuntu">
-    <para>Some OpenStack packages generate and assign user IDs
-      automatically during package installation. In these cases, the
-      user ID value is not important. The existence of the user ID is
-      what matters.
+    <para>一些OpenStack包在安装的时候，会自动生成和分配用户ID。
+这种情况下，用户的ID值并不重要，重要的是用户ID是存在的。
     </para>
   </note>
 
   <table rules="all">
-    <caption>Reserved user IDs</caption>
+    <caption>保留的用户ID</caption>
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Description</th>
+        <th>名字</th>
+        <th>描述</th>
         <th>ID</th>
       </tr>
     </thead>
@@ -35,54 +32,53 @@
         <td>ceilometer</td>
         <td>OpenStack ceilometer daemons</td>
         <td os="rhel;centos;fedora">166</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>cinder</td>
         <td>OpenStack cinder daemons</td>
         <td os="rhel;centos;fedora">165</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>glance</td>
         <td>OpenStack glance daemons</td>
         <td os="rhel;centos;fedora">161</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>heat</td>
         <td>OpenStack heat daemons</td>
         <td os="rhel;centos;fedora">187</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>keystone</td>
         <td>OpenStack keystone daemons</td>
         <td os="rhel;centos;fedora">163</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>neutron</td>
         <td>OpenStack neutron daemons</td>
         <td os="rhel;centos;fedora">164</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>nova</td>
         <td>OpenStack nova daemons</td>
         <td os="rhel;centos;fedora">162</td>
         <td os="opensuse;sles">96</td>
-        <td os="debian;ubuntu">Assigned during package installation</td>
+        <td os="debian;ubuntu">包安装时分配的</td>
       </tr>
       <tr>
         <td>swift</td>
         <td>OpenStack swift daemons</td>
         <td os="rhel;centos;fedora">160</td>
-        <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
+        <td os="debian;opensuse;sles;ubuntu">包安装时分配的</td>
       </tr>
     </tbody>
   </table>
-  <para>Each user belongs to a user group with the same name as the
-  user.
+  <para>每个用户都属于一个同名的用户组。
   </para>
 </appendix>

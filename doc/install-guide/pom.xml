@@ -40,7 +40,7 @@
                             <!-- These parameters only apply to webhelp -->
                             <localFontPath>/home/gongysh/fonts</localFontPath>
                             <bodyFont>SimSun</bodyFont>
-                            <monospaceFont>NanumGothic</monospaceFont>
+                            <monospaceFont>Liberation Mono</monospaceFont>
 
                             <enableDisqus>${comments.enabled}</enableDisqus>
                             <disqusShortname>os-install-${operating.system}</disqusShortname>
