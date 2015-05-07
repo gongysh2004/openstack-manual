@@ -1,43 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="ceilometer-cinder">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="ceilometer-cinder">
   <?dbhtml stop-chunking?>
   <title>配置块存储服务</title>
-  <para>To retrieve volume-oriented events and samples, you must
-    configure the Block Storage service to send notifications to the
-    message bus. Perform these steps on the controller and storage
-    nodes.</para>
+  <para>为获取存储卷相关的事件和样本，你必须配置块存储服务发送事件通知到消息队列，相关步骤在控制节点上操作。</para>
   <procedure>
-    <title>To configure prerequisites</title>
-    <para>Edit the <filename>/etc/cinder/cinder.conf</filename> file
-      and complete the following actions:</para>
+    <title>前提条件配置</title>
+    <para>编辑<filename>/etc/cinder/cinder.conf</filename>文件并完成以下步骤：</para>
     <step>
-      <para>In the <literal>[DEFAULT]</literal> section, configure
-        notifications:</para>
+      <para>在<literal>[DEFAULT]</literal>部分，配置消息通知：</para>
       <programlisting language="ini">[DEFAULT]
 ...
 control_exchange = cinder
 notification_driver = messagingv2</programlisting>
     </step>
     <step>
-      <para>Restart the Block Storage services on the controller node:</para>
-      <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>service cinder-api restart</userinput>
-<prompt>#</prompt> <userinput>service cinder-scheduler restart</userinput></screen>
-      <screen os="rhel;centos;fedora;opensuse;sles"><prompt>#</prompt> <userinput>systemctl restart openstack-cinder-api.service openstack-cinder-scheduler.service</userinput></screen>
+      <para>重新启动Cinder管理服务：</para>
+      <screen os="ubuntu;debian">
+        <prompt>#</prompt>
+        <userinput>service cinder-api restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service cinder-scheduler restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service cinder-volume restart</userinput>
+      </screen>
+      <screen os="rhel;centos;fedora;opensuse;sles">
+        <prompt>#</prompt>
+        <userinput>systemctl restart openstack-cinder-api.service openstack-cinder-scheduler.service</userinput>
+      </screen>
     </step>
     <step>
-      <para>Restart the Block Storage services on the storage nodes:</para>
-      <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>service cinder-volume restart</userinput></screen>
-      <screen os="rhel;centos;fedora;opensuse;sles"><prompt>#</prompt> <userinput>systemctl restart openstack-cinder-volume.service</userinput></screen>
+      <para>在存储节点上重新启动块存储服务：</para>
+      <screen os="ubuntu;debian">
+        <prompt>#</prompt>
+        <userinput>service cinder-volume restart</userinput>
+      </screen>
+      <screen os="rhel;centos;fedora;opensuse;sles">
+        <prompt>#</prompt>
+        <userinput>systemctl restart openstack-cinder-volume.service</userinput>
+      </screen>
     </step>
     <step>
-      <para>Use the <command>cinder-volume-usage-audit</command> command to
-        retrieve metrics on demand. For more information, see
-        <link xlink:href="http://docs.openstack.org/admin-guide-cloud/content/section_telemetry-cinder-audit-script.html"
-        ><citetitle>Block Storage audit script setup to get notifications</citetitle></link>.</para>
+      <para>用<command>cinder-volume-usage-audit</command>命令来获取利用率数据。更多帮助可以参考<link xlink:href="http://docs.openstack.org/admin-guide-cloud/content/section_telemetry-cinder-audit-script.html"><citetitle>Block Storage audit script setup to get notifications</citetitle></link>。</para>
     </step>
   </procedure>
 </section>

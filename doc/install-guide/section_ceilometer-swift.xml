@@ -1,70 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="ceilometer-swift">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="ceilometer-swift">
   <title>配置对象存储服务</title>
-  <para>To retrieve storage-oriented events and samples, configure the
-    Object Storage service to send notifications to the message bus.</para>
+  <para>为了获取存储相关的事件和样本，配置对象存储服务，使之发送通知到消息队列中。</para>
   <procedure>
-    <title>To configure prerequisites</title>
-    <para>The Telemetry service requires access to the Object Storage
-      service using the <literal>ResellerAdmin</literal> role. Perform
-      these steps on the controller node.</para>
+    <title>配置准备工作</title>
+    <para>Telemetry服务需要用<literal>ResellerAdmin</literal>角色访问对象存储，在控制节点执行以下步骤。</para>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain
-        access to admin-only CLI commands.</para>
-       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
+      <para>切换到<literal>admin</literal>环境：</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>source admin-openrc.sh</userinput>
+      </screen>
     </step>
     <step>
-      <para>Create the <literal>ResellerAdmin</literal> role:</para>
-      <screen><prompt>$</prompt> <userinput>openstack role create ResellerAdmin</userinput>
-<computeroutput>+-------+----------------------------------+
+      <para>创建<literal>ResellerAdmin</literal>角色：</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>openstack role create ResellerAdmin</userinput>
+        <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
 +-------+----------------------------------+
 | id    | 462fa46c13fd4798a95a3bfbe27b5e54 |
 | name  | ResellerAdmin                    |
-+-------+----------------------------------+</computeroutput></screen>
++-------+----------------------------------+</computeroutput>
+      </screen>
     </step>
     <step>
-      <para>Add the <literal>ResellerAdmin</literal> role to the
-        <literal>service</literal> tenant and <literal>ceilometer</literal>
-        user:</para>
-      <screen><prompt>$</prompt> <userinput>openstack role add --project service --user ceilometer ResellerAdmin</userinput>
-<computeroutput>+-------+----------------------------------+
+      <para>增加<literal>ResellerAdmin</literal>角色到<literal>service</literal>租户和<literal>ceilometer</literal>用户：</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>openstack role add --project service --user ceilometer ResellerAdmin</userinput>
+        <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
 +-------+----------------------------------+
 | id    | 462fa46c13fd4798a95a3bfbe27b5e54 |
 | name  | ResellerAdmin                    |
-+-------+----------------------------------+</computeroutput></screen>
++-------+----------------------------------+</computeroutput>
+      </screen>
     </step>
   </procedure>
   <procedure>
-    <title>To configure notifications</title>
-    <para>Perform these steps on the controller and any other nodes that
-      run the Object Storage proxy service.</para>
+    <title>配置消息通知</title>
+    <para>在控制节点和其他运行对象存储代理服务的节点上执行这些步骤。</para>
     <step>
-      <para>Edit the <filename>/etc/swift/proxy-server.conf</filename> file
-        and complete the following actions:</para>
+      <para>编辑<filename>/etc/swift/proxy-server.conf</filename>文件并执行以下操作：</para>
       <substeps>
         <step>
-          <para>In the <literal>[filter:keystoneauth]</literal> section,
-            add the <literal>ResellerAdmin</literal> role:</para>
+          <para>在<literal>[filter:keystoneauth]</literal>部分，增加<literal>ResellerAdmin</literal>角色：</para>
           <programlisting language="ini">[filter:keystoneauth]
 ...
 operator_roles = admin,_member_,ResellerAdmin</programlisting>
         </step>
         <step>
-          <para>In the <literal>[pipeline:main]</literal> section, add
-            <literal>ceilometer</literal>:</para>
+          <para>在<literal>[pipeline:main]</literal>部分，增加
+            <literal>ceilometer</literal>：</para>
           <programlisting language="ini">[pipeline:main]
 ...
 pipeline = authtoken cache healthcheck keystoneauth proxy-logging ceilometer proxy-server</programlisting>
         </step>
         <step>
-          <para>In the <literal>[filter:ceilometer]</literal> section, configure
-            notifications:</para>
+          <para>在<literal>[filter:ceilometer]</literal>部分，配置通知：</para>
           <programlisting language="ini">[filter:ceilometer]
 ...
 paste.filter_factory = ceilometermiddleware.swift:filter_factory
@@ -73,27 +68,36 @@ url = rabbit://openstack:<replaceable>RABBIT_PASS</replaceable>@<replaceable>con
 driver = messagingv2
 topic = notifications
 log_level = WARN</programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account in
-            <application>RabbitMQ</application>.</para>
+          <para>用<application>RabbitMQ</application> <literal>openstack</literal>账户的密码替换<replaceable>RABBIT_PASS</replaceable>。</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Add the <literal>swift</literal> system user to the
-        <literal>ceilometer</literal> system group to permit access to the
-        Telemetry configuration files by the Object Storage service:</para>
-      <screen><prompt>#</prompt> <userinput>usermod -a -G ceilometer swift</userinput></screen>
+      <para>增加<literal>swift</literal>系统用户到
+        <literal>ceilometer</literal>系统组来使对象存储服务对Telemetry配置文件的访问权：</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>usermod -a -G ceilometer swift</userinput>
+      </screen>
     </step>
     <step os="fedora;centos;rhel">
       <!-- Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1214928. -->
-      <para>Install the <package>ceilometermiddleware</package> package:</para>
-      <screen><prompt>#</prompt> <userinput>pip install ceilometermiddleware</userinput></screen>
+      <para>安装<package>ceilometermiddleware</package> 软件包：</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>pip install ceilometermiddleware</userinput>
+      </screen>
     </step>
     <step>
-      <para>Restart the Object Storage proxy service:</para>
-      <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>service swift-proxy restart</userinput></screen>
-      <screen os="rhel;centos;fedora;opensuse;sles"><prompt>#</prompt> <userinput>systemctl restart openstack-swift-proxy.service</userinput></screen>
+      <para>重启块存储代理服务：</para>
+      <screen os="ubuntu;debian">
+        <prompt>#</prompt>
+        <userinput>service swift-proxy restart</userinput>
+      </screen>
+      <screen os="rhel;centos;fedora;opensuse;sles">
+        <prompt>#</prompt>
+        <userinput>systemctl restart openstack-swift-proxy.service</userinput>
+      </screen>
     </step>
   </procedure>
 </section>

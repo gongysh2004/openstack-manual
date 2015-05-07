@@ -1,80 +1,67 @@
-<?xml version="1.0" encoding="UTF-8"?>
-    <section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="metering-service">
-      <title>OpenStack计量模块</title>
-      <para>The Telemetry module performs the following functions:</para>
-      <para>
-        <itemizedlist>
-          <listitem>
-            <para>Efficiently polls metering data related to OpenStack
-              services.</para>
-          </listitem>
-          <listitem>
-            <para>Collects event and metering data by monitoring notifications
-              sent from services.</para>
-          </listitem>
-          <listitem>
-            <para>Publishes collected data to various targets including data
-              stores and message queues.</para>
-          </listitem>
-          <listitem>
-            <para>Creates alarms when collected data breaks defined rules.</para>
-          </listitem>
-        </itemizedlist>
-     </para>
-      <para>The Telemetry module consists of the following
-        components:</para>
-      <variablelist>
-        <varlistentry><term>A compute agent (<systemitem class="service"
-          >ceilometer-agent-compute</systemitem>)</term>
-          <listitem><para>Runs on each compute node and polls for resource
-          utilization statistics. There may be other types of agents in the
-          future, but for now our focus is creating the compute agent.</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry><term>A central agent (<systemitem class="service"
-           >ceilometer-agent-central</systemitem>)</term>
-          <listitem><para>Runs on a central management server to poll for
-           resource utilization statistics for resources not tied to instances
-           or compute nodes. Multiple agents can be started to scale service
-           horizontally.</para></listitem>
-        </varlistentry>
-        <varlistentry><term>A notification agent (<systemitem class="service"
-           >ceilometer-agent-notification</systemitem>)</term>
-          <listitem><para>Runs on a central management server(s) and consumes
-            messages from the message queue(s) to build event and metering data.
-          </para></listitem>
-        </varlistentry>
-        <varlistentry><term>A collector (<systemitem class="service"
-           >ceilometer-collector</systemitem>)</term>
-          <listitem><para>Runs on central management server(s) and dispatches
-            collected telemetry data to a data store or external consumer
-            without modification.</para>
-          </listitem>
-        </varlistentry>
-        <varlistentry><term>An alarm evaluator (<systemitem class="service"
-            >ceilometer-alarm-evaluator</systemitem>)</term>
-          <listitem><para>Runs on one or more central management servers to
-          determine when alarms fire due to the associated statistic
-          trend crossing a threshold over a sliding time window.</para></listitem>
-        </varlistentry>
-        <varlistentry><term>An alarm notifier (<systemitem class="service"
-            >ceilometer-alarm-notifier</systemitem>)</term>
-          <listitem><para>Runs on one or more central management servers to
-            allow alarms to be set based on the threshold evaluation for a
-            collection of samples.</para></listitem>
-        </varlistentry>
-        <varlistentry>
-          <term>An API server (<systemitem
-           class="service">ceilometer-api</systemitem>)</term>
-          <listitem><para>Runs on one or more central management servers to
-           provide data access from the data store.</para></listitem>
-        </varlistentry>
-      </variablelist>
-      <para>These services communicate by using the OpenStack messaging bus.
-        Only the collector and API server have access
-        to the data store.</para>
-    </section>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="metering-service">
+  <title>OpenStack计量模块</title>
+  <para>Telemetry模块提供一下功能：</para>
+  <para>
+    <itemizedlist>
+      <listitem>
+        <para>有效地抓取OpenStack服务有关的度量数据。</para>
+      </listitem>
+      <listitem>
+        <para>通过服务发出的通知收集事件和测量数据。</para>
+      </listitem>
+      <listitem>
+        <para>将收集到的数据推送到目标地点如数据存储和消息队列。</para>
+      </listitem>
+      <listitem>
+        <para>定义规则，如果所收集到的数据打破某些规则，产生告警。</para>
+      </listitem>
+    </itemizedlist>
+  </para>
+  <para>Telemetry模块包括以下组件：</para>
+  <variablelist>
+    <varlistentry>
+      <term>A compute agent (<systemitem class="service">ceilometer-agent-compute</systemitem>)</term>
+      <listitem>
+        <para>在每个计算节点上运行，并抓取资源使用统计数据。将来可能有其他类型的代理，但现在主要是计算代理。</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>A central agent (<systemitem class="service">ceilometer-agent-central</systemitem>)</term>
+      <listitem>
+        <para>运行在一个或多个集中管理服务器上，来从那些没有连接到计算节点或实例的源上获取资源使用统计数据，可以同时使用多个代理来扩展。</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>A notification agent (<systemitem class="service">ceilometer-agent-notification</systemitem>)</term>
+      <listitem>
+        <para>运行在集中管理服务器上，处理从消息队列发来的消息，构造来事件和测量数据。</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>A collector (<systemitem class="service">ceilometer-collector</systemitem>)</term>
+      <listitem>
+        <para>运行在集中管理服务器上，并将收集到的监控数据发送到存储或外部。</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>An alarm evaluator (<systemitem class="service">ceilometer-alarm-evaluator</systemitem>)</term>
+      <listitem>
+        <para>运行在一个或多个集中管理服务器上，来确定什么时候因为统计趋势超过某个滑动窗口内的门限值而触发告警。</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>An alarm notifier (<systemitem class="service">ceilometer-alarm-notifier</systemitem>)</term>
+      <listitem>
+        <para>运行在一个或多个集中管理服务器上，允许根据某些设定的门限值产生告警。</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>An API server (<systemitem class="service">ceilometer-api</systemitem>)</term>
+      <listitem>
+        <para>运行在一个或多个集中管理的服务器上，提供数据访问服务</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+  <para>这些服务通过OpenStack消息总线通信。只有collector和API服务器能访问数据库。</para>
+</section>

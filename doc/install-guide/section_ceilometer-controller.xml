@@ -1,35 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE chapter [
 <!ENTITY % openstack SYSTEM "../common/entities/openstack.ent">
 %openstack;
 ]>
-<section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="ceilometer-controller-install">
-  <title>安装配置控制节点</title>
-  <para>This section describes how to install and configure the Telemetry
-    module, code-named ceilometer, on the controller node. The Telemetry
-    module uses separate agents to collect measurements from each OpenStack
-    service in your environment.</para>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="ceilometer-controller-install">
+  <title>安装和配置控制节点</title>
+  <para>本章介绍如何安装和配置Telemetry模块。Telemetry模块用独立的收集器来从OpenStack服务环境中收集测量数据。</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure Telemetry, you must install
-      <application>MongoDB</application>, create a MongoDB database,
-      service credentials, and API endpoint.</para>
+    <title>配置预选项</title>
+    <para>在安装和配置Telemetry之前, 你必须安装：
+      <application>MongoDB</application>，创建MongoDB数据库，服务证书，和API端点。</para>
     <step os="opensuse;sles">
-      <para>Enable the Open Build Service repositories for MongoDB based on
-        your openSUSE or SLES version:</para>
-      <para>On openSUSE:</para>
-      <screen><prompt>#</prompt> <userinput>zypper addrepo -f obs://server:database/openSUSE_13.2 Database</userinput></screen>
-      <para>On SLES:</para>
-      <screen><prompt>#</prompt> <userinput>zypper addrepo -f obs://server:database/SLE_12 Database</userinput></screen>
+      <para>基于你的openSUSE 或 SLES版本，启动 MongoDB的Open Build Service 库:</para>
+      <para>在openSUSE上:</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>zypper addrepo -f obs://server:database/openSUSE_13.2 Database</userinput>
+      </screen>
+      <para>在SLES上:</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>zypper addrepo -f obs://server:database/SLE_12 Database</userinput>
+      </screen>
       <note>
-        <para>The packages are signed by GPG key
-          <literal>562111AC05905EA8</literal>. You should
-          verify the fingerprint of the imported GPG key before using
-          it.</para>
+        <para>这个包是被用GPG key签名
+          <literal>562111AC05905EA8</literal>。你在应用之前要验证导入的GPG key的指纹。</para>
         <programlisting>Key Name: server:database OBS Project &lt;server:database@build.opensuse.org&gt;
 Key Fingerprint: 116EB86331583E47E63CDF4D562111AC05905EA8
 Key Created: Thu Oct 11 20:08:39 2012
@@ -37,72 +32,89 @@ Key Expires: Sat Dec 20 20:08:39 2014</programlisting>
       </note>
     </step>
     <step>
-      <para>Install the MongoDB package:</para>
-      <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install mongodb-server mongodb</userinput></screen>
-      <screen os="opensuse;sles"><prompt>#</prompt> <userinput>zypper install mongodb</userinput></screen>
-      <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install mongodb-server mongodb-clients python-pymongo</userinput></screen>
+      <para>安装MongoDB包:</para>
+      <screen os="rhel;centos;fedora">
+        <prompt>#</prompt>
+        <userinput>yum install mongodb-server mongodb</userinput>
+      </screen>
+      <screen os="opensuse;sles">
+        <prompt>#</prompt>
+        <userinput>zypper install mongodb</userinput>
+      </screen>
+      <screen os="ubuntu">
+        <prompt>#</prompt>
+        <userinput>apt-get install mongodb-server mongodb-clients python-pymongo</userinput>
+      </screen>
     </step>
     <step>
-      <para>Edit the <filename os="opensuse;sles;ubuntu">/etc/mongodb.conf</filename>
-        <filename os="rhel;centos;fedora">/etc/mongod.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑<filename os="opensuse;sles;ubuntu">/etc/mongodb.conf</filename><filename os="rhel;centos;fedora">/etc/mongod.conf</filename>
+      文件，并完成以下动作：</para>
       <substeps>
         <step>
-          <para>Configure the <literal>bind_ip</literal> key to use the
-            management interface IP address of the controller node.</para>
+          <para>配置<literal>bind_ip</literal> key来使用控制节点管理接口的IP地址。</para>
           <programlisting language="ini">bind_ip = 10.0.0.11</programlisting>
         </step>
         <step>
-          <para>By default, MongoDB creates several 1&nbsp;GB journal files
-            in the <filename>/var/lib/mongodb/journal</filename>
-            directory. If you want to reduce the size of each journal file
-            to 128&nbsp;MB and limit total journal space consumption to
-            512&nbsp;MB, assert the <literal>smallfiles</literal> key:</para>
+          <para>缺省情况下，MongoDB创建几个1GB journal文件在<filename>/var/lib/mongodb/journal</filename>目录中。
+           如果你想压缩journal文件的大小到128MB并且限制journal空间不超过512MB，可以插入：</para>
           <programlisting language="ini">smallfiles = true</programlisting>
-          <para os="ubuntu">If you change the journaling configuration,
-            stop the MongoDB service, remove the initial journal files, and
-            start the service:</para>
-          <screen os="ubuntu"><prompt>#</prompt> <userinput>service mongodb stop</userinput>
-<prompt>#</prompt> <userinput>rm /var/lib/mongodb/journal/prealloc.*</userinput>
-<prompt>#</prompt> <userinput>service mongodb start</userinput></screen>
-          <para>You can also disable journaling. For more information, see
-            the <link xlink:href="http://docs.mongodb.org/manual/"
-            >MongoDB manual</link>.</para>
+          <para os="ubuntu">如果你改变journaling配置，停止MongoDB服务，移除初始的journal文件，再启动服务：</para>
+          <screen os="ubuntu">
+            <prompt>#</prompt>
+            <userinput>service mongodb stop</userinput>
+            <prompt>#</prompt>
+            <userinput>rm /var/lib/mongodb/journal/prealloc.*</userinput>
+            <prompt>#</prompt>
+            <userinput>service mongodb start</userinput>
+          </screen>
+          <para>你还可以关闭journaling。更多信息可以看： <link xlink:href="http://docs.mongodb.org/manual/">MongoDB manual</link>。</para>
         </step>
         <step os="ubuntu">
-          <para>Restart the MongoDB service:</para>
-          <screen><prompt>#</prompt> <userinput>service mongodb restart</userinput></screen>
+          <para>重新启动MongoDB服务:</para>
+          <screen>
+            <prompt>#</prompt>
+            <userinput>service mongodb restart</userinput>
+          </screen>
         </step>
         <step os="centos;fedora;opensuse;rhel;sles">
-          <para>Start the MongoDB services and configure them to start when
-            the system boots:</para>
-          <screen os="opensuse;sles"><prompt>#</prompt> <userinput>systemctl enable mongodb.service</userinput>
-<prompt>#</prompt> <userinput>systemctl start mongodb.service</userinput></screen>
-      <!-- NB: The use of mongod, and not mongodb, in the below screen is
-      intentional. -->
-          <screen os="centos;fedora;rhel"><prompt>#</prompt> <userinput>systemctl enable mongod.service</userinput>
-<prompt>#</prompt> <userinput>systemctl start mongod.service</userinput></screen>
+          <para>启动MongoDB服务并配置为自动随系统启动：</para>
+          <screen os="opensuse;sles">
+            <prompt>#</prompt>
+            <userinput>systemctl enable mongodb.service</userinput>
+            <prompt>#</prompt>
+            <userinput>systemctl start mongodb.service</userinput>
+          </screen>
+          <!-- (Note)below is mongod, not mongodb. -->
+          <screen os="centos;fedora;rhel">
+            <prompt>#</prompt>
+            <userinput>systemctl enable mongod.service</userinput>
+            <prompt>#</prompt>
+            <userinput>systemctl start mongod.service</userinput>
+          </screen>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Create the <literal>ceilometer</literal> database:</para>
-      <screen os="centos;fedora;rhel"><prompt>#</prompt> <userinput>mongo --host <replaceable>controller</replaceable> --eval '
+      <para>创建<literal>ceilometer</literal>数据库:</para>
+      <screen os="centos;fedora;rhel">
+        <prompt>#</prompt>
+        <userinput>mongo --host <replaceable>controller</replaceable> --eval '
   db = db.getSiblingDB("ceilometer");
   db.createUser({user: "ceilometer",
   pwd: "<replaceable>CEILOMETER_DBPASS</replaceable>",
   roles: [ "readWrite", "dbAdmin" ]})'</userinput>
-
-<computeroutput>MongoDB shell version: 2.6.x
+        <computeroutput>MongoDB shell version: 2.6.x
 connecting to: controller:27017/test
-Successfully added user: { "user" : "ceilometer", "roles" : [ "readWrite", "dbAdmin" ] }</computeroutput></screen>
-      <screen os="ubuntu;opensuse;sles"><prompt>#</prompt> <userinput>mongo --host <replaceable>controller</replaceable> --eval '
+Successfully added user: { "user" : "ceilometer", "roles" : [ "readWrite", "dbAdmin" ] }</computeroutput>
+      </screen>
+      <screen os="ubuntu;opensuse;sles">
+        <prompt>#</prompt>
+        <userinput>mongo --host <replaceable>controller</replaceable> --eval '
   db = db.getSiblingDB("ceilometer");
   db.addUser({user: "ceilometer",
   pwd: "<replaceable>CEILOMETER_DBPASS</replaceable>",
   roles: [ "readWrite", "dbAdmin" ]})'</userinput>
-
-<computeroutput>MongoDB shell version: 2.4.x
+        <computeroutput>MongoDB shell version: 2.4.x
 connecting to: controller:27017/test
 {
  "user" : "ceilometer",
@@ -112,22 +124,26 @@ connecting to: controller:27017/test
   "dbAdmin"
  ],
  "_id" : ObjectId("5489c22270d7fad1ba631dc3")
-}</computeroutput></screen>
-      <para>Replace <replaceable>CEILOMETER_DBPASS</replaceable> with a
-        suitable password.</para>
+}</computeroutput>
+      </screen>
+      <para>修改<replaceable>CEILOMETER_DBPASS</replaceable>为一个更合适的密码。</para>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access
-        to admin-only CLI commands:</para>
-      <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
+      <para>切换到 <literal>admin</literal>环境：</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>source admin-openrc.sh</userinput>
+      </screen>
     </step>
     <step>
-      <para>To create the service credentials, complete these steps:</para>
+      <para>为了创建服务证书，完成以下步骤：</para>
       <substeps>
         <step>
-          <para>Create the <literal>ceilometer</literal> user:</para>
-          <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt ceilometer</userinput>
-<computeroutput>User Password:
+          <para>创建<literal>ceilometer</literal> 用户：</para>
+          <screen>
+            <prompt>$</prompt>
+            <userinput>openstack user create --password-prompt ceilometer</userinput>
+            <computeroutput>User Password:
 Repeat User Password:
 +----------+----------------------------------+
 | Field    | Value                            |
@@ -137,25 +153,29 @@ Repeat User Password:
 | id       | b7657c9ea07a4556aef5d34cf70713a3 |
 | name     | ceilometer                       |
 | username | ceilometer                       |
-+----------+----------------------------------+</computeroutput></screen>
++----------+----------------------------------+</computeroutput>
+          </screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>ceilometer</literal> user.</para>
-         <screen><prompt>$</prompt> <userinput>openstack role add --project service --user ceilometer admin</userinput>
-<computeroutput>+-------+----------------------------------+
+          <para>增加 <literal>admin</literal>角色到<literal>ceilometer</literal>用户。</para>
+          <screen>
+            <prompt>$</prompt>
+            <userinput>openstack role add --project service --user ceilometer admin</userinput>
+            <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
 +-------+----------------------------------+
 | id    | cd2cb9a39e874ea69e5d4b896eb16128 |
 | name  | admin                            |
-+-------+----------------------------------+</computeroutput></screen>
++-------+----------------------------------+</computeroutput>
+          </screen>
         </step>
         <step>
-          <para>Create the <literal>ceilometer</literal> service
-            entity:</para>
-          <screen><prompt>$</prompt> <userinput>openstack service create --type metering \
+          <para>创建<literal>ceilometer</literal>服务实体：</para>
+          <screen>
+            <prompt>$</prompt>
+            <userinput>openstack service create --type metering \
   --description "Telemetry" ceilometer</userinput>
-<computeroutput>+-------------+----------------------------------+
+            <computeroutput>+-------------+----------------------------------+
 | Field       | Value                            |
 +-------------+----------------------------------+
 | description | Telemetry                        |
@@ -163,19 +183,22 @@ Repeat User Password:
 | id          | 3405453b14da441ebb258edfeba96d83 |
 | name        | ceilometer                       |
 | type        | metering                         |
-+-------------+----------------------------------+</computeroutput></screen>
++-------------+----------------------------------+</computeroutput>
+          </screen>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Create the Telemetry module API endpoint:</para>
-      <screen><prompt>$</prompt> <userinput>openstack endpoint create \
+      <para>创建Telemetry组件的API端点：</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:8777 \
   --internalurl http://<replaceable>controller</replaceable>:8777 \
   --adminurl http://<replaceable>controller</replaceable>:8777 \
   --region RegionOne \
   metering</userinput>
-<computeroutput>+--------------+----------------------------------+
+        <computeroutput>+--------------+----------------------------------+
 | Field        | Value                            |
 +--------------+----------------------------------+
 | adminurl     | http://controller:8777           |
@@ -186,87 +209,96 @@ Repeat User Password:
 | service_id   | 3405453b14da441ebb258edfeba96d83 |
 | service_name | ceilometer                       |
 | service_type | metering                         |
-+--------------+----------------------------------+</computeroutput></screen>
++--------------+----------------------------------+</computeroutput>
+      </screen>
     </step>
   </procedure>
   <procedure os="debian">
     <title>To configure prerequisites</title>
-    <para>Before you install and configure Telemetry, you must install
+    <para>在安装和配置Telemetry之前,必须安装
       <application>MongoDB</application>.</para>
     <step>
       <para>Install the MongoDB package:</para>
-      <screen><prompt>#</prompt> <userinput>apt-get install mongodb-server</userinput></screen>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>apt-get install mongodb-server</userinput>
+      </screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/mongodb.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑<filename>/etc/mongodb.conf</filename>文件并完成下列步骤：</para>
       <substeps>
         <step>
-          <para>Configure the <literal>bind_ip</literal> key to use the
-            management interface IP address of the controller node.</para>
+          <para>配置<literal>bind_ip</literal> key来使用控制节点的管理接口IP地址。</para>
           <programlisting language="ini">bind_ip = 10.0.0.11</programlisting>
         </step>
         <step>
-          <para>By default, MongoDB creates several 1&nbsp;GB journal files
-            in the <filename>/var/lib/mongodb/journal</filename>
-            directory. If you want to reduce the size of each journal file
-            to 128&nbsp;MB and limit total journal space consumption to
-            512&nbsp;MB, assert the <literal>smallfiles</literal> key:</para>
+          <para>缺省情况下，MongoDB创建多个1GB journal文件在<filename>/var/lib/mongodb/journal</filename>目录. 如果你要压缩journal文件的大小到128MB并且限制总空间不超过512MB, 插入<literal>smallfiles</literal> key：</para>
           <programlisting language="ini">smallfiles = true</programlisting>
-          <para>If you change the journaling configuration, stop the MongoDB
-            service, remove the initial journal files, and start the
-            service:</para>
-          <screen><prompt>#</prompt> <userinput>service mongodb stop</userinput>
-<prompt>#</prompt> <userinput>rm /var/lib/mongodb/journal/prealloc.*</userinput>
-<prompt>#</prompt> <userinput>service mongodb start</userinput></screen>
-          <para>You can also disable journaling. For more information, see
-            the <link xlink:href="http://docs.mongodb.org/manual/"
-            >MongoDB manual</link>.</para>
+          <para>如果要改变journaling配置，停止MongoDB服务，删除初始的journal文件，再启动服务：</para>
+          <screen>
+            <prompt>#</prompt>
+            <userinput>service mongodb stop</userinput>
+            <prompt>#</prompt>
+            <userinput>rm /var/lib/mongodb/journal/prealloc.*</userinput>
+            <prompt>#</prompt>
+            <userinput>service mongodb start</userinput>
+          </screen>
+          <para>还可以关闭journaling。更多信息请参考<link xlink:href="http://docs.mongodb.org/manual/">MongoDB manual</link>。 </para>
         </step>
         <step>
           <para>Restart the MongoDB service:</para>
-          <screen><prompt>#</prompt> <userinput>service mongodb restart</userinput></screen>
+          <screen>
+            <prompt>#</prompt>
+            <userinput>service mongodb restart</userinput>
+          </screen>
         </step>
       </substeps>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install and configure the Telemetry module components</title>
+    <title>安装和配置Telemetry组件模块</title>
     <step>
-      <para>Install the packages:</para>
-      <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
+      <para>安装软件包：</para>
+      <screen os="ubuntu">
+        <prompt>#</prompt>
+        <userinput>apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
   ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
-  python-ceilometerclient</userinput></screen>
-      <screen os="centos;fedora;rhel"><prompt>#</prompt> <userinput>yum install openstack-ceilometer-api openstack-ceilometer-collector \
+  python-ceilometerclient</userinput>
+      </screen>
+      <screen os="centos;fedora;rhel">
+        <prompt>#</prompt>
+        <userinput>yum install openstack-ceilometer-api openstack-ceilometer-collector \
   openstack-ceilometer-notification openstack-ceilometer-central openstack-ceilometer-alarm \
-  python-ceilometerclient</userinput></screen>
-      <screen os="opensuse;sles"><prompt>#</prompt> <userinput>zypper install openstack-ceilometer-api openstack-ceilometer-collector \
+  python-ceilometerclient</userinput>
+      </screen>
+      <screen os="opensuse;sles">
+        <prompt>#</prompt>
+        <userinput>zypper install openstack-ceilometer-api openstack-ceilometer-collector \
   openstack-ceilometer-agent-notification openstack-ceilometer-agent-central python-ceilometerclient \
-  openstack-ceilometer-alarm-evaluator openstack-ceilometer-alarm-notifier</userinput></screen>
+  openstack-ceilometer-alarm-evaluator openstack-ceilometer-alarm-notifier</userinput>
+      </screen>
     </step>
     <step>
-      <para>Generate a random value to use as the telemetry secret:</para>
-      <screen><prompt>$</prompt> <userinput>openssl rand -hex 10</userinput></screen>
+      <para>生成telemetry用户随机密码:</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>openssl rand -hex 10</userinput>
+      </screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/ceilometer/ceilometer.conf</filename> file
-        and complete the following actions:</para>
+      <para>编辑<filename>/etc/ceilometer/ceilometer.conf</filename>文件并且完成下列步骤：</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section,
-            configure database access:</para>
+          <para>在<literal>[database]</literal>部分，配置数据库访问：</para>
           <programlisting language="ini">[database]
 ...
 connection = mongodb://ceilometer:<replaceable>CEILOMETER_DBPASS</replaceable>@<replaceable>controller</replaceable>:27017/ceilometer</programlisting>
-          <para>Replace <replaceable>CEILOMETER_DBPASS</replaceable> with
-            the password you chose for the Telemetry module database. You
-            must escape special characters such as ':', '/', '+', and '@'
-            in the connection string in accordance with RFC2396.</para>
+          <para>修改<replaceable>CEILOMETER_DBPASS</replaceable>，用你选择的Telemetry数据库密码.你要避免在连接字符串中使用RFC2396规定的特殊字符如 ':', '/', '+', and '@' 。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
+          <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[oslo_messaging_rabbit]</literal>部分, 配置
+            <application>RabbitMQ</application> 消息队列访问：</para>
           <programlisting language="ini">[DEFAULT]
 ...
 rpc_backend = rabbit
@@ -276,14 +308,11 @@ rpc_backend = rabbit
 rabbit_host = <replaceable>controller</replaceable>
 rabbit_userid = openstack
 rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account in
-            <application>RabbitMQ</application>.</para>
+          <para>用你的<literal>openstack</literal> 用户在<application>RabbitMQ</application>中的密码替换<replaceable>RABBIT_PASS</replaceable>密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections, configure
-            Identity service access:</para>
+          <para>在<literal>[DEFAULT]</literal>和
+            <literal>[keystone_authtoken]</literal>部分, 配置身份服务访问信息:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 auth_strategy = keystone
@@ -295,19 +324,17 @@ identity_uri = http://<replaceable>controller</replaceable>:35357
 admin_tenant_name = service
 admin_user = ceilometer
 admin_password = <replaceable>CEILOMETER_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>CEILOMETER_PASS</replaceable> with the
-            password you chose for the <literal>celiometer</literal>
-            user in the Identity service.</para>
+          <para>用你的在Identity服务中<literal>celiometer</literal>用户的密码替换 <replaceable>CEILOMETER_PASS</replaceable>密码。</para>
           <note>
-            <para>Comment out any <literal>auth_host</literal>,
-              <literal>auth_port</literal>, and
-              <literal>auth_protocol</literal> options because the
-              <literal>identity_uri</literal> option replaces them.</para>
+            <para>注释掉 <literal>auth_host</literal>,
+              <literal>auth_port</literal>, 和
+              <literal>auth_protocol</literal> 选项，因为
+              <literal>identity_uri</literal> 选项代替了他们.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[service_credentials]</literal>
-            section, configure service credentials:</para>
+          <para>在 <literal>[service_credentials]</literal>
+            部分, 配置服务证书:</para>
           <programlisting language="ini">[service_credentials]
 ...
 os_auth_url = http://<replaceable>controller</replaceable>:5000/v2.0
@@ -316,31 +343,27 @@ os_tenant_name = service
 os_password = <replaceable>CEILOMETER_PASS</replaceable>
 os_endpoint_type = internalURL
 os_region_name = RegionOne</programlisting>
-          <para>Replace <replaceable>CEILOMETER_PASS</replaceable> with
-            the password you chose for the <literal>ceilometer</literal>
-            user in the Identity service.</para>
+          <para>用在Identity服务中用户的 <literal>ceilometer</literal>的密码替换<replaceable>CEILOMETER_PASS</replaceable> 密码。</para>
         </step>
         <step>
-          <para>In the <literal>[publisher]</literal> section, configure
-            the telemetry secret:</para>
+          <para>在<literal>[publisher]</literal> 部分, 配置telemetry secret：</para>
           <programlisting language="ini">[publisher]
 ...
 telemetry_secret = <replaceable>TELEMETRY_SECRET</replaceable></programlisting>
-          <para>Replace <replaceable>TELEMETRY_SECRET</replaceable> with the
-            telemetry secret that you generated in a previous step.</para>
+          <para>用在前面步骤中产生的telemetry secret替换<replaceable>TELEMETRY_SECRET</replaceable>密码。</para>
         </step>
         <step os="opensuse;sles">
           <para>In the <literal>[collector]</literal> section, configure the
             dispatcher:</para>
-<!-- should this be 'dispatcher = database' ? -->
+          <!-- should this be 'dispatcher = database' ? -->
           <programlisting language="ini">[collector]
 ...
 dispatcher = database</programlisting>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+          <para>(选项) 为协助排错,
+            在<literal>[DEFAULT]</literal>
+            部分启动verbose日志:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -348,17 +371,19 @@ verbose = True</programlisting>
       </substeps>
     </step>
   </procedure>
-
   <procedure os="debian">
-  <title>To install and configure the Telemetry module components</title>
+    <title>安装和配置Telemetry模块组件</title>
     <step>
-      <para>Install the packages:</para>
-      <screen><prompt>#</prompt> <userinput>apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
+      <para>安装软件包:</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>apt-get install ceilometer-api ceilometer-collector ceilometer-agent-central \
   ceilometer-agent-notification ceilometer-alarm-evaluator ceilometer-alarm-notifier \
-  python-ceilometerclient</userinput></screen>
+  python-ceilometerclient</userinput>
+      </screen>
     </step>
     <step>
-      <para>Respond to prompts for
+      <para>响应填充以下条目：
         <link linkend="debconf-dbconfig-common">database management</link>,
         <link linkend="debconf-keystone_authtoken">Identity service
         credentials</link>,
@@ -368,58 +393,67 @@ verbose = True</programlisting>
         credentials</link>.</para>
     </step>
     <step>
-      <para>Generate a random value to use as the telemetry secret:</para>
-      <screen><prompt>$</prompt> <userinput>openssl rand -hex 10</userinput></screen>
+      <para>为telemetry secret产生一个随机数：</para>
+      <screen>
+        <prompt>$</prompt>
+        <userinput>openssl rand -hex 10</userinput>
+      </screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/ceilometer/ceilometer.conf</filename> file
-        and complete the following actions:</para>
+      <para>编辑<filename>/etc/ceilometer/ceilometer.conf</filename>文件并完成以下步骤:</para>
       <substeps>
         <step>
-          <para>In the <literal>[publisher]</literal> section, configure
-            the telemetry secret:</para>
+          <para>在<literal>[publisher]</literal> 部分, 配置telemetry secret:</para>
           <programlisting language="ini">[publisher]
 ...
 telemetry_secret = <replaceable>TELEMETRY_SECRET</replaceable></programlisting>
-          <para>Replace <replaceable>TELEMETRY_SECRET</replaceable> with the
-            telemetry secret that you generated in a previous step.</para>
+          <para>用上一步生成的telemetry secret 替换 <replaceable>TELEMETRY_SECRET</replaceable>。</para>
         </step>
         <step>
-          <para>In the <literal>[service_credentials]</literal>
-            section, configure service credentials:</para>
+          <para>在<literal>[service_credentials]</literal>
+            部分, 配置服务证书：</para>
           <programlisting language="ini">[service_credentials]
 ...
 os_auth_url = http://<replaceable>controller</replaceable>:5000/v2.0
 os_username = ceilometer
 os_tenant_name = service
 os_password = <replaceable>CEILOMETER_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>CEILOMETER_PASS</replaceable> with
-            the password you chose for the <literal>ceilometer</literal>
-            user in the Identity service.</para>
+          <para>用你的Identity服务的用户的<literal>ceilometer</literal>密码替换<replaceable>CEILOMETER_PASS</replaceable>密码。</para>
         </step>
       </substeps>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu;debian">
-      <para>Restart the Telemetry services:</para>
-      <screen><prompt>#</prompt> <userinput>service ceilometer-agent-central restart</userinput>
-<prompt>#</prompt> <userinput>service ceilometer-agent-notification restart</userinput>
-<prompt>#</prompt> <userinput>service ceilometer-api restart</userinput>
-<prompt>#</prompt> <userinput>service ceilometer-collector restart</userinput>
-<prompt>#</prompt> <userinput>service ceilometer-alarm-evaluator restart</userinput>
-<prompt>#</prompt> <userinput>service ceilometer-alarm-notifier restart</userinput></screen>
+      <para>重启Telemetry服务:</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>service ceilometer-agent-central restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service ceilometer-agent-notification restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service ceilometer-api restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service ceilometer-collector restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service ceilometer-alarm-evaluator restart</userinput>
+        <prompt>#</prompt>
+        <userinput>service ceilometer-alarm-notifier restart</userinput>
+      </screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the Telemetry services and configure them to start when the
-        system boots:</para>
-      <screen><prompt>#</prompt> <userinput>systemctl enable openstack-ceilometer-api.service openstack-ceilometer-notification.service \
+      <para>启动Telemetry服务并配置为开机自动启动：</para>
+      <screen>
+        <prompt>#</prompt>
+        <userinput>systemctl enable openstack-ceilometer-api.service openstack-ceilometer-notification.service \
   openstack-ceilometer-central.service openstack-ceilometer-collector.service \
   openstack-ceilometer-alarm-evaluator.service openstack-ceilometer-alarm-notifier.service</userinput>
-<prompt>#</prompt> <userinput>systemctl start openstack-ceilometer-api.service openstack-ceilometer-notification.service \
+        <prompt>#</prompt>
+        <userinput>systemctl start openstack-ceilometer-api.service openstack-ceilometer-notification.service \
   openstack-ceilometer-central.service openstack-ceilometer-collector.service \
-  openstack-ceilometer-alarm-evaluator.service openstack-ceilometer-alarm-notifier.service</userinput></screen>
+  openstack-ceilometer-alarm-evaluator.service openstack-ceilometer-alarm-notifier.service</userinput>
+      </screen>
     </step>
   </procedure>
 </section>

@@ -80,11 +80,6 @@
         <td os="rhel;centos;fedora">160</td>
         <td os="debian;opensuse;sles;ubuntu">Assigned during package installation</td>
       </tr>
-      <tr>
-        <td>trove</td>
-        <td>OpenStack trove daemons</td>
-        <td os="debian;opensuse;sles;ubuntu;rhel;centos;fedora">Assigned during package installation</td>
-      </tr>
     </tbody>
   </table>
   <para>Each user belongs to a user group with the same name as the
