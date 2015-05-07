@@ -1,18 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="launch-instance">
+<?xml version="1.0" encoding="utf-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="launch-instance">
   <title>启动虚拟机</title>
-  <para>An instance is a VM that OpenStack provisions on a compute node.
-    This guide shows you how to launch a minimal instance using the
-    <glossterm>CirrOS</glossterm> image that you added to your environment
-    in the <xref linkend="ch_glance"/> chapter. In these steps, you use the
-    command-line interface (CLI) on your controller node or any system with
-    the appropriate OpenStack client libraries. To use the dashboard, see the
-    <link
-      xlink:href="http://docs.openstack.org/user-guide/dashboard.html">
-    <citetitle>OpenStack User Guide</citetitle></link>.</para>
-  <xi:include href="section_launch-instance-neutron.xml"/>
+
+  <para>一个虚拟机(实例)是指一个由OpenStack在计算节点角色物理机上启动的虚拟机。
+本指南介绍如何启动一个最小配置的虚拟机，采用<glossterm>CirrOS</glossterm> 软件镜像
+(软件镜像是用 <xref linkend="ch_glance" /> 一章介绍的方法上传的)。
+此过程可以采用控制节点上的命令行(CLI)或者通过其他系统上的OpenStack客户库。
+</para>
+  <xi:include href="section_launch-instance-neutron.xml" />
 </chapter>
