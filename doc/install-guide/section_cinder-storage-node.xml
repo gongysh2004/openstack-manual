@@ -6,25 +6,17 @@
   xml:id="cinder-install-storage-node">
   <?dbhtml stop-chunking?>
   <title>控制节点安装和配置Cinder磁盘服务</title>
-  <para>This section describes how to install and configure storage nodes
-    for the Block Storage service. For simplicity, this configuration
-    references one storage node with an empty local block storage device
-    <literal>/dev/sdb</literal> that contains a suitable partition table with
-    one partition <literal>/dev/sdb1</literal> occupying the entire device.
-    The service provisions logical volumes on this device using the
-    <glossterm>LVM</glossterm> driver and provides them to instances via
-    <glossterm baseform="Internet Small Computer Systems Interface (iSCSI)"
-    >iSCSI</glossterm> transport. You can follow these instructions with
-    minor modifications to horizontally scale your environment with
-    additional storage nodes.</para>
+  <para>这部分内容讲述了如何安装和配置块存储的存储节点，在本次课程中， 我们使用了一个名叫<literal>/dev/sdb</literal>的设备，并且将其全部空间分配到<literal>/dev/sdb1</literal>分区中， 块存储服务将在该设备中使用<glossterm>LVM</glossterm>来创建逻辑卷。最终它上面的卷会通过<glossterm baseform="Internet Small Computer Systems Interface (iSCSI)"
+    >iSCSI</glossterm>的方式提供给虚拟机。
+    </para>
   <procedure>
-    <title>To configure prerequisites</title>
+    <title>配置的前提条件</title>
     <step>
-      <para>Install the LVM packages:</para>
+      <para>安装LVM相关的软件包:</para>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>apt-get install lvm2</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install lvm2</userinput></screen>
        <note>
-         <para>Some distributions include LVM by default.</para>
+         <para>一些Linux发行版中已经包含了LVM。</para>
        </note>
     </step>
     <step os="rhel;centos;fedora">
@@ -34,61 +26,39 @@
 <prompt>#</prompt> <userinput>systemctl start lvm2-lvmetad.service</userinput></screen>
     </step>
     <step>
-      <para>Create the LVM physical volume <literal>/dev/sdb1</literal>:</para>
+      <para>创建物理卷 <literal>/dev/sdb1</literal>:</para>
       <screen><prompt>#</prompt> <userinput>pvcreate /dev/sdb1</userinput>
 <computeroutput>  Physical volume "/dev/sdb1" successfully created</computeroutput></screen>
       <note>
-        <para>If your system uses a different device name, adjust these
-          steps accordingly.</para>
+        <para>如果系统使用了不同的设备名称， 将命令中的设备名称修改成正确的名称。</para>
       </note>
     </step>
     <step>
-      <para>Create the LVM volume group
+      <para>创建卷组
         <literal>cinder-volumes</literal>:</para>
       <screen><prompt>#</prompt> <userinput>vgcreate cinder-volumes /dev/sdb1</userinput>
 <computeroutput>  Volume group "cinder-volumes" successfully created</computeroutput></screen>
-      <para>The Block Storage service creates logical volumes in this
-        volume group.</para>
+      <para>块存储服务将在这个卷组中创建逻辑卷。</para>
     </step>
     <step>
-      <para>Only instances can access Block Storage volumes. However, the
-        underlying operating system manages the devices associated with
-        the volumes. By default, the LVM volume scanning tool scans the
-        <literal>/dev</literal> directory for block storage devices that
-        contain volumes. If projects use LVM on their volumes, the scanning
-        tool detects these volumes and attempts to cache them which can cause
-        a variety of problems with both the underlying operating system
-        and project volumes. You must reconfigure LVM to scan only the devices
-        that contain the <literal>cinder-volume</literal> volume group. Edit
-        the <filename>/etc/lvm/lvm.conf</filename> file and complete the
-        following actions:</para>
+      <para>只有计算节点上的虚拟机实例可以访问块存储的卷，不过，块存储中的卷都是由操作系统底层来分配和管理的， LVM的扫描工具会扫描/dev/目录下的块存储设备， 如果卷使用的是LVM, 扫描工具检测到这些卷并尝试缓存它们也许会引起底层的一些问题， 你可以通过修改<filename>/etc/lvm/lvm.conf</filename>文件来规定LVM只扫描包含<literal>cinder-volume</literal>的卷组。</para>
       <substeps>
         <step>
-          <para>In the <literal>devices</literal> section, add a filter
-            that accepts the <literal>/dev/sdb</literal> device and rejects
-            all other devices:</para>
+          <para>在<literal>devices</literal> 配置组中,添加一个filter来只接受 <literal>/dev/sdb</literal> 设备并去除其他设备:</para>
           <programlisting language="ini">devices {
 ...
 filter = [ "a/sdb/", "r/.*/"]</programlisting>
-          <para>Each item in the filter array begins with <literal>a</literal>
-            for <emphasis>accept</emphasis> or <literal>r</literal> for
-            <emphasis>reject</emphasis> and includes a regular expression
-            for the device name. The array must end with
-            <literal>r/.*/</literal> to reject any remaining
-            devices. You can use the <command>vgs -vvvv</command>
-            command to test filters.</para>
+          <para>filter数组的每个项目都以一个<literal>a</literal>打头代表<emphasis>accept</emphasis> 或者 <literal>r</literal> 打头代表
+            <emphasis>reject</emphasis> ， 中间包含一个正则表达式代表设备名称. 配置项必须以
+            <literal>r/.*/</literal>结尾来去除所有剩余的设备。你可以使用 <command>vgs -vvvv</command>
+            命令来测试filters.</para>
           <warning>
-            <para>If your storage nodes use LVM on the operating system disk,
-              you must also add the associated device to the filter. For
-              example, if the <literal>/dev/sda</literal> device contains
-              the operating system:</para>
+            <para>
+              如果你的存储节点在系统盘上使用LVM， 你必须同样配置现有设备的filter, 例如, 如果 <literal>/dev/sda</literal>设备上包含了操作系统:</para>
             <programlisting language="ini">filter = [ "a/sda/", "a/sdb/", "r/.*/"]</programlisting>
-            <para>Similarly, if your compute nodes use LVM on the operating
-              system disk, you must also modify the filter in the
-              <literal>/etc/lvm/lvm.conf</literal> file on those nodes to
-              include only the operating system disk. For example, if the
-              <literal>/dev/sda</literal> device contains the operating
-              system:</para>
+            <para>同样， 如果你的计算节点上的系统盘上使用LVM，你同样需要修改
+              <literal>/etc/lvm/lvm.conf</literal>文件中的filter。例如系统在
+              <literal>/dev/sda</literal> 设备上:</para>
             <programlisting language="ini">filter = [ "a/sda/", "r/.*/"]</programlisting>
           </warning>
         </step>
@@ -96,9 +66,9 @@ filter = [ "a/sdb/", "r/.*/"]</programlisting>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>Install and configure Block Storage volume components</title>
+    <title>安装和配置块存储卷服务(volume service)</title>
     <step>
-      <para>Install the packages:</para>
+      <para>安装软件包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install cinder-volume python-mysqldb</userinput></screen>
       <!-- Temporary workaround for bug:
            https://bugzilla.redhat.com/show_bug.cgi?id=1212899 -->
@@ -106,13 +76,11 @@ filter = [ "a/sdb/", "r/.*/"]</programlisting>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install openstack-cinder-volume tgt python-mysql</userinput></screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/cinder/cinder.conf</filename> file
-        and complete the following actions:</para>
+      <para>编辑 <filename>/etc/cinder/cinder.conf</filename> 文件并完成以下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[lvm]</literal> section, configure the LVM
-            back end with the LVM driver, <literal>cinder-volumes</literal>
-            volume group, iSCSI protocol, and appropriate iSCSI
+          <para>在 <literal>[lvm]</literal> 配置组中, 配置LVM作为后端的存储Driver, <literal>cinder-volumes</literal>
+            volume group, iSCSI protocol, 和iSCSI相关的
             service:</para>
           <programlisting os="ubuntu;sles;opensuse" language="ini">[lvm]
 ...
@@ -128,19 +96,16 @@ iscsi_protocol = iscsi
 iscsi_helper = lioadm</programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, enable the LVM
-            back end:</para>
+          <para>在<literal>[DEFAULT]</literal> 配置组中, 开启LVM存储后端:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 enabled_backends = lvm</programlisting>
           <note>
-            <para>Back-end names are arbitrary. As an example, this guide
-              uses the name of the driver as the name of the back end.</para>
+            <para>存储后端的名称可以任意取， 作为实例教程， 这里使用与driver相同的名称作为后端名称。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            location of the Image service:</para>
+          <para>在<literal>[DEFAULT]</literal> 配置组中, 配置Image Service的路径:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 glance_host = <replaceable>controller</replaceable></programlisting>
@@ -173,10 +138,9 @@ glance_host = <replaceable>controller</replaceable></programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu;debian">
-      <para>Restart the Block Storage volume service including its
-        dependencies:</para>
+      <para>重启cinder以及其相关的服务:</para>
       <screen><prompt>#</prompt> <userinput>service tgt restart</userinput>
 <prompt>#</prompt> <userinput>service cinder-volume restart</userinput></screen>
     </step>
@@ -189,9 +153,7 @@ glance_host = <replaceable>controller</replaceable></programlisting>
 <prompt>#</prompt> <userinput>systemctl start openstack-cinder-volume.service tgtd.service</userinput></screen>
     </step>
     <step os="ubuntu">
-      <para>By default, the Ubuntu packages create an SQLite database.
-        Because this configuration uses a SQL database server, remove
-        the SQLite database file:</para>
+      <para>默认情况下， Ubuntu的OpenStack软件包会自动创建一个SQLite数据库， 因为我们已经配置成使用MySQL作为我们的后端数据库， 所以我们可以删除这个数据库文件:</para>
       <screen><prompt>#</prompt> <userinput>rm -f /var/lib/cinder/cinder.sqlite</userinput></screen>
     </step>
   </procedure>

@@ -38,9 +38,11 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <!-- These parameters only apply to webhelp -->
-                            <localFontPath>/home/gongysh/fonts</localFontPath>
-                            <bodyFont>SimSun</bodyFont>
-                            <monospaceFont>NanumGothic</monospaceFont>
+							<localFontPath>/Users/liangbo/Dev/fonts</localFontPath>
+							<!--<bodyFont>WenQuanYi Zen Hei</bodyFont>-->
+							<bodyFont>HelveticaNeue</bodyFont>
+							<bodyFont>Microsoft YaHei</bodyFont>
+							<monospaceFont>Consolas</monospaceFont>
 
                             <enableDisqus>${comments.enabled}</enableDisqus>
                             <disqusShortname>os-install-${operating.system}</disqusShortname>

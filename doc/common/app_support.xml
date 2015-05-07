@@ -6,26 +6,22 @@
   xml:id="app_community_support">
     <?dbhtml stop-chunking?>
     <title>社区支持</title>
-    <para>The following resources are available to help you run and use
-        OpenStack. The OpenStack community constantly improves and
-        adds to the main features of OpenStack, but if you have
-        any questions, do not hesitate to ask. Use the
-        following resources to get OpenStack support,
-        and troubleshoot your installations.</para>
+    <para>以下的资源可用来帮你运行和使用OpenStack。OpenStack社区一直在改进OpenStack，
+并且不是地在增加特性，如果你有任何的疑问，可以毫不犹豫地提问。
+使用以下的资源能够得到OpenStack的支援，并排除安装时的发生的故障。</para>
     <section xml:id="support-documentation">
         <title>文档</title>
-        <para>For the available OpenStack documentation, see <link
+        <para>如需可用的OpenStack文档，查看 <link
                 xlink:href="http://docs.openstack.org"
                 >docs.openstack.org</link>.</para>
-        <para>To provide feedback on documentation, join and use the
+        <para>如需提供关于文档的反馈，加入并使用
                 <email>openstack-docs@lists.openstack.org</email>
-            mailing list at <link
+            邮件列表。访问 <link
                 xlink:href="http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-docs"
                 >OpenStack Documentation Mailing List</link>, or <link
                 xlink:href="https://bugs.launchpad.net/openstack-manuals/+filebug"
                 >report a bug</link>.</para>
-        <para>The following books explain how to install an OpenStack
-            cloud and its associated components:</para>
+        <para>以下的文档说明了怎样去安装OpenStack以及连结它的组件:</para>
         <itemizedlist>
             <listitem>
                 <para>
@@ -53,8 +49,7 @@
                     </link></para>
             </listitem>
         </itemizedlist>
-        <para>The following books explain how to configure and run an
-            OpenStack cloud:</para>
+        <para>以下的文档说明了怎样去配置并运行一个OpenStack云:</para>
         <itemizedlist>
             <listitem>
                 <para><link
@@ -106,8 +101,7 @@
                             Guide</citetitle></link></para>
             </listitem>
         </itemizedlist>
-        <para>The following books explain how to use the OpenStack
-            dashboard and command-line clients:</para>
+        <para>以下的文档说明了怎样去使用OpenStack仪表盘和命令行客户端:</para>
         <itemizedlist>
             <listitem>
                 <para>
@@ -138,8 +132,7 @@
                             Reference</citetitle></link></para>
             </listitem>
         </itemizedlist>
-        <para>The following documentation provides reference and
-            guidance information for the OpenStack APIs:</para>
+        <para>以下的文档提供了OpenStack API接口的参照和指导信息:</para>
         <itemizedlist>
             <listitem>
                 <para><link
@@ -156,91 +149,60 @@
         <para>The <link
                 xlink:href="http://docs.openstack.org/training-guides/content/"
                     ><citetitle>Training Guides</citetitle></link>
-            offer software training for cloud administration and
-            management.</para>
+            提供了云管理的软件练习。</para>
     </section>
     <section xml:id="support-ask_openstack">
         <title>ask.openstack.org</title>
-        <para>During the set up or testing of OpenStack, you might
-            have questions about how a specific task is completed or
-            be in a situation where a feature does not work correctly.
-            Use the <link xlink:href="http://ask.openstack.org"
-                >ask.openstack.org</link> site to ask questions and
-            get answers. When you visit the <link
-                xlink:href="http://ask.openstack.org"
-                >http://ask.openstack.org</link> site, scan the
-            recently asked questions to see whether your question has
-            already been answered. If not, ask a new question. Be sure
-            to give a clear, concise summary in the title and provide
-            as much detail as possible in the description. Paste in
-            your command output or stack traces, links to screen
-            shots, and any other information which
-            might be useful.</para>
+        <para>在OpenStack的一系列测试中，你可能会对一个任务是如何完成的或是工程的一个特性无法正确工作的情况存在疑问。使用<link xlink:href="http://ask.openstack.org"
+                >ask.openstack.org</link> 问问题。</para>
     </section>
     <section xml:id="support-mailing-lists">
         <title>OpenStack邮件列表</title>
-        <para>A great way to get answers and insights is to post your
-            question or problematic scenario to the OpenStack mailing
-            list. You can learn from and help others who might have
-            similar issues. To subscribe or view the archives, go to
+        <para>一个获得答案和见解的好方法是贴出你的问题或是出错的情景到OpenStack的邮件列表。
+你能够学习或帮助其他可能和你碰到同样问题的人。如需订阅或是查看档案文件，查看
                 <link
                 xlink:href="http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack"
                 >http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack</link>.
-            You might be interested in the other mailing lists for
-            specific projects or development, which you can find <link
+            你可能会对其他特定的项目或是开发感兴趣，查看<link
                 xlink:href="http://wiki.openstack.org/MailingLists">on
-                the wiki</link>. A description of all mailing lists is
-            available at <link
+                the wiki</link>. OpenStack的所有邮件列表在 <link
                 xlink:href="http://wiki.openstack.org/MailingLists"
                 >http://wiki.openstack.org/MailingLists</link>.</para>
     </section>
     <section xml:id="support-wiki">
         <title>OpenStack wiki</title>
-        <para>The <link xlink:href="http://wiki.openstack.org/">OpenStack
-                wiki</link> contains a broad range of topics but some of the
-            information can be difficult to find or is a few pages deep.
-            Fortunately, the wiki search feature enables you to search by title
-            or content. If you search for specific information, such as about
-            networking or nova, you can find a large amount of relevant
-            material. More is being added all the time, so be sure to check back
-            often. You can find the search box in the upper-right corner of any
-            OpenStack wiki page.</para>
+        <para><link xlink:href="http://wiki.openstack.org/">OpenStack
+                wiki</link> 包括了方方面面的主题，但是一些信息可能很难找到，
+或是在比较深的页面。幸运的是，维基百科的查找特性能够使你能够通过标题或内容查找。
+如果你需要查找特定的信息，比如networking或是nova,你能找到大量的相关资料。
+更多的内容是一直在增加的，所以确认你会常回来查看。你能够在任何OpenStack的维基页面的右上角找到搜索框。</para>
     </section>
     <section xml:id="support-bugs-area">
         <title>Launchpad Bugs</title>
-        <para>The OpenStack community values your set up and testing efforts and
-            wants your feedback. To log a bug, you must sign up for a Launchpad
-            account at <link xlink:href="https://launchpad.net/+login"
-                >https://launchpad.net/+login</link>. You can view existing bugs
-            and report bugs in the Launchpad Bugs area. Use the search feature
-            to determine whether the bug has already been reported or already
-            been fixed. If it still seems like your bug is unreported, fill out
-            a bug report.</para>
-        <para>Some tips:</para>
+        <para>OpenStack社区重视你在建立和测试上的付出，并想要你的反馈，
+要记录一个错误，你必须登录 Launchpad账号在
+             <link xlink:href="https://launchpad.net/+login"
+                >https://launchpad.net/+login</link>。
+ 你能够在Launchpad的错误区域查看以及存在的错误和汇报错误。使用搜索特性确认一个错误是否被
+汇报或是被修复。如果看你上去你的错误并未被汇报，填写一个错误报告。</para>
+        <para>一些技巧:</para>
         <itemizedlist>
             <listitem>
-                <para>Give a clear, concise summary.</para>
+                <para>给出一个清晰简明的概要。</para>
             </listitem>
             <listitem>
-                <para>Provide as much detail as possible in the
-                    description. Paste in your command output or stack
-                    traces, links to screen shots, and any
-                    other information which might be useful.</para>
+                <para>在说明中提供尽可能多的细节信息，贴上你的命令输出或是堆栈追踪的截屏，
+或是任何其他可能有用的信息。</para>
             </listitem>
             <listitem>
-                <para>Be sure to include the software and package
-                    versions that you are using, especially if you are
-                    using a development branch, such as,
-                        <literal>"Juno release" vs git commit
-                        bc79c3ecc55929bac585d04a03475b72e06a3208</literal>.</para>
+                <para>确认你给出了你所使用的软件和包的版本，特别是你所用的开发分支，比如
+                        <literal>"Juno release" 在git上提交。bc79c3ecc55929bac585d04a03475b72e06a3208</literal>.</para>
             </listitem>
             <listitem>
-                <para>Any deployment-specific information is helpful, such as
-                    whether you are using Ubuntu 14.04 or are performing a
-                    multi-node installation.</para>
+                <para>任何特定部署的信息是有用的，比如你是在使用Ubuntu 14.04或是执行一个多节点的安装。</para>
             </listitem>
         </itemizedlist>
-        <para>The following Launchpad Bugs areas are available:</para>
+        <para>以下的Launchpad错误区域是可用的:</para>
         <itemizedlist>
             <!-- Core projects, sorted alphabetically -->
             <listitem>
@@ -333,39 +295,27 @@
     </section>
     <section xml:id="support-irc-channel">
         <title>OpenStack IRC频道</title>
-        <para>The OpenStack community lives in the #openstack IRC channel on the
-            Freenode network. You can hang out, ask questions, or get immediate
-            feedback for urgent and pressing issues. To install an IRC client or
-            use a browser-based client, go to <link
+        <para>OpenStack社区在Freenode上的OpenStack IRC频道。你能够闲逛，
+问问题，或是在碰到紧急问题时得到快速的反馈。需要安装一个IRC客户端或是使用一个基于浏览器的客户端，查看 <link
                 xlink:href="https://webchat.freenode.net"
-                >https://webchat.freenode.net/</link>. You can also use Colloquy
-            (Mac OS X, <link xlink:href="http://colloquy.info/"
-                >http://colloquy.info/</link>), mIRC (Windows, <link
-                xlink:href="http://www.mirc.com/">http://www.mirc.com/</link>),
-            or XChat (Linux). When you are in the IRC channel and want to share
-            code or command output, the generally accepted method is to use a
-            Paste Bin. The OpenStack project has one at <link
-                xlink:href="http://paste.openstack.org"
-                >http://paste.openstack.org</link>. Just paste your longer
-            amounts of text or logs in the web form and you get a URL that you
-            can paste into the channel. The OpenStack IRC channel is
-                <literal>#openstack</literal> on
-                <literal>irc.freenode.net</literal>. You can find a list of all
-            OpenStack IRC channels at <link
+                >https://webchat.freenode.net/</link>. 
+当你在IRC频道并想要分享代码或是命令输出，一个普遍接受的方法是使用粘贴本。
+OpenStack本身有一个，在 <link xlink:href="http://paste.openstack.org"
+                >http://paste.openstack.org</link>. 只需贴上更大量的文本或是日志，
+你会得到一个URL，你可以把它贴进频道里。OpenStack的IRC频道是<literal>#openstack</literal> 在<literal>irc.freenode.net</literal>. 
+你能找到所有OpenStack IRC频道的列表在 <link
                 xlink:href="https://wiki.openstack.org/wiki/IRC"
                 >https://wiki.openstack.org/wiki/IRC</link>.</para>
     </section>
     <section xml:id="support-documentation-feedback">
         <title>文档反馈</title>
-        <para>To provide feedback on documentation, join and use the
-            <email>openstack-docs@lists.openstack.org</email> mailing list at
-            <link xlink:href="http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-docs">OpenStack
-                Documentation Mailing List</link>, or <link xlink:href="https://bugs.launchpad.net/openstack-manuals/+filebug">report a bug</link>.</para>
+        <para>如需获得文档的反馈，加入并使用<email>openstack-docs@lists.openstack.org</email>
+ 邮件列表在<link xlink:href="http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-docs">OpenStack文档邮件列表</link>, 或者
+ <link xlink:href="https://bugs.launchpad.net/openstack-manuals/+filebug">汇报Bug</link>.</para>
     </section>
     <section xml:id="distro-support">
         <title>OpenStack发行包</title>
-        <para>The following Linux distributions provide
-            community-supported packages for OpenStack:</para>
+        <para>以下的Linux发行版提供 OpenStack的社区支持包:</para>
         <itemizedlist>
             <listitem>
                 <para><emphasis role="bold">Debian:</emphasis>

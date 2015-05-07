@@ -5,20 +5,11 @@
   version="5.0"
   xml:id="ch_cinder">
   <title>块存储服务Cinder</title>
-  <para>The OpenStack Block Storage service provides block storage devices
-    to guest instances. The method in which the storage is provisioned and
-    consumed is determined by the Block Storage driver, or drivers
-    in the case of a multi-backend configuration. There are a variety of
-    drivers that are available: NAS/SAN, NFS, iSCSI, Ceph, and more.
-    The Block Storage API and scheduler services typically run on the controller
-    nodes. Depending upon the drivers used, the volume service can run
-    on controllers, compute nodes, or standalone storage nodes.
-    For more information, see the
+  <para>OpenStack块存储服务为云主机提供块存储设备, 生成块设备的方法是为不同的存储后端提供一个专有的Driver或者使用多个Driver来让多个存储后端同时为OpenStack工作。 目前已经有一些Driver可以直接使用， 包括NAS/SAN, NFS, iSCSI, Ceph等。 块存储API和调度器(Scheduler)通常运行在控制节点上， 基于不同的存储Driver， 卷服务(Volume Service)有可能运行在控制器上、计算节点上或者单独的存储节点上。 参考
     <link xlink:href="http://docs.openstack.org/kilo/config-reference/content/section_volume-drivers.html">
-    <citetitle>Configuration Reference</citetitle></link>.</para>
+    <citetitle>Configuration Reference (http://docs.openstack.org/kilo/config-reference/content/section_volume-drivers.html)</citetitle></link>.</para>
   <note>
-    <para>This chapter omits the backup manager because it depends on the
-      Object Storage service.</para>
+    <para>该章节未包含backup manager， 因为它依赖于对象存储服务。</para>
   </note>
   <xi:include href="../common/section_getstart_block-storage.xml"/>
   <xi:include href="section_cinder-controller-node.xml"/>
