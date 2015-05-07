@@ -16,8 +16,8 @@
     </title>
     <?rax
       status.bar.text.font.size="40px"
-      status.bar.text="99cloud"?>
-    <?rax subtitle.font.size="16px" title.font.size="28px"?>
+      status.bar.text=""?>
+    <?rax subtitle.font.size="14px" title.font.size="18px"?>
     <titleabbrev>OpenStack训练营(Kilo)
         <phrase os="rhel;centos;fedora">Red Hat Enterprise Linux, CentOS, and Fedora</phrase>
         <phrase os="ubuntu">Ubuntu</phrase>
