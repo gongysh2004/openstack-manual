@@ -5,49 +5,43 @@
   version="5.0"
   xml:id="heat-install-controller-node">
   <title>安装和配置</title>
-  <para>This section describes how to install and configure the
-    Orchestration module, code-named heat, on the controller node.</para>
+  <para>这一节会描述怎么在控制节点上安装和配置编排模块(heat)。</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure Orchestration, you must create a
-      database, service credentials, and API endpoints.</para>
+    <title>配置之前的准备</title>
+    <para>在安装和配置编排模块之前, 你先要创建一个数据库，服务认证信息，API服务端点。</para>
     <step>
-      <para>To create the database, complete these steps:</para>
+      <para>如下步骤，创建数据库:</para>
       <substeps>
         <step>
-          <para>Use the database access client to connect to the database
-            server as the <literal>root</literal> user:</para>
+          <para>用 <literal>root</literal> 用户登录数据库:</para>
           <screen><prompt>$</prompt> <userinput>mysql -u root -p</userinput></screen>
         </step>
         <step>
-          <para>Create the <literal>heat</literal> database:</para>
+          <para>创建 <literal>heat</literal> 数据库:</para>
           <screen><userinput>CREATE DATABASE heat;</userinput></screen>
         </step>
         <step>
-          <para>Grant proper access to the <literal>heat</literal>
-            database:</para>
+          <para>修改 <literal>heat</literal>数据库适当的访问权限:</para>
           <screen><userinput>GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'localhost' \
   IDENTIFIED BY '<replaceable>HEAT_DBPASS</replaceable>';</userinput>
 <userinput>GRANT ALL PRIVILEGES ON heat.* TO 'heat'@'%' \
   IDENTIFIED BY '<replaceable>HEAT_DBPASS</replaceable>';</userinput></screen>
-          <para>Replace <replaceable>HEAT_DBPASS</replaceable> with a suitable
-            password.</para>
+          <para>用一个适当的字符串代替 <replaceable>HEAT_DBPASS</replaceable> 。</para>
         </step>
         <step>
-          <para>Exit the database access client.</para>
+          <para>退出数据库。</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>导入 <literal>admin</literal> 凭证:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>To create the service credentials, complete these steps:</para>
+      <para>创建服务认证信息，步骤如下:</para>
       <substeps>
         <step>
-          <para>Create the <literal>heat</literal> user:</para>
+          <para>创建 <literal>heat</literal> 用户:</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt heat</userinput>
 <computeroutput>User Password:
 Repeat User Password:
@@ -62,8 +56,7 @@ Repeat User Password:
 +----------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>heat</literal> user:</para>
+          <para>把 <literal>heat</literal> 用户加上<literal>admin</literal> 角色:</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project service --user heat admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -73,7 +66,7 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>heat_stack_owner</literal> role:</para>
+          <para>创建 <literal>heat_stack_owner</literal> 角色:</para>
           <screen><prompt>$</prompt> <userinput>openstack role create heat_stack_owner</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -83,8 +76,8 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>heat_stack_owner</literal> role to the
-            <literal>demo</literal> tenant and user:</para>
+          <para>把 <literal>heat_stack_owner</literal> 角色加到
+            <literal>demo</literal> 租户和用户:</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project demo --user demo heat_stack_owner</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -93,12 +86,11 @@ Repeat User Password:
 | name  | heat_stack_owner                 |
 +-------+----------------------------------+</computeroutput></screen>
           <note>
-            <para>You must add the <literal>heat_stack_owner</literal>
-              role to users that manage stacks.</para>
+            <para>必须给管理堆栈的用户加上 <literal>heat_stack_owner</literal>角色</para>
           </note>
         </step>
         <step>
-          <para>Create the <literal>heat_stack_user</literal> role:</para>
+          <para>创建 <literal>heat_stack_user</literal> 角色:</para>
           <screen><prompt>$</prompt> <userinput>openstack role create heat_stack_user</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -107,17 +99,15 @@ Repeat User Password:
 | name  | heat_stack_user                  |
 +-------+----------------------------------+</computeroutput></screen>
           <note>
-            <para>The Orchestration service automatically assigns the
-              <literal>heat_stack_user</literal> role to users that it
-              creates during stack deployment. By default, this role
-              restricts <glossterm>API</glossterm> operations. To avoid
-              conflicts, do not add this role to users with the
-              <literal>heat_stack_owner</literal> role.</para>
+            <para>编排服务在堆栈部署的时候会自动分配
+              <literal>heat_stack_user</literal> 角色给创建的用户。默认, 这个角色被限制
+               <glossterm>API</glossterm> 操作。 为了避免冲突, 不要把这个角色和
+              <literal>heat_stack_owner</literal> 角色加给同一个用户。</para>
           </note>
         </step>
         <step>
-          <para>Create the <literal>heat</literal> and
-            <literal>heat-cfn</literal> service entities:</para>
+          <para>创建 <literal>heat</literal> 和
+            <literal>heat-cfn</literal> 服务入口:</para>
           <screen><prompt>$</prompt> <userinput>openstack service create --type orchestration \
   --description "Orchestration" heat</userinput>
 <computeroutput>+-------------+----------------------------------+
@@ -144,7 +134,7 @@ Repeat User Password:
       </substeps>
     </step>
     <step>
-      <para>Create the Orchestration service API endpoints:</para>
+      <para>创建编排服务API端点:</para>
       <screen><prompt>$</prompt> <userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:8004/v1/%\(tenant_id\)s \
   --internalurl http://<replaceable>controller</replaceable>:8004/v1/%\(tenant_id\)s \
@@ -184,9 +174,9 @@ Repeat User Password:
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install and configure the Orchestration components</title>
+    <title>安装和配置编排组件</title>
     <step>
-      <para>Run the following commands to install the packages:</para>
+      <para>按照如下命令安装这些包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install heat-api heat-api-cfn heat-engine python-heatclient</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-heat-api openstack-heat-api-cfn openstack-heat-engine \
   python-heatclient</userinput></screen>
@@ -195,38 +185,32 @@ Repeat User Password:
     </step>
     <step>
       <!-- Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1213476. -->
-      <para os="rhel;centos;fedora">Copy the <filename>/usr/share/heat/heat-dist.conf</filename> file
-        to <filename>/etc/heat/heat.conf</filename>.</para>
+      <para os="rhel;centos;fedora">复制 <filename>/usr/share/heat/heat-dist.conf</filename> 到 <filename>/etc/heat/heat.conf</filename>。</para>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>cp /usr/share/heat/heat-dist.conf /etc/heat/heat.conf</userinput>
 <prompt>#</prompt> <userinput>chown -R heat:heat /etc/heat/heat.conf</userinput></screen>
-      <para>Edit the <filename>/etc/heat/heat.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑 <filename>/etc/heat/heat.conf</filename> 文件，然后如下操作:</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
+          <para>在 <literal>[database]</literal> 节中, 配置数据库连接:</para>
           <programlisting language="ini">[database]
 ...
 connection = mysql://heat:<replaceable>HEAT_DBPASS</replaceable>@<replaceable>controller</replaceable>/heat</programlisting>
-          <para>Replace <replaceable>HEAT_DBPASS</replaceable> with the
-            password you chose for the Orchestration database.</para>
+          <para>把 <replaceable>HEAT_DBPASS</replaceable> 替换成你选择的编排数据库密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            <application>RabbitMQ</application> message broker access:</para>
+          <para>在 <literal>[DEFAULT]</literal> 节中, 配置
+            <application>RabbitMQ</application> 消息队列:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 rpc_backend = rabbit
 rabbit_host = <replaceable>controller</replaceable>
 rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>guest</literal> account in
-            <application>RabbitMQ</application>.</para>
+          <para>把 <replaceable>RABBIT_PASS</replaceable> 替换成你选择的<literal>guest</literal> 账户的密码
+            <application>RabbitMQ</application>。</para>
         </step>
         <step>
-          <para>In the <literal>[keystone_authtoken]</literal> and
-            <literal>[ec2authtoken]</literal> sections, configure Identity
-            service access:</para>
+          <para>在 <literal>[keystone_authtoken]</literal> 和
+            <literal>[ec2authtoken]</literal> 节中, 配置认证信息:</para>
           <programlisting language="ini">[keystone_authtoken]
 ...
 auth_uri = http://<replaceable>controller</replaceable>:5000/v2.0
@@ -238,39 +222,33 @@ admin_password = <replaceable>HEAT_PASS</replaceable>
 [ec2authtoken]
 ...
 auth_uri = http://<replaceable>controller</replaceable>:5000/v2.0</programlisting>
-          <para>Replace <replaceable>HEAT_PASS</replaceable> with the
-            password you chose for the <literal>heat</literal> user
-            in the Identity service.</para>
+          <para>把 <replaceable>HEAT_PASS</replaceable> 替换成你选择的 <literal>heat</literal>
+            用户的密码。</para>
           <note>
-            <para>Comment out any <literal>auth_host</literal>,
-              <literal>auth_port</literal>, and
-              <literal>auth_protocol</literal> options because the
-              <literal>identity_uri</literal> option replaces them.</para>
+            <para>注释掉所有 <literal>auth_host</literal>,
+              <literal>auth_port</literal>, 和
+              <literal>auth_protocol</literal> 选项，因为
+              <literal>identity_uri</literal> 选项覆盖了他们。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            the metadata and wait condition URLs:</para>
+          <para>在 <literal>[DEFAULT]</literal> 节中, 配置元数据和等待条件URL:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 heat_metadata_server_url = http://<replaceable>controller</replaceable>:8000
 heat_waitcondition_server_url = http://<replaceable>controller</replaceable>:8000/v1/waitcondition</programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure
-            information about the heat Identity service domain:</para>
+          <para>在 <literal>[DEFAULT]</literal> 节中, 配置heat的认证信息:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 stack_domain_admin = heat_domain_admin
 stack_domain_admin_password = <replaceable>HEAT_DOMAIN_PASS</replaceable>
 stack_user_domain_name = heat_user_domain</programlisting>
-          <para>Replace <replaceable>HEAT_DOMAIN_PASS</replaceable> with the
-            password you chose for the admin user of the
-            <literal>heat</literal> user domain in the Identity service.</para>
+          <para>把 <replaceable>HEAT_DOMAIN_PASS</replaceable> 替换成认证系统中<literal>heat</literal> 域中管理员用户的密码。</para>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting, enable verbose
-            logging in the <literal>[DEFAULT]</literal> section:</para>
+          <para>(可选) 为了帮助调试, 在 <literal>[DEFAULT]</literal> 节中开启日志服务:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -280,49 +258,42 @@ verbose = True</programlisting>
     <step>
       <substeps>
         <step>
-          <para>Source the <literal>admin</literal> credentials to gain access to
-            admin-only CLI commands:</para>
+          <para>导入 <literal>admin</literal> 凭证:</para>
           <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
         </step>
         <step>
-          <para>Create the heat domain in Identity service:</para>
+          <para>在认证系统中创建heat域:</para>
           <screen><prompt>$</prompt> <userinput>heat-keystone-setup-domain \
   --stack-user-domain-name heat_user_domain \
   --stack-domain-admin heat_domain_admin \
   --stack-domain-admin-password <replaceable>HEAT_DOMAIN_PASS</replaceable></userinput></screen>
-          <para>Replace <replaceable>HEAT_DOMAIN_PASS</replaceable> with a suitable
-            password.</para>
+          <para>把 <replaceable>HEAT_DOMAIN_PASS</replaceable> 替换成一个合适的密码。</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Populate the Orchestration database:</para>
+      <para>填充数据库:</para>
       <screen><prompt>#</prompt> <userinput>su -s /bin/sh -c "heat-manage db_sync" heat</userinput></screen>
     </step>
   </procedure>
   <procedure os="debian">
-    <title>To install and configure the Orchestration components</title>
+    <title>安装和配置编排组件</title>
     <step>
-      <para>Run the following commands to install the packages:</para>
+      <para>按照如下命令安装这些包:</para>
       <screen><prompt>#</prompt> <userinput>apt-get install heat-api heat-api-cfn heat-engine python-heat-client</userinput></screen>
     </step>
     <step>
-      <para>Respond to prompts for
-        <link linkend="debconf-dbconfig-common">database management</link>,
-        <link linkend="debconf-keystone_authtoken">Identity service
-        credentials</link>,
-        <link linkend="debconf-api-endpoints">service endpoint
-        registration</link>, and
-        <link linkend="debconf-rabbitmq">message broker
-        credentials</link>.</para>
+      <para>提示
+        <link linkend="debconf-dbconfig-common">数据库管理</link>,
+        <link linkend="debconf-keystone_authtoken">认证服务凭证</link>,
+        <link linkend="debconf-api-endpoints">服务端点注册</link>, 和
+        <link linkend="debconf-rabbitmq">消息队列认证</link>。</para>
     </step>
     <step>
-      <para>Edit the <filename>/etc/heat/heat.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑 <filename>/etc/heat/heat.conf</filename> 文件，完成如下步骤:</para>
       <substeps>
         <step>
-          <para>In the <literal>[ec2authtoken]</literal> section, configure
-            Identity service access:</para>
+          <para>在 <literal>[ec2authtoken]</literal> 节中, 配置认证服务信息:</para>
           <programlisting language="ini">[ec2authtoken]
 ...
 auth_uri = http://<replaceable>controller</replaceable>:5000/v2.0</programlisting>
@@ -331,25 +302,23 @@ auth_uri = http://<replaceable>controller</replaceable>:5000/v2.0</programlistin
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu;debian">
-      <para>Restart the Orchestration services:</para>
+      <para>重启编排服务:</para>
       <screen><prompt>#</prompt> <userinput>service heat-api restart</userinput>
 <prompt>#</prompt> <userinput>service heat-api-cfn restart</userinput>
 <prompt>#</prompt> <userinput>service heat-engine restart</userinput></screen>
     </step>
     <step os="rhel;fedora;centos;sles;opensuse">
-      <para>Start the Orchestration services and configure them to start when
-        the system boots:</para>
+      <para>启动编排服务，并且配置他们开机启动:</para>
       <screen><prompt>#</prompt> <userinput>systemctl enable openstack-heat-api.service openstack-heat-api-cfn.service \
   openstack-heat-engine.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start openstack-heat-api.service openstack-heat-api-cfn.service \
   openstack-heat-engine.service</userinput></screen>
     </step>
     <step os="ubuntu">
-      <para>By default, the Ubuntu packages create a SQLite database.</para>
-      <para>Because this configuration uses a SQL database server, you
-        can remove the SQLite database file:</para>
+      <para>默认，Ubuntu包创建一个SQLite数据库。</para>
+      <para>因为配置使用了一个SQL数据库，你可以删除这个SQLite数据库文件:</para>
       <screen><prompt>#</prompt> <userinput>rm -f /var/lib/heat/heat.sqlite</userinput></screen>
     </step>
   </procedure>
