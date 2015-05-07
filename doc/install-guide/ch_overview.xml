@@ -68,8 +68,7 @@
         </itemizedlist>
 
         <figure xml:id="example-architecture-with-neutron-networking-hw">
-          <title>Minimal architecture example with OpenStack Networking
-            (neutron)&mdash;Hardware requirements</title>
+          <title>最小示例架构 &mdash;硬件要求</title>
           <mediaobject>
             <imageobject>
               <imagedata contentwidth="6in"
@@ -78,8 +77,7 @@
           </mediaobject>
         </figure>
         <figure xml:id="example-architecture-with-neutron-networking-networks">
-          <title>Minimal architecture example with OpenStack Networking
-            (neutron)&mdash;Network layout</title>
+          <title>最小示例架构&mdash;Network layout</title>
           <mediaobject>
             <imageobject>
               <imagedata contentwidth="6in"
@@ -88,8 +86,7 @@
           </mediaobject>
         </figure>
         <figure xml:id="example-architecture-with-neutron-networking-services">
-          <title>Minimal architecture example with OpenStack Networking
-            (neutron)&mdash;Service layout</title>
+          <title>最小示例架构&mdash;Service layout</title>
           <mediaobject>
             <imageobject>
               <imagedata contentwidth="6in"

@@ -170,8 +170,8 @@ dnsmasq_config_file = /etc/neutron/dnsmasq-neutron.conf</programlisting>
           <para>在<literal>[DEFAULT]</literal> 部分, 配置访问权限:</para>
           <programlisting language="ini">[DEFAULT]
 ...
-auth_uri = http://<replaceable>controller</replaceable>:5000
-auth_url = http://<replaceable>controller</replaceable>:35357
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
 auth_region = RegionOne
 auth_plugin = password
 project_domain_id = default
