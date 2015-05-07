@@ -5,37 +5,25 @@
   version="5.0"
   xml:id="networking-service-overview">
   <title>OpenStack 网络服务</title>
-  <para>OpenStack Networking allows you to create and
-    attach interface devices managed by other OpenStack services to
-    networks. Plug-ins can be implemented to accommodate different
-    networking equipment and software, providing flexibility to OpenStack
-    architecture and deployment.</para>
-  <para>It includes the following components:</para>
+  <para>OpenStack网络服务用于创建和管理网卡设备，灵活的插件机制非常便于部署。</para>
+  <para>OpenStack网络服务包含以下组件:</para>
   <variablelist>
     <varlistentry><term><systemitem
           class="service">neutron-server</systemitem></term>
-        <listitem><para>Accepts and routes API requests to the appropriate
-         OpenStack Networking plug-in for action.</para></listitem>
+        <listitem><para>调用OpenStack网络插件来处理API请求</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>OpenStack Networking plug-ins and agents</term>
-        <listitem><para>Plugs and unplugs ports, creates networks or subnets,
-        and provides IP addressing. These plug-ins and agents differ
-        depending on the vendor and technologies used in the particular cloud.
-        OpenStack Networking ships with plug-ins and agents for Cisco
-        virtual and physical switches, NEC OpenFlow products, Open
-        vSwitch, Linux bridging, and the VMware NSX product.</para>
-      <para>The common agents are L3 (layer 3), DHCP (dynamic host IP
-        addressing), and a plug-in agent.</para></listitem>
+        <listitem><para>插件可以用来管理端口，创建网络和子网，提供IP地址。
+	  这些插件包含Cisco虚拟机和物理交换机、NEC SDN、Open vSwitch
+   	  Linux Bridge和VMware NSX产品</para>
+      <para>通用的组件有L3（三层），DHCP（提供DHCP服务）和二层插件</para></listitem>
     </varlistentry>
     <varlistentry>
       <term>Messaging queue</term>
-      <listitem><para>Used by most OpenStack Networking installations to route
-        information between the neutron-server and various agents, as well as a
-        database to store networking state for particular
-        plug-ins.</para></listitem>
+      <listitem><para>neutron-server和插件之间使用消息队列来通信，
+	使用数据库来各个插件的网络状态。</para></listitem>
     </varlistentry>
   </variablelist>
-  <para>OpenStack Networking mainly interacts with OpenStack Compute to
-       provide networks and connectivity for its instances.</para>
+  <para>OpenStack网络服务主要是用来提供实例的网络连通性。</para>
 </section>

@@ -1,59 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="neutron-initial-networks">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="neutron-initial-networks">
   <title>初始化网络</title>
-  <para>Before launching your first instance, you must create the
-    necessary virtual network infrastructure to which the instances
-    connect, including the
-    <link linkend="neutron_initial-external-network">external network</link>
-    and
-    <link linkend="neutron_initial-tenant-network">tenant network</link>.
-    See <xref linkend="neutron_figure-neutron-initial-networks"/>. After
-    creating this infrastructure, we recommend that you
-    <link linkend="neutron_initial-networks-verify">verify
-      connectivity</link> and resolve any issues before proceeding further.
-    <xref linkend="neutron_figure-neutron-initial-networks"/> provides a
-    basic architectural overview of the components that Networking implements
-    for the initial networks and shows how network traffic flows from the
-    instance to the external network or Internet.</para>
+  <para>在启动虚拟机之前需要创建虚拟机网络来连接实例，包括
+<link linkend="neutron_initial-external-network">外部网络</link>
+和<link linkend="neutron_initial-tenant-network">租户网络</link>,参考<xref linkend="neutron_figure-neutron-initial-networks" />
+创建完成后建议你<link linkend="neutron_initial-networks-verify">检查连通性</link>
+    <xref linkend="neutron_figure-neutron-initial-networks" /> 提供了基本的结构图显示网络连接，并显示网络流量从虚拟机到外部网络的方向。</para>
   <figure xml:id="neutron_figure-neutron-initial-networks">
-    <title>Initial networks</title>
+    <title>初始网络</title>
     <mediaobject>
       <imageobject>
-        <imagedata contentwidth="6in"
-          fileref="../common/figures/installguide-neutron-initialnetworks.png"/>
+        <imagedata contentwidth="6in" fileref="../common/figures/installguide-neutron-initialnetworks.png" />
       </imageobject>
     </mediaobject>
   </figure>
   <section xml:id="neutron_initial-external-network">
     <title>外部网络</title>
-    <para>The external network typically provides Internet access for
-      your instances. By default, this network only allows Internet
-      access <emphasis>from</emphasis> instances using
-      <glossterm>Network Address Translation (NAT)</glossterm>. You can
-      enable Internet access <emphasis>to</emphasis> individual instances
-      using a <glossterm>floating IP address</glossterm> and suitable
-      <glossterm>security group</glossterm> rules. The <literal>admin</literal>
-      tenant owns this network because it provides external network
-      access for multiple tenants.</para>
+    <para>外部网络提供虚拟机到Internet的连接。缺省情况下，这个网络通过NAT允许虚拟机向外访问。
+你可以通过设置 <glossterm>floating IP address</glossterm>和适当的安全规则使外部网络能访问虚拟机。<literal>admin</literal>租户拥有外部网络。 </para>
     <note>
-      <para>Perform these commands on the controller node.</para>
+      <para>在控制节点执行下列命令</para>
     </note>
     <procedure>
-      <title>To create the external network</title>
+      <title>创建外部网络</title>
       <step>
-        <para>Source the <literal>admin</literal> credentials to gain access to
-          admin-only CLI commands:</para>
-        <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
+        <para>切换到 <literal>admin</literal>用户证书以获得管理员命令行的执行权限：</para>
+        <screen>
+          <prompt>$</prompt><userinput>source admin-openrc.sh</userinput>
+        </screen>
       </step>
       <step>
-        <para>Create the network:</para>
-        <screen><prompt>$</prompt> <userinput>neutron net-create ext-net --router:external \
+        <para>创建网络:</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron net-create ext-net --router:external \
   --provider:physical_network external --provider:network_type flat</userinput>
-<computeroutput>Created a new network:
+          <computeroutput>Created a new network:
 +---------------------------+--------------------------------------+
 | Field                     | Value                                |
 +---------------------------+--------------------------------------+
@@ -68,40 +49,29 @@
 | status                    | ACTIVE                               |
 | subnets                   |                                      |
 | tenant_id                 | 54cd044c64d5408b83f843d63624e0d8     |
-+---------------------------+--------------------------------------+</computeroutput></screen>
++---------------------------+--------------------------------------+</computeroutput>
+        </screen>
       </step>
     </procedure>
-    <para>Like a physical network, a virtual network requires a
-      <glossterm>subnet</glossterm> assigned to it. The external network
-      shares the same subnet and <glossterm>gateway</glossterm> associated
-      with the physical network connected to the external interface on the
-      network node. You should specify an exclusive slice of this subnet
-      for <glossterm>router</glossterm> and floating IP addresses to prevent
-      interference with other devices on the external network.</para>
+    <para>和物理网络类似，一个虚拟网络需要配置<glossterm>subnet</glossterm>。外部网络和外部物理网络及外网接口使用同样的subnet和网关，你可以设置一个单独子网和网关，以便与外部的其他网络隔离。</para>
     <procedure>
-      <title>To create a subnet on the external network</title>
+      <title>在外部网络上创建子网（subnet）：</title>
       <step>
-        <para>Create the subnet:</para>
-        <screen><prompt>$</prompt> <userinput>neutron subnet-create ext-net <replaceable>EXTERNAL_NETWORK_CIDR</replaceable> --name ext-subnet \
+        <para>创建subnet:</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron subnet-create ext-net <replaceable>EXTERNAL_NETWORK_CIDR</replaceable> --name ext-subnet \
   --allocation-pool start=<replaceable>FLOATING_IP_START</replaceable>,end=<replaceable>FLOATING_IP_END</replaceable> \
-  --disable-dhcp --gateway <replaceable>EXTERNAL_NETWORK_GATEWAY</replaceable></userinput></screen>
-        <para>Replace <replaceable>FLOATING_IP_START</replaceable> and
-          <replaceable>FLOATING_IP_END</replaceable> with the first and last
-          IP addresses of the range that you want to allocate for floating IP
-          addresses. Replace <replaceable>EXTERNAL_NETWORK_CIDR</replaceable>
-          with the subnet associated with the physical network. Replace
-          <replaceable>EXTERNAL_NETWORK_GATEWAY</replaceable> with the gateway
-          associated with the physical network, typically the ".1" IP address.
-          You should disable <glossterm>DHCP</glossterm> on this subnet because
-          instances do not connect directly to the external network and
-          floating IP addresses require manual assignment.</para>
-        <para>For example, using <literal>203.0.113.0/24</literal> with
-          floating IP address range <literal>203.0.113.101</literal> to
-          <literal>203.0.113.200</literal>:</para>
-        <screen><prompt>$</prompt> <userinput>neutron subnet-create ext-net 203.0.113.0/24 --name ext-subnet \
+  --disable-dhcp --gateway <replaceable>EXTERNAL_NETWORK_GATEWAY</replaceable></userinput>
+        </screen>
+        <para>用你的浮动IP网段的第一个IP地址和最后一个IP地址替换<replaceable>FLOATING_IP_START</replaceable> 和 <replaceable>FLOATING_IP_END</replaceable>。替换<replaceable>EXTERNAL_NETWORK_CIDR</replaceable>为物理网络的subnet。替换 <replaceable>EXTERNAL_NETWORK_GATEWAY</replaceable> 为物理网络的网关，通常是 ".1" IP地址。你在这个子网上关闭<glossterm>DHCP</glossterm> 因为虚机并不直接连到外网，浮动IP要人工设置。</para>
+        
+<para>例如，<literal>203.0.113.0/24</literal> ，浮动IP的范围： <literal>203.0.113.101</literal>到<literal>203.0.113.200</literal>：</para>
+        <screen>
+          <prompt>$</prompt>
+          <userinput>neutron subnet-create ext-net 203.0.113.0/24 --name ext-subnet \
   --allocation-pool start=203.0.113.101,end=203.0.113.200 \
   --disable-dhcp --gateway 203.0.113.1</userinput>
-<computeroutput>Created a new subnet:
+          <computeroutput>Created a new subnet:
 +-------------------+------------------------------------------------------+
 | Field             | Value                                                |
 +-------------------+------------------------------------------------------+
@@ -118,30 +88,30 @@
 | name              | ext-subnet                                           |
 | network_id        | 893aebb9-1c1e-48be-8908-6b947f3237b3                 |
 | tenant_id         | 54cd044c64d5408b83f843d63624e0d8                     |
-+-------------------+------------------------------------------------------+</computeroutput></screen>
++-------------------+------------------------------------------------------+</computeroutput>
+        </screen>
       </step>
     </procedure>
   </section>
   <section xml:id="neutron_initial-tenant-network">
     <title>租户网络</title>
-    <para>The tenant network provides internal network access for instances.
-      The architecture isolates this type of network from other tenants. The
-      <literal>demo</literal> tenant owns this network because it only
-      provides network access for instances within it.</para>
+    <para>租户网络提供虚拟机的内部网络连接，并把不同租户隔离起来，这个<literal>demo</literal> 租户拥有这个网络。</para>
     <note>
-      <para>Perform these commands on the controller node.</para>
+      <para>在控制节点上运行命令：</para>
     </note>
     <procedure>
-      <title>To create the tenant network</title>
+      <title>创建一个租户网络</title>
       <step>
-        <para>Source the <literal>demo</literal> credentials to gain access to
-          user-only CLI commands:</para>
-        <screen><prompt>$</prompt> <userinput>source demo-openrc.sh</userinput></screen>
+        <para>切换到<literal>demo</literal> 用户证书：</para>
+        <screen>
+          <prompt>$</prompt><userinput>source demo-openrc.sh</userinput>
+        </screen>
       </step>
       <step>
-        <para>Create the network:</para>
-        <screen><prompt>$</prompt> <userinput>neutron net-create demo-net</userinput>
-<computeroutput>Created a new network:
+        <para>创建网络</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron net-create demo-net</userinput>
+          <computeroutput>Created a new network:
 +-----------------+--------------------------------------+
 | Field           | Value                                |
 +-----------------+--------------------------------------+
@@ -153,27 +123,25 @@
 | status          | ACTIVE                               |
 | subnets         |                                      |
 | tenant_id       | cdef0071a0194d19ac6bb63802dc9bae     |
-+-----------------+--------------------------------------+</computeroutput></screen>
++-----------------+--------------------------------------+</computeroutput>
+        </screen>
       </step>
     </procedure>
-    <para>Like the external network, your tenant network also requires
-      a subnet attached to it. You can specify any valid subnet because the
-      architecture isolates tenant networks. By default, this subnet uses
-      DHCP so your instances can obtain IP addresses.</para>
+    <para>和外部网络一样，租户网络也需要配置一个子网。你可以选择任何地址，因为它是隔离的。缺省来说，子网用HDCP,虚拟机可以自动获得IP地址。</para>
     <procedure>
-      <title>To create a subnet on the tenant network</title>
+      <title>在租户网络上创建一个子网</title>
       <step>
-        <para>Create the subnet:</para>
-        <screen><prompt>$</prompt> <userinput>neutron subnet-create demo-net <replaceable>TENANT_NETWORK_CIDR</replaceable> \
-  --name demo-subnet --gateway <replaceable>TENANT_NETWORK_GATEWAY</replaceable></userinput></screen>
-        <para>Replace <replaceable>TENANT_NETWORK_CIDR</replaceable> with the
-          subnet you want to associate with the tenant network and
-          <replaceable>TENANT_NETWORK_GATEWAY</replaceable> with the gateway
-          you want to associate with it, typically the ".1" IP address.</para>
-        <para>Example using <literal>192.168.1.0/24</literal>:</para>
-        <screen><prompt>$</prompt> <userinput>neutron subnet-create demo-net 192.168.1.0/24 \
+        <para>创建子网</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron subnet-create demo-net <replaceable>TENANT_NETWORK_CIDR</replaceable> \
+  --name demo-subnet --gateway <replaceable>TENANT_NETWORK_GATEWAY</replaceable></userinput>
+        </screen>
+        <para>用你选的租户子网地址替换<replaceable>TENANT_NETWORK_CIDR</replaceable>，用你选的网关替换<replaceable>TENANT_NETWORK_GATEWAY</replaceable>，一般是 ".1" IP地址。</para>
+        <para>例如： <literal>192.168.1.0/24</literal> </para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron subnet-create demo-net 192.168.1.0/24 \
   --name demo-subnet --gateway 192.168.1.1</userinput>
-<computeroutput>Created a new subnet:
+          <computeroutput>Created a new subnet:
 +-------------------+------------------------------------------------------+
 | Field             | Value                                                |
 +-------------------+------------------------------------------------------+
@@ -190,21 +158,18 @@
 | name              | demo-subnet                                          |
 | network_id        | ac108952-6096-4243-adf4-bb6615b3de28                 |
 | tenant_id         | cdef0071a0194d19ac6bb63802dc9bae                     |
-+-------------------+------------------------------------------------------+</computeroutput></screen>
++-------------------+------------------------------------------------------+</computeroutput>
+        </screen>
       </step>
     </procedure>
-    <para>A virtual router passes network traffic between two or more virtual
-      networks. Each router requires one or more
-      <glossterm baseform="interface">interfaces</glossterm> and/or gateways
-      that provide access to specific networks. In this case, you create
-      a router and attach your tenant and external networks to it.</para>
+    <para>一个虚拟路由器在不同的虚拟网络种传送网络流量。每个路由器需要1个或多个<glossterm baseform="interface">interfaces</glossterm> 连到相关网络。 在目前情况想， 你创建了一个路由器，连接内部网络和外部网络。 </para>
     <procedure>
-      <title>To create a router on the tenant network and attach the external
-        and tenant networks to it</title>
+      <title>创建一个租户路由器，并连接内部网络和外部网络</title>
       <step>
-        <para>Create the router:</para>
-        <screen><prompt>$</prompt> <userinput>neutron router-create demo-router</userinput>
-<computeroutput>Created a new router:
+        <para>创建一个路由器</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron router-create demo-router</userinput>
+          <computeroutput>Created a new router:
 +-----------------------+--------------------------------------+
 | Field                 | Value                                |
 +-----------------------+--------------------------------------+
@@ -215,44 +180,38 @@
 | routes                |                                      |
 | status                | ACTIVE                               |
 | tenant_id             | cdef0071a0194d19ac6bb63802dc9bae     |
-+-----------------------+--------------------------------------+</computeroutput></screen>
++-----------------------+--------------------------------------+</computeroutput>
+        </screen>
       </step>
       <step>
-        <para>Attach the router to the <literal>demo</literal> tenant
-          subnet:</para>
-        <screen><prompt>$</prompt> <userinput>neutron router-interface-add demo-router demo-subnet</userinput>
-<computeroutput>Added interface b1a894fd-aee8-475c-9262-4342afdc1b58 to router demo-router.</computeroutput></screen>
+        <para>将路由器连接到<literal>demo</literal> 租户子网：</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron router-interface-add demo-router demo-subnet</userinput>
+          <computeroutput>Added interface b1a894fd-aee8-475c-9262-4342afdc1b58 to router demo-router.</computeroutput>
+        </screen>
       </step>
       <step>
-        <para>Attach the router to the external network by setting it as
-          the gateway:</para>
-        <screen><prompt>$</prompt> <userinput>neutron router-gateway-set demo-router ext-net</userinput>
-<computeroutput>Set gateway for router demo-router</computeroutput></screen>
+        <para>通过设置网关，将路由器连接到外部网络</para>
+        <screen>
+          <prompt>$</prompt><userinput>neutron router-gateway-set demo-router ext-net</userinput>
+          <computeroutput>Set gateway for router demo-router</computeroutput>
+        </screen>
       </step>
     </procedure>
   </section>
   <section xml:id="neutron_initial-networks-verify">
     <title>验证联通性</title>
-    <para>We recommend that you verify network connectivity and resolve any
-      issues before proceeding further. Following the external network
-      subnet example using <literal>203.0.113.0/24</literal>, the tenant
-      router gateway should occupy the lowest IP address in the floating
-      IP address range, <literal>203.0.113.101</literal>. If you configured
-      your external physical network and virtual networks correctly, you
-      should be able to <command>ping</command> this IP address from any
-      host on your external physical network.</para>
+    <para>我们建议在做其他动作前要验证网络的连通性。以外部网络地址为<literal>203.0.113.0/24</literal>为例，租户路由的网关应该占用最低的地址, <literal>203.0.113.101</literal>. 如果你的配置没有问题， 你可以ping到物理网络上的其他设备。</para>
     <note>
-      <para>If you are building your OpenStack nodes as virtual machines,
-      you must configure the hypervisor to permit promiscuous mode on the
-      external network.</para>
+      <para>如果你用Openstack创建你的虚机， 你必须将宿主机的外部网络的接口设置为混杂模式(promiscuous mode)。</para>
     </note>
     <procedure>
-      <title>To verify network connectivity</title>
+      <title>验证网络连接</title>
       <step>
-        <para>From a host on the the external network, ping the tenant router
-          gateway:</para>
-        <screen><prompt>$</prompt> <userinput>ping -c 4 203.0.113.101</userinput>
-<computeroutput>PING 203.0.113.101 (203.0.113.101) 56(84) bytes of data.
+        <para>从外部网络的一台主机ping路由器的网关接口：</para>
+        <screen>
+          <prompt>$</prompt><userinput>ping -c 4 203.0.113.101</userinput>
+          <computeroutput>PING 203.0.113.101 (203.0.113.101) 56(84) bytes of data.
 64 bytes from 203.0.113.101: icmp_req=1 ttl=64 time=0.619 ms
 64 bytes from 203.0.113.101: icmp_req=2 ttl=64 time=0.189 ms
 64 bytes from 203.0.113.101: icmp_req=3 ttl=64 time=0.165 ms
@@ -260,7 +219,8 @@
 
 --- 203.0.113.101 ping statistics ---
 4 packets transmitted, 4 received, 0% packet loss, time 2999ms
-rtt min/avg/max/mdev = 0.165/0.297/0.619/0.187 ms</computeroutput></screen>
+rtt min/avg/max/mdev = 0.165/0.297/0.619/0.187 ms</computeroutput>
+        </screen>
       </step>
     </procedure>
   </section>

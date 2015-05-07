@@ -200,6 +200,12 @@ Listen 35357
       <para>重启Apache HTTP server:</para>
       <screen><prompt>#</prompt> <userinput>service apache2 restart</userinput></screen>
     </step>
+    <step os="rhel;fedora;centos;opensuse;sles">
+      <para>Start the Identity service and configure it to start when the
+        system boots:</para>
+      <screen><prompt>#</prompt> <userinput>systemctl enable openstack-keystone.service</userinput>
+<prompt>#</prompt> <userinput>systemctl start openstack-keystone.service</userinput></screen>
+    </step>
     <step os="ubuntu">
       <para>默认情况下, Ubuntu安装包会创建一个 SQLite 数据库。</para>
       <para>由于这个配置使用了一个SQL数据库服务，你可以移除 SQLite数据库文件：</para>
