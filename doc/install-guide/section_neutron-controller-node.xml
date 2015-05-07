@@ -42,7 +42,8 @@
         <step>
           <para>创建 <literal>neutron</literal> 用户:</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt neutron</userinput>
-<computeroutput>User Password:
+<computeroutput>
+User Password:
 Repeat User Password:
 +----------+----------------------------------+
 | Field    | Value                            |
@@ -163,8 +164,7 @@ Repeat User Password:
           <programlisting language="ini">[database]
 ...
 connection = mysql://neutron:<replaceable>NEUTRON_DBPASS</replaceable>@<replaceable>controller</replaceable>/neutron</programlisting>
-          <para>Replace <replaceable>NEUTRON_DBPASS</replaceable> with the
-            password you chose for the database.</para>
+          <para>将 <replaceable>NEUTRON_DBPASS</replaceable> 替换成正确的数据库密码.</para>
         </step>
         <step>
           <para>在 <literal>[DEFAULT]</literal> 和
@@ -382,7 +382,7 @@ admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
   <procedure>
     <title>验证操作</title>
     <note>
-      <para>在计算节点执行以下命令。</para>
+      <para>在控制节点执行以下命令。</para>
     </note>
     <step>
       <para>导入 <literal>admin</literal> 认证:</para>
@@ -391,7 +391,8 @@ admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
     <step>
       <para>列出加载的插件来验证<literal>neutron-server</literal> 正常启动:</para>
       <screen><prompt>$</prompt> <userinput>neutron ext-list</userinput>
-<computeroutput>+-----------------------+-----------------------------------------------+
+<computeroutput>
++-----------------------+-----------------------------------------------+
 | alias                 | name                                          |
 +-----------------------+-----------------------------------------------+
 | security-group        | security-group                                |
@@ -410,7 +411,8 @@ admin_password = <replaceable>NEUTRON_PASS</replaceable></programlisting>
 | extraroute            | Neutron Extra Route                           |
 | extra_dhcp_opt        | Neutron Extra DHCP opts                       |
 | dvr                   | Distributed Virtual Router                    |
-+-----------------------+-----------------------------------------------+</computeroutput></screen>
++-----------------------+-----------------------------------------------+
+</computeroutput></screen>
     </step>
   </procedure>
 </section>
