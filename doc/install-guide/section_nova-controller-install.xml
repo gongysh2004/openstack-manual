@@ -124,7 +124,7 @@ Repeat User Password:
     <step>
       <para>Install the packages:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install nova-api nova-cert nova-conductor nova-consoleauth \
-  nova-novncproxy nova-scheduler python-novaclient</userinput></screen>
+  nova-novncproxy nova-scheduler nova-compute sysfsutils python-novaclient</userinput></screen>
       <screen os="fedora;rhel;centos"><prompt>#</prompt> <userinput>yum install openstack-nova-api openstack-nova-cert openstack-nova-conductor \
   openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler \
   python-novaclient</userinput></screen>
@@ -202,8 +202,11 @@ my_ip = 10.0.0.11</programlisting>
             controller node:</para>
           <programlisting language="ini">[DEFAULT]
 ...
-vncserver_listen = 10.0.0.11
-vncserver_proxyclient_address = 10.0.0.11</programlisting>
+vncserver_proxyclient_address = 10.0.0.11
+vnc_enabled = True
+vncserver_listen = 0.0.0.0
+vncserver_proxyclient_address = 10.0.0.11
+novncproxy_base_url = http://10.0.0.11:6080/vnc_auto.html</programlisting>
         </step>
         <step>
           <para>In the <literal>[glance]</literal> section, configure the
@@ -226,6 +229,30 @@ lock_path = /var/lock/nova</programlisting>
 ...
 verbose = True</programlisting>
         </step>
+            <step>
+      <para>Determine whether your compute node supports hardware acceleration
+        for virtual machines:</para>
+      <screen><prompt>$</prompt> <userinput>egrep -c '(vmx|svm)' /proc/cpuinfo</userinput></screen>
+      <para>If this command returns a value of
+        <emphasis>one or greater</emphasis>, your compute node supports
+        hardware acceleration which typically requires no additional
+        configuration.</para>
+      <para>If this command returns a value of <emphasis>zero</emphasis>,
+        your compute node does not support hardware acceleration and you must
+        configure <literal>libvirt</literal> to use QEMU instead of KVM.</para>
+      <substeps>
+        <step>
+          <para>Edit the <literal>[libvirt]</literal>
+            section in the
+            <filename os="ubuntu;debian">/etc/nova/nova-compute.conf</filename>
+            <filename os="rhel;centos;fedora;sles;opensuse"
+              >/etc/nova/nova.conf</filename> file as follows:</para>
+          <programlisting language="ini">[libvirt]
+...
+virt_type = qemu</programlisting>
+        </step>
+      </substeps>
+    </step>
       </substeps>
     </step>
     <step os="ubuntu;rhel;centos;fedora">
@@ -275,7 +302,8 @@ vncserver_proxyclient_address = 10.0.0.11</programlisting>
 <prompt>#</prompt> <userinput>service nova-consoleauth restart</userinput>
 <prompt>#</prompt> <userinput>service nova-scheduler restart</userinput>
 <prompt>#</prompt> <userinput>service nova-conductor restart</userinput>
-<prompt>#</prompt> <userinput>service nova-novncproxy restart</userinput></screen>
+<prompt>#</prompt> <userinput>service nova-novncproxy restart</userinput>
+<prompt>#</prompt> <userinput>service nova-compute restart</userinput></screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
       <para>Start the Compute services and configure them to start when the

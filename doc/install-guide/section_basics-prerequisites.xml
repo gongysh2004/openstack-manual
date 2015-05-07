@@ -15,24 +15,18 @@
     <glossterm>CirrOS</glossterm> instances:</para>
   <itemizedlist>
     <listitem>
-      <para>Controller Node: 1 processor, 2 GB memory, and 5 GB
+      <para>Controller Node: 4 processor, 8 GB memory, and 40 GB
         storage</para>
     </listitem>
     <listitem>
-      <para>Network Node: 1 processor, 512 MB memory, and 5 GB
-        storage</para>
-    </listitem>
-    <listitem>
-      <para>Compute Node: 1 processor, 2 GB memory, and 10 GB
+      <para>Compute Node: 1 processor, 2 GB memory, and 20 GB
         storage</para>
     </listitem>
   </itemizedlist>
   <para>To minimize clutter and provide more resources for OpenStack, we
     recommend a minimal installation of your Linux distribution. Also, we
-    strongly recommend that you install a 64-bit version of your distribution
-    on at least the compute node. If you install a 32-bit version of your
-    distribution on the compute node, attempting to start an instance using
-    a 64-bit image will fail.</para>
+    strongly recommend that you install a 64-bit version of your distribution.
+  </para>
   <note>
     <para>A single disk partition on each node works for most basic
       installations. However, you should consider
