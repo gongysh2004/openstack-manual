@@ -6,17 +6,15 @@
   xml:id="basics-packages">
   <?dbhtml stop-chunking?>
   <title>OpenStack 软件包</title>
-  <para>Distributions release OpenStack packages as part of the distribution
-    or using other methods because of differing release schedules. Perform
-    these procedures on all nodes.</para>
+  <para>操作系统发行版有的把OpenStack包作为操作系统的一部分，有的由于发行计划的不同选择其它的发行方法。
+   在所有的节点执行下列操作：</para>
   <note>
-    <para>Disable or remove any automatic update services because they can
-      impact your OpenStack environment.</para>
+    <para>取消操作系统的自动更新服务，这个功能很有可能会影响OpenStack环境。</para>
   </note>
   <procedure os="ubuntu">
-    <title>To enable the OpenStack repository</title>
+    <title>设置OpenStack仓库</title>
     <step>
-      <para>Install the Ubuntu Cloud archive keyring and repository:</para>
+      <para>安装Ubuntu Cloud archive keyring和repository:</para>
       <screen><prompt>#</prompt> <userinput>apt-get install ubuntu-cloud-keyring</userinput>
 <prompt>#</prompt> <userinput>echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
   "trusty-updates/kilo main" > /etc/apt/sources.list.d/cloudarchive-kilo.list</userinput></screen>
@@ -138,15 +136,14 @@ Key Expires: Thu Dec 17 13:34:21 2015</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step>
-      <para>Upgrade the packages on your system:</para>
+      <para>升级系统的包:</para>
       <screen os="ubuntu;debian"><prompt>#</prompt> <userinput>apt-get update &amp;&amp; apt-get dist-upgrade</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum upgrade</userinput></screen>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper refresh &amp;&amp; zypper dist-upgrade</userinput></screen>
       <note>
-        <para>If the upgrade process includes a new kernel, reboot your system
-          to activate it.</para>
+        <para>如果升级涉及到内核，需要重新启动来激活它。</para>
       </note>
     </step>
     <step os="rhel;centos">

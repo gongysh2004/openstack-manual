@@ -1,57 +1,54 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<section xmlns="http://docbook.org/ns/docbook"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  version="5.0"
-  xml:id="nova-controller-install">
+<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0" xml:id="nova-controller-install">
   <title>安装和配置控制节点</title>
-  <para>This section describes how to install and configure the
-    Compute service, code-named nova, on the controller node.</para>
+  <para>本节介绍如何在控制节点上安装和配置计算服务，也被称为NOVA。</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure the Compute service, you must
-      create a database, service credentials, and API endpoint.</para>
+    <title>预配置项</title>
+    <para> 在安装和配置计算服务前，必须要创建一个数据库，服务凭证，和API端点。</para>
     <step>
-      <para>To create the database, complete these steps:</para>
+      <para>为了创建数据库，执行以下步骤：</para>
       <substeps>
         <step>
-          <para>Use the database access client to connect to
-           the database server as the
-           <literal>root</literal> user:</para>
-          <screen><prompt>$</prompt> <userinput>mysql -u root -p</userinput></screen>
+          <para>用数据库客户端以<literal>root</literal>用户连接数据库服务器：</para>
+          <screen>
+            <prompt>$</prompt><userinput>mysql -u root -p</userinput>
+          </screen>
         </step>
         <step>
-          <para>Create the <literal>nova</literal> database:</para>
-          <screen><userinput>CREATE DATABASE nova;</userinput></screen>
+          <para>创建<literal>nova</literal> 数据库：</para>
+          <screen>
+            <userinput>CREATE DATABASE nova;</userinput>
+          </screen>
         </step>
         <step>
-          <para>Grant proper access to the <literal>nova</literal>
-            database:</para>
-          <screen><userinput>GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
+          <para>授予数据库<literal>nova</literal>的相关权限：</para>
+          <screen>
+            <userinput>GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' \
   IDENTIFIED BY '<replaceable>NOVA_DBPASS</replaceable>';</userinput>
-<userinput>GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
-  IDENTIFIED BY '<replaceable>NOVA_DBPASS</replaceable>';</userinput></screen>
-          <para>Replace
-           <replaceable>NOVA_DBPASS</replaceable> with a suitable
-           password.</para>
+            <userinput>GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' \
+  IDENTIFIED BY '<replaceable>NOVA_DBPASS</replaceable>';</userinput>
+          </screen>
+          <para>用合适的密码替换<replaceable>NOVA_DBPASS</replaceable>。</para>
         </step>
         <step>
-          <para>Exit the database access client.</para>
+          <para>退出数据库连接。</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
-      <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
+      <para>切换到<literal>admin</literal> 用户的凭证环境:</para>
+      <screen>
+        <prompt>$</prompt><userinput>source admin-openrc.sh</userinput>
+      </screen>
     </step>
     <step>
-      <para>To create the service credentials, complete these steps:</para>
+      <para>为创建服务凭证，完成以下几步：</para>
       <substeps>
         <step>
-          <para>Create the <literal>nova</literal> user:</para>
-<screen><prompt>$</prompt> <userinput>openstack user create --password-prompt nova</userinput>
-<computeroutput>User Password:
+          <para>创建<literal>nova</literal> 用户：</para>
+          <screen>
+            <prompt>$</prompt><userinput>openstack user create --password-prompt nova</userinput>
+            <computeroutput>User Password:
 Repeat User Password:
 +----------+----------------------------------+
 | Field    | Value                            |
@@ -61,24 +58,27 @@ Repeat User Password:
 | id       | 8e0b71d732db4bfba04943a96230c8c0 |
 | name     | nova                             |
 | username | nova                             |
-+----------+----------------------------------+</computeroutput></screen>
++----------+----------------------------------+</computeroutput>
+          </screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>nova</literal> user:</para>
-<screen><prompt>$</prompt> <userinput>openstack role add --project service --user nova admin</userinput>
-<computeroutput>+-------+----------------------------------+
+          <para>对<literal>nova</literal>用户增加<literal>admin</literal>角色：</para>
+          <screen>
+            <prompt>$</prompt><userinput>openstack role add --project service --user nova admin</userinput>
+            <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
 +-------+----------------------------------+
 | id    | cd2cb9a39e874ea69e5d4b896eb16128 |
 | name  | admin                            |
-+-------+----------------------------------+</computeroutput></screen>
++-------+----------------------------------+</computeroutput>
+          </screen>
         </step>
         <step>
-          <para>Create the <literal>nova</literal> service entity:</para>
-<screen><prompt>$</prompt> <userinput>openstack service create --type compute \
+          <para>创建<literal>nova</literal> 服务实体：</para>
+          <screen>
+            <prompt>$</prompt><userinput>openstack service create --type compute \
   --description "OpenStack Compute" nova</userinput>
-<computeroutput>+-------------+----------------------------------+
+            <computeroutput>+-------------+----------------------------------+
 | Field       | Value                            |
 +-------------+----------------------------------+
 | description | OpenStack Compute                |
@@ -86,19 +86,21 @@ Repeat User Password:
 | id          | 060d59eac51b4594815603d75a00aba2 |
 | name        | nova                             |
 | type        | compute                          |
-+-------------+----------------------------------+</computeroutput></screen>
++-------------+----------------------------------+</computeroutput>
+          </screen>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Create the Compute service API endpoint:</para>
-      <screen><prompt>$</prompt> <userinput>openstack endpoint create \
+      <para>创建计算服务API端点：</para>
+      <screen>
+        <prompt>$</prompt><userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:8774/v2/%\(tenant_id\)s \
   --internalurl http://<replaceable>controller</replaceable>:8774/v2/%\(tenant_id\)s \
   --adminurl http://<replaceable>controller</replaceable>:8774/v2/%\(tenant_id\)s \
   --region RegionOne \
   compute</userinput>
-<computeroutput>+--------------+-----------------------------------------+
+        <computeroutput>+--------------+-----------------------------------------+
 | Field        | Value                                   |
 +--------------+-----------------------------------------+
 | adminurl     | http://controller:8774/v2/%(tenant_id)s |
@@ -109,46 +111,43 @@ Repeat User Password:
 | service_id   | 060d59eac51b4594815603d75a00aba2        |
 | service_name | nova                                    |
 | service_type | compute                                 |
-+--------------+-----------------------------------------+</computeroutput></screen>
++--------------+-----------------------------------------+</computeroutput>
+      </screen>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install and configure Compute controller components</title>
-    <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
-    </note>
+    <title>安装和配置计算控制器和计算组件</title>
     <step>
-      <para>Install the packages:</para>
-      <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install nova-api nova-cert nova-conductor nova-consoleauth \
-  nova-novncproxy nova-scheduler nova-compute sysfsutils python-novaclient</userinput></screen>
-      <screen os="fedora;rhel;centos"><prompt>#</prompt> <userinput>yum install openstack-nova-api openstack-nova-cert openstack-nova-conductor \
+      <para>安装软件包:</para>
+      <screen os="ubuntu">
+        <prompt>#</prompt><userinput>apt-get install nova-api nova-cert nova-conductor nova-consoleauth \
+  nova-novncproxy nova-scheduler nova-compute sysfsutils python-novaclient</userinput>
+      </screen>
+      <screen os="fedora;rhel;centos">
+        <prompt>#</prompt><userinput>yum install openstack-nova-api openstack-nova-cert openstack-nova-conductor \
   openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler \
-  python-novaclient</userinput></screen>
-      <screen os="opensuse;sles"><prompt>#</prompt> <userinput>zypper install openstack-nova-api openstack-nova-scheduler openstack-nova-cert \
+  python-novaclient</userinput>
+      </screen>
+      <screen os="opensuse;sles">
+        <prompt>#</prompt><userinput>zypper install openstack-nova-api openstack-nova-scheduler openstack-nova-cert \
   openstack-nova-conductor openstack-nova-consoleauth openstack-nova-novncproxy \
-  python-novaclient iptables</userinput></screen>
+  python-novaclient iptables</userinput>
+      </screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/nova/nova.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑<filename>/etc/nova/nova.conf</filename> 文件并完成以下动作：</para>
       <substeps>
         <step>
-          <para>Add a <literal>[database]</literal> section, and configure
-            database access:</para>
+          <para>增加<literal>[database]</literal>一节，并配置数据库访问：</para>
           <programlisting language="ini">[database]
 ...
 connection = mysql://nova:<replaceable>NOVA_DBPASS</replaceable>@controller/nova</programlisting>
-          <para>Replace <replaceable>NOVA_DBPASS</replaceable> with the
-            password you chose for the Compute database.</para>
+          <para>将<replaceable>NOVA_DBPASS</replaceable> 替换成你的数据库密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
+          <para>在<literal>[DEFAULT]</literal> 和
+            <literal>[oslo_messaging_rabbit]</literal>部分，配置
+            <application>RabbitMQ</application> 消息队列访问：</para>
           <programlisting language="ini">[DEFAULT]
 ...
 rpc_backend = rabbit
@@ -158,20 +157,17 @@ rpc_backend = rabbit
 rabbit_host = <replaceable>controller</replaceable>
 rabbit_userid = openstack
 rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account in
-            <application>RabbitMQ</application>.</para>
+          <para>在
+            <application>RabbitMQ</application>部分，用你的<literal>openstack</literal>账户密码替换掉<replaceable>RABBIT_PASS</replaceable>密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections,
-            configure Identity service access:</para>
+          <para>在<literal>[DEFAULT]</literal> 和
+            <literal>[keystone_authtoken]</literal> 一节，配置认证服务访问：</para>
           <programlisting language="ini">[DEFAULT]
 ...
 auth_strategy = keystone
 
 [keystone_authtoken]
-...
 auth_uri = http://<replaceable>controller</replaceable>:5000
 auth_url = http://<replaceable>controller</replaceable>:35357
 auth_plugin = password
@@ -180,26 +176,19 @@ user_domain_id = default
 project_name = service
 username = nova
 password = <replaceable>NOVA_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>NOVA_PASS</replaceable> with the password
-            you chose for the <literal>nova</literal> user in the Identity
-            service.</para>
+          <para> 用你的 <literal>nova</literal>用户的密码替换<replaceable>NOVA_PASS</replaceable> 密码。</para>
           <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
+            <para>去掉或注释掉<literal>[keystone_authtoken]</literal>部分。</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            <literal>my_ip</literal> option to use the management interface IP
-            address of the controller node:</para>
+          <para>在<literal>[DEFAULT]</literal> 部分，配置<literal>my_ip</literal> 选项以便使用控制节点的管理接口的IP地址。</para>
           <programlisting language="ini">[DEFAULT]
 ...
 my_ip = 10.0.0.11</programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            VNC proxy to use the management interface IP address of the
-            controller node:</para>
+          <para>在<literal>[DEFAULT]</literal> 部分，配置 VNC 代理以便使用控制节点的管理接口的IP地址。</para>
           <programlisting language="ini">[DEFAULT]
 ...
 vncserver_proxyclient_address = 10.0.0.11
@@ -209,66 +198,60 @@ vncserver_proxyclient_address = 10.0.0.11
 novncproxy_base_url = http://10.0.0.11:6080/vnc_auto.html</programlisting>
         </step>
         <step>
-          <para>In the <literal>[glance]</literal> section, configure the
-            location of the Image service:</para>
+          <para>在<literal>[glance]</literal> 部分，配置镜像服务的位置：</para>
           <programlisting language="ini">[glance]
 ...
 host = <replaceable>controller</replaceable></programlisting>
         </step>
         <step>
-          <para>In the <literal>[oslo_concurrency]</literal> section,
-            configure the lock path:</para>
+          <para>在<literal>[oslo_concurrency]</literal>部分，配置状态锁的目录：</para>
           <programlisting language="ini">[oslo_concurrency]
 ...
 lock_path = /var/lock/nova</programlisting>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal> section:</para>
+          <para>(可选)为帮助故障排查，在<literal>[DEFAULT]</literal> 部分启动verbose logging：</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
         </step>
-            <step>
-      <para>Determine whether your compute node supports hardware acceleration
-        for virtual machines:</para>
-      <screen><prompt>$</prompt> <userinput>egrep -c '(vmx|svm)' /proc/cpuinfo</userinput></screen>
-      <para>If this command returns a value of
-        <emphasis>one or greater</emphasis>, your compute node supports
-        hardware acceleration which typically requires no additional
-        configuration.</para>
-      <para>If this command returns a value of <emphasis>zero</emphasis>,
-        your compute node does not support hardware acceleration and you must
-        configure <literal>libvirt</literal> to use QEMU instead of KVM.</para>
-      <substeps>
         <step>
-          <para>Edit the <literal>[libvirt]</literal>
-            section in the
-            <filename os="ubuntu;debian">/etc/nova/nova-compute.conf</filename>
-            <filename os="rhel;centos;fedora;sles;opensuse"
-              >/etc/nova/nova.conf</filename> file as follows:</para>
-          <programlisting language="ini">[libvirt]
+          <para>确认你的主机是否支持硬件加速的虚拟化:</para>
+          <screen>
+            <prompt>$</prompt><userinput>egrep -c '(vmx|svm)' /proc/cpuinfo</userinput>
+          </screen>
+          <para>如果命令输出的值是<emphasis>one or greater</emphasis>, 你的机器支持硬件加速而且不需要额外配置。</para>
+      <para>如果命令的输出是<emphasis>zero</emphasis>,你的机器不支持硬件加速，你必须配置<literal>libvirt</literal> 用QEMU 而非KVM。</para>
+          <substeps>
+            <step>
+              <para>在以下文件中，编辑<literal>[libvirt]</literal>部分：
+            <filename os="ubuntu;debian">/etc/nova/nova-compute.conf</filename><filename os="rhel;centos;fedora;sles;opensuse">/etc/nova/nova.conf</filename>，如下：</para>
+              <programlisting language="ini">[libvirt]
 ...
 virt_type = qemu</programlisting>
+            </step>
+          </substeps>
         </step>
       </substeps>
     </step>
-      </substeps>
-    </step>
     <step os="ubuntu;rhel;centos;fedora">
-      <para>Populate the Compute database:</para>
-      <screen><prompt>#</prompt> <userinput>su -s /bin/sh -c "nova-manage db sync" nova</userinput></screen>
+      <para>填充数据库：</para>
+      <screen>
+        <prompt>#</prompt><userinput>su -s /bin/sh -c "nova-manage db sync" nova</userinput>
+      </screen>
     </step>
   </procedure>
   <procedure os="debian">
-    <title>To install and configure the Compute controller components</title>
+    <title>安装和配置计算控制组件</title>
     <step>
-      <para>Install the packages:</para>
-      <screen><prompt>#</prompt> <userinput>apt-get install nova-api nova-cert nova-conductor nova-consoleauth \
-  nova-novncproxy nova-scheduler python-novaclient</userinput></screen>
+      <para>软件包安装：</para>
+      <screen>
+        <prompt>#</prompt><userinput>apt-get install nova-api nova-cert nova-conductor nova-consoleauth \
+  nova-novncproxy nova-scheduler python-novaclient</userinput>
+      </screen>
     </step>
     <step>
-      <para>Respond to prompts for
+      <para>响应以下表单选项：
         <link linkend="debconf-dbconfig-common">database management</link>,
         <link linkend="debconf-keystone_authtoken">Identity service
         credentials</link>,
@@ -278,13 +261,10 @@ virt_type = qemu</programlisting>
         credentials</link>.</para>
     </step>
     <step>
-      <para>Edit the <filename>/etc/nova/nova.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑<filename>/etc/nova/nova.conf</filename> 文件并完成以下几步：</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the VNC
-            proxy to use the management interface IP address of the controller
-            node:</para>
+          <para>在<literal>[DEFAULT]</literal>部分, 配置VNC代理来使用控制节点的管理接口的IP地址：</para>
           <programlisting language="ini">[DEFAULT]
 ...
 vncserver_listen = 10.0.0.11
@@ -296,30 +276,34 @@ vncserver_proxyclient_address = 10.0.0.11</programlisting>
   <procedure>
     <title>To finalize installation</title>
     <step os="ubuntu;debian">
-      <para>Restart the Compute services:</para>
-      <screen><prompt>#</prompt> <userinput>service nova-api restart</userinput>
-<prompt>#</prompt> <userinput>service nova-cert restart</userinput>
-<prompt>#</prompt> <userinput>service nova-consoleauth restart</userinput>
-<prompt>#</prompt> <userinput>service nova-scheduler restart</userinput>
-<prompt>#</prompt> <userinput>service nova-conductor restart</userinput>
-<prompt>#</prompt> <userinput>service nova-novncproxy restart</userinput>
-<prompt>#</prompt> <userinput>service nova-compute restart</userinput></screen>
+      <para>重启计算服务</para>
+      <screen>
+        <prompt>#</prompt><userinput>service nova-api restart</userinput>
+        <prompt>#</prompt><userinput>service nova-cert restart</userinput>
+        <prompt>#</prompt><userinput>service nova-consoleauth restart</userinput>
+        <prompt>#</prompt><userinput>service nova-scheduler restart</userinput>
+        <prompt>#</prompt><userinput>service nova-conductor restart</userinput>
+        <prompt>#</prompt><userinput>service nova-novncproxy restart</userinput>
+        <prompt>#</prompt><userinput>service nova-compute restart</userinput>
+      </screen>
     </step>
     <step os="rhel;centos;fedora;sles;opensuse">
-      <para>Start the Compute services and configure them to start when the
-        system boots:</para>
-      <screen><prompt>#</prompt> <userinput>systemctl enable openstack-nova-api.service openstack-nova-cert.service \
+      <para>启动计算服务并配置为自动启动：</para>
+      <screen>
+        <prompt>#</prompt><userinput>systemctl enable openstack-nova-api.service openstack-nova-cert.service \
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
   openstack-nova-conductor.service openstack-nova-novncproxy.service</userinput>
-<prompt>#</prompt> <userinput>systemctl start openstack-nova-api.service openstack-nova-cert.service \
+        <prompt>#</prompt><userinput>systemctl start openstack-nova-api.service openstack-nova-cert.service \
   openstack-nova-consoleauth.service openstack-nova-scheduler.service \
-  openstack-nova-conductor.service openstack-nova-novncproxy.service</userinput></screen>
+  openstack-nova-conductor.service openstack-nova-novncproxy.service</userinput>
+      </screen>
     </step>
     <step os="ubuntu">
-      <para>By default, the Ubuntu packages create an SQLite database.</para>
-      <para>Because this configuration uses a SQL database server, you can
-        remove the SQLite database file:</para>
-      <screen><prompt>#</prompt> <userinput>rm -f /var/lib/nova/nova.sqlite</userinput></screen>
+      <para>缺省情况下， Ubuntu 启动一个 SQLite数据库。</para>
+      <para>因为这个配置中使用了SQL数据库服务器，你可以移除SQLite 数据库文件：</para>
+      <screen>
+        <prompt>#</prompt><userinput>rm -f /var/lib/nova/nova.sqlite</userinput>
+      </screen>
     </step>
   </procedure>
 </section>

@@ -5,22 +5,19 @@
   version="5.0"
   xml:id="heat-verify">
   <title>验证</title>
-  <para>This section describes how to verify operation of the Orchestration
-    module (heat).</para>
+  <para>这一节会描述怎么验证编排(heat)模块。</para>
   <procedure>
     <step>
-      <para>Source the <literal>admin</literal> tenant credentials:</para>
+      <para>导入 <literal>admin</literal> 租户认证:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>The Orchestration module uses templates to describe stacks. To learn
-        about the template language, see <link
-          xlink:href="http://docs.openstack.org/developer/heat/template_guide/index.html"
-        >the Template Guide</link> in the <link
+      <para>编排模块使用模板来描述应用。进一步学习模板语言， 可以看<link
           xlink:href="http://docs.openstack.org/developer/heat/">Heat developer
-        documentation</link>.</para>
-      <para>Create a test template in the <filename>test-stack.yml</filename>
-        file with the following content:</para>
+        documentation</link> 中的 <link
+          xlink:href="http://docs.openstack.org/developer/heat/template_guide/index.html"
+        >the Template Guide</link> 。</para>
+      <para>创建一个模板文件<filename>test-stack.yml</filename>,内容如下:</para>
       <programlisting language="yml">heat_template_version: 2014-10-16
 description: A simple server.
 
@@ -47,8 +44,7 @@ outputs:
     value: { get_attr: [ server, first_address ] }</programlisting>
     </step>
     <step>
-      <para>Use the <command>heat stack-create</command> command to create a
-        stack from the template:</para>
+      <para>用命令 <command>heat stack-create</command> 从模板文件创建一个堆栈:</para>
       <screen><prompt>$</prompt> <userinput>NET_ID=$(nova net-list | awk '/ demo-net / { print $2 }')</userinput>
 <prompt>$</prompt> <userinput>heat stack-create -f test-stack.yml \
   -P "ImageID=cirros-0.3.3-x86_64;NetID=$NET_ID" testStack</userinput>
@@ -59,8 +55,7 @@ outputs:
 +--------------------------------------+------------+--------------------+----------------------+</computeroutput></screen>
     </step>
     <step>
-      <para>Use the <command>heat stack-list</command> command to verify
-        successful creation of the stack:</para>
+      <para>用命令<command>heat stack-list</command> 验证堆栈是否创建成功:</para>
       <screen><prompt>$</prompt> <userinput>heat stack-list</userinput>
 <computeroutput>+--------------------------------------+------------+-----------------+----------------------+
 | id                                   | stack_name | stack_status    | creation_time        |

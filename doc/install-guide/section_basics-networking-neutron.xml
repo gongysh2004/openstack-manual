@@ -10,13 +10,9 @@
   xml:id="basics-networking">
   <?dbhtml stop-chunking?>
   <title>网络</title>
-  <para>After installing the operating system on each node for the
-    architecture that you choose to deploy, you must configure the network
-    interfaces. We recommend that you disable any automated network
-    management tools and manually edit the appropriate configuration files
-    for your distribution. For more information on how to configure networking
-    on your distribution, see the
-    <link os="ubuntu"
+  <para>在你所选择部署的框架的每个节点安装了操作系统以后，你必须
+配置网卡设备。我们推荐你使所有的自动管理网络的工具无效，并且根据你的发行版本手动的编辑合适的配置文件。
+如需获得更多信息，查看<link os="ubuntu"
     xlink:href="https://help.ubuntu.com/lts/serverguide/network-configuration.html"
     >documentation.</link>
     <link os="debian"
@@ -32,32 +28,18 @@
     <link os="sles;opensuse"
     xlink:href="http://activedoc.opensuse.org/book/opensuse-reference/chapter-13-basic-networking"
     >openSUSE documentation.</link></para>
-    <para>All nodes require Internet access for administrative purposes
-      such as package installation, security updates,
-      <glossterm>DNS</glossterm>, and
+    <para>所有的节点需要访问互联网，用以安装，保持系统更新，
+      <glossterm>DNS</glossterm>, 和
       <glossterm baseform="Network Time Protocol (NTP)"
-      >NTP</glossterm>. In most cases, nodes should obtain Internet
-      access through the management network interface. To highlight
-      the importance of network separation, the example architectures
-      use <link xlink:href="https://tools.ietf.org/html/rfc1918"
-      >private address space</link> for the management network and assume
-      that network infrastructure provides Internet access via
-      <glossterm baseform="Network Address Translation (NAT)"
-      >NAT</glossterm>. To illustrate the flexibility of
-      <glossterm>IaaS</glossterm>, the example architectures use public
-      IP address space for the external network and assume that network
-      infrastructure provides direct Internet access to instances in
-      your OpenStack environment. In environments with only one block
-      of public IP address space, both the management and external networks
-      must ultimately obtain Internet access using it. For simplicity, the
-      diagrams in this guide only show Internet access for OpenStack
-      services.</para>
+      >NTP</glossterm>. 在我们的样例架构中，节点从管理网络网卡接入互联网。为了突出分离网络的重要性，示例结构使用 <link xlink:href="https://tools.ietf.org/html/rfc1918"
+      >私用地址空间</link> 。假设网络设施提供<glossterm baseform="Network Address Translation (NAT)"
+      >NAT</glossterm>接入互联网.</para>
   <procedure os="sles;opensuse">
-    <title>To disable Network Manager</title>
+    <title>使网络管理无效</title>
     <step>
-      <para>Use the YaST network module:</para>
+      <para>使用YaST网络模块:</para>
       <screen os="opensuse;sles"><prompt>#</prompt> <userinput>yast2 network</userinput></screen>
-      <para>For more information, see the
+      <para>如需获得更多信息，查看
         <link xlink:href="https://www.suse.com/documentation/sles-12/book_sle_admin/data/sec_nm_activate.html">SLES </link> or
         the
         <link xlink:href="http://activedoc.opensuse.org/book/opensuse-reference/chapter-13-basic-networking#sec.basicnet.yast.netcard.global">
@@ -73,66 +55,41 @@
       environment, refer to the
       <link xlink:href="http://docs.openstack.org/sec/">OpenStack
       Security Guide</link>.</para>
-    <para os="ubuntu;debian">Your distribution does not enable a
-      restrictive <glossterm>firewall</glossterm> by default. For more
-      information about securing your environment, refer to the
-      <link xlink:href="http://docs.openstack.org/sec/">OpenStack
-      Security Guide</link>.</para>
+    <para os="ubuntu;debian">你的发行版缺省没有启用限制性 <glossterm>firewall</glossterm> </para>
   </note>
   <section xml:id="basics-networking-neutron">
   <?dbhtml stop-chunking?>
   <title>网络参数</title>
-  <para>The example architecture with OpenStack Networking (neutron) requires
-    one controller node, one network node, and at least one compute node.
-    The controller node contains one network interface on the
-    <glossterm>management network</glossterm>. The network node contains
-    one network interface on the management network, one on the
-    <glossterm>instance tunnels network</glossterm>, and one on the
-    <glossterm>external network</glossterm>. The compute node contains
-    one network interface on the management network and one on the
-    instance tunnels network.</para>
-  <para>The example architecture assumes use of the following networks:</para>
+  <para>有OpenStack网络(Neutron)的实例结构需要一个控制节点，一个网络节
+    点和至少一个计算节点。本手册在控制节点上同时运行网络节点和计算节点。</para>
+  <para>示例结构假设以下网络的用途:</para>
   <itemizedlist>
     <listitem>
-      <para>Management on 10.0.0.0/24 with gateway 10.0.0.1</para>
+      <para>管理在10.0.0.0/24 上，网关 10.0.0.1</para>
       <note>
-        <para>This network requires a gateway to provide Internet
-          access to all nodes for administrative purposes such as
-          package installation, security updates,
-          <glossterm>DNS</glossterm>, and
-          <glossterm baseform="Network Time Protocol (NTP)"
-          >NTP</glossterm>.</para>
+        <para>网络需要一个网关去提供互联网连接，用以实现某些系统管理工作。</para>
       </note>
     </listitem>
     <listitem>
-      <para>Instance tunnels on 10.0.1.0/24 without a gateway</para>
+      <para>实例通道10.0.1.0/24 上，没有网关</para>
       <note>
-        <para>This network does not require a gateway because communication
-          only occurs among network and compute nodes in your OpenStack
-          environment.</para>
+        <para>这个网络不需要网关，因为通信只需要在控制和计算节点之间进行。</para>
       </note>
     </listitem>
     <listitem>
-      <para>External on 203.0.113.0/24 with gateway 203.0.113.1</para>
+      <para>外部环境在 203.0.113.0/24上 ，有网关 203.0.113.1</para>
       <note>
-        <para>This network requires a gateway to provide Internet
-          access to instances in your OpenStack environment.</para>
+        <para>这个网络需要网关去提供你OpenStack环境上实例到互联网的访问。</para>
       </note>
     </listitem>
   </itemizedlist>
-  <para>You can modify these ranges and gateways to work with your
-    particular network infrastructure.</para>
+  <para>你能够修改这些范围和网关，使它们能够和你特定的网络设施工作。</para>
   <note>
-    <para>Network interface names vary by distribution. Traditionally,
-      interfaces use "eth" followed by a sequential number. To cover all
-      variations, this guide simply refers to the first interface as the
-      interface with the lowest number, the second interface as the
-      interface with the middle number, and the third interface as the
-      interface with the highest number.</para>
+    <para>网络接口因为发行版本的原因而不同。通常来说，接口使用“eth”紧跟着一个数字。为了掩护这些差异，
+这份指南简单地把第一个接口认作最低的数字，把第二个接口认作中间的数字，第三个数字认作最高的数字。</para>
   </note>
   <figure>
-    <title>Minimal architecture example with OpenStack Networking
-      (neutron)&mdash;Network layout</title>
+    <title>示例架构&mdash;网络Layout</title>
     <mediaobject>
       <imageobject>
         <imagedata contentwidth="6in"
@@ -140,46 +97,32 @@
       </imageobject>
     </mediaobject>
   </figure>
-  <para>Unless you intend to use the exact configuration provided in this
-    example architecture, you must modify the networks in this procedure to
-    match your environment. Also, each node must resolve the other nodes
-    by name in addition to IP address. For example, the
-    <replaceable>controller</replaceable> name must resolve to
-    <literal>10.0.0.11</literal>, the IP address of the management
-    interface on the controller node.</para>
-  <warning>
-    <para>Reconfiguring network interfaces will interrupt network
-      connectivity. We recommend using a local terminal session for these
-      procedures.</para>
-  </warning>
+  <para>每个节点都必须解析其他节点的名字到IP地址。举个例子，
+<replaceable>controller</replaceable> 名必须解析为<literal>10.0.0.11</literal>,
+控制节点上管理接口的IP地址 。</para>
   </section>
   <section xml:id="basics-neutron-networking-controller-node">
     <title>控制节点</title>
     <procedure>
-      <title>To configure networking:</title>
+      <title>配置网络:</title>
       <step>
-        <para>Configure the first interface as the management interface:</para>
+        <para>配置第一个接口作为管理接口:</para>
         <para>IP address: 10.0.0.11</para>
         <para>Network mask: 255.255.255.0 (or /24)</para>
         <para>Default gateway: 10.0.0.1</para>
       </step>
       <step>
-        <para>Configure the second interface as the instance tunnels
-          interface:</para>
+        <para>配置第二个接口作为实例通道接口:</para>
         <para>IP address: 10.0.1.11</para>
         <para>Network mask: 255.255.255.0 (or /24)</para>
       </step>
       <step>
-        <para>The external interface uses a special configuration without an
-          IP address assigned to it. Configure the third interface as the
-          external interface:</para>
-        <para>Replace <replaceable>INTERFACE_NAME</replaceable> with the
-          actual interface name. For example, <emphasis>eth2</emphasis> or
-          <emphasis>ens256</emphasis>.</para>
+        <para>外部接口使用一个特殊的配置文件，且不需要分配IP地址。把第三个接口配置成外部接口:</para>
+        <para>替换 <replaceable>INTERFACE_NAME</replaceable> 成实际接口名。
+比如, <emphasis>eth2</emphasis> 或者<emphasis>ens256</emphasis>.</para>
         <substeps>
           <step os="ubuntu;debian">
-            <para>Edit the <filename>/etc/network/interfaces</filename> file
-              to contain the following:</para>
+            <para>编辑 <filename>/etc/network/interfaces</filename> 文件，包含以下信息:</para>
             <programlisting># The external network interface
 auto <replaceable>INTERFACE_NAME</replaceable>
 iface <replaceable>INTERFACE_NAME</replaceable> inet manual
@@ -208,24 +151,23 @@ BOOTPROTO='static'</programlisting>
       </step>
 
       <step>
-        <para>Reboot the system to activate the changes.</para>
+        <para>重启系统来激活改变。</para>
       </step>
     </procedure>
     <procedure>
-      <title>To configure name resolution:</title>
+      <title>配置名字解析:</title>
       <step>
-        <para>Set the hostname of the node to
+        <para>设置节点的主机名到
           <code><replaceable>controller</replaceable></code>.</para>
       </step>
       <step>
-        <para>Edit the <filename>/etc/hosts</filename> file to contain the
-          following:</para>
+        <para>编辑 <filename>/etc/hosts</filename> 文件去包含以下信息:</para>
         <programlisting># controller
 10.0.0.11       controller
 # compute1
 10.0.0.31       compute1</programlisting>
         <warning os="ubuntu;debian">
-          <para>You must remove or comment the line beginning with
+          <para>你必须删除或注释以以下内容为开头的命令
             <literal>127.0.1.1</literal>.</para>
         </warning>
       </step>
@@ -234,39 +176,37 @@ BOOTPROTO='static'</programlisting>
   <section xml:id="basics-neutron-networking-compute-node">
     <title>计算节点</title>
     <procedure>
-      <title>To configure networking:</title>
+      <title>配置网络:</title>
       <step>
-        <para>Configure the first interface as the management interface:</para>
+        <para>配置第一个网卡作为管理网卡:</para>
         <para>IP address: 10.0.0.31</para>
         <para>Network mask: 255.255.255.0 (or /24)</para>
         <para>Default gateway: 10.0.0.1</para>
         <note>
-          <para>Additional compute nodes should use 10.0.0.32, 10.0.0.33,
-            and so on.</para>
+          <para>增加的计算节点应当使用 10.0.0.32, 10.0.0.33,
+            及其他。</para>
         </note>
       </step>
       <step>
-        <para>Configure the second interface as the instance tunnels
-          interface:</para>
+        <para>配置第二个网络作为实例通道节点:</para>
         <para>IP address: 10.0.1.31</para>
         <para>Network mask: 255.255.255.0 (or /24)</para>
         <note>
-          <para>Additional compute nodes should use 10.0.1.32, 10.0.1.33,
-            and so on.</para>
+          <para>增加的计算节点应当使用 10.0.1.32, 10.0.1.33,
+            及其他。</para>
         </note>
       </step>
       <step>
-        <para>Reboot the system to activate the changes.</para>
+        <para>重启系统并激活变动。</para>
       </step>
     </procedure>
     <procedure>
-      <title>To configure name resolution:</title>
+      <title>配置名字解析:</title>
       <step>
-        <para>Set the hostname of the node to <code>compute1</code>.</para>
+        <para>把节点主机名字设置为 <code>compute1</code>.</para>
       </step>
       <step>
-        <para>Edit the <filename>/etc/hosts</filename> file to contain the
-          following:</para>
+        <para>编辑 <filename>/etc/hosts</filename> 文件并包含以下信息:</para>
         <programlisting># compute1
 10.0.0.31       compute1
 
@@ -274,7 +214,7 @@ BOOTPROTO='static'</programlisting>
 10.0.0.11       controller
 </programlisting>
         <warning os="ubuntu;debian">
-          <para>You must remove or comment the line beginning with
+          <para>你必须删除或者注释以以下内容为开头的命令
             <literal>127.0.1.1</literal>.</para>
         </warning>
       </step>
@@ -282,12 +222,11 @@ BOOTPROTO='static'</programlisting>
   </section>
   <section xml:id="basics-neutron-networking-verify">
     <title>验证联通性</title>
-    <para>We recommend that you verify network connectivity to the Internet
-      and among the nodes before proceeding further.</para>
+    <para>我们推荐你在继续操作之前先确认节点与节点之间的网络联通。</para>
     <procedure>
       <step>
-        <para>From the <emphasis>controller</emphasis> node,
-          <command>ping</command> a site on the Internet:</para>
+        <para>从 <emphasis>controller</emphasis> 节点,
+          <command>ping</command> 英特网网站:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 openstack.org</userinput>
 <computeroutput>PING openstack.org (174.143.194.225) 56(84) bytes of data.
 64 bytes from 174.143.194.225: icmp_seq=1 ttl=54 time=18.3 ms
@@ -300,9 +239,9 @@ BOOTPROTO='static'</programlisting>
 rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms</computeroutput></screen>
       </step>
       <step>
-        <para>From the <emphasis>controller</emphasis> node,
-        <command>ping</command> the management interface on the
-        <emphasis>compute</emphasis> node:</para>
+        <para>从<emphasis>controller</emphasis> 节点,
+        <command>ping</command> 
+        <emphasis>compute</emphasis> 节点的管理网络网卡:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 <replaceable>compute1</replaceable></userinput>
 <computeroutput>PING compute1 (10.0.0.31) 56(84) bytes of data.
 64 bytes from compute1 (10.0.0.31): icmp_seq=1 ttl=64 time=0.263 ms
@@ -315,9 +254,9 @@ rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms</computeroutput></screen>
 rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
       </step>
       <step>
-        <para>From the <emphasis>controller</emphasis> node,
-          <command>ping</command> the instance tunnels interface on the
-          <emphasis>compute</emphasis> node:</para>
+        <para>从 <emphasis>controller</emphasis> 节点,
+          <command>ping</command>
+          <emphasis>compute</emphasis> 节点实例通道网卡:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 10.0.1.31</userinput>
 <computeroutput>PING 10.0.1.31 (10.0.1.31) 56(84) bytes of data.
 64 bytes from 10.0.1.31 (10.0.1.31): icmp_seq=1 ttl=64 time=0.263 ms
@@ -330,8 +269,8 @@ rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
 rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
       </step>
       <step>
-        <para>From the <emphasis>compute</emphasis> node,
-          <command>ping</command> a site on the Internet:</para>
+        <para>从 <emphasis>compute</emphasis> 节点,
+          <command>ping</command> 互联网站点:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 openstack.org</userinput>
 <computeroutput>PING openstack.org (174.143.194.225) 56(84) bytes of data.
 64 bytes from 174.143.194.225: icmp_seq=1 ttl=54 time=18.3 ms
@@ -344,9 +283,9 @@ rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
 rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms</computeroutput></screen>
       </step>
       <step>
-        <para>From the <emphasis>compute</emphasis> node,
-          <command>ping</command> the management interface on the
-          <emphasis>controller</emphasis> node:</para>
+        <para>从<emphasis>compute</emphasis> 节点,
+          <command>ping</command>
+          <emphasis>controller</emphasis> 节点管理网络网卡:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 <replaceable>controller</replaceable></userinput>
 <computeroutput>PING controller (10.0.0.11) 56(84) bytes of data.
 64 bytes from controller (10.0.0.11): icmp_seq=1 ttl=64 time=0.263 ms
@@ -359,9 +298,9 @@ rtt min/avg/max/mdev = 17.489/17.715/18.346/0.364 ms</computeroutput></screen>
 rtt min/avg/max/mdev = 0.202/0.217/0.263/0.030 ms</computeroutput></screen>
       </step>
       <step>
-        <para>From the <emphasis>compute</emphasis> node,
-          <command>ping</command> the instance tunnels interface on the
-          <emphasis>controller</emphasis> node:</para>
+        <para>从<emphasis>compute</emphasis> 节点,
+          <command>ping</command> 
+          <emphasis>controller</emphasis> 节点实例通道网卡:</para>
         <screen><prompt>#</prompt> <userinput>ping -c 4 10.0.1.11</userinput>
 <computeroutput>PING 10.0.1.11 (10.0.1.11) 56(84) bytes of data.
 64 bytes from 10.0.1.11 (10.0.1.11): icmp_seq=1 ttl=64 time=0.263 ms

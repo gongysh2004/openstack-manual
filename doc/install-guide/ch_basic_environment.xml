@@ -8,31 +8,10 @@
   <title>基础环境</title>
 
 
-  <para>This chapter explains how to configure each node in the
-    <link linkend="architecture_example-architectures">example architectures</link>
-    including the
-    <link linkend="example-architecture-with-neutron-networking-hw">three-node
-    architecture with OpenStack Networking (neutron)</link>.</para>
+  <para>本章节解释如何配置基本系统环境</para>
+
   <note>
-    <para>Although most environments include Identity, Image service,
-      Compute, at least one networking service, and the dashboard, the
-      Object Storage service can operate independently. If your use case
-      only involves Object Storage, you can skip to
-      <xref linkend="ch_swift"/> after configuring the appropriate nodes
-      for it. However, the dashboard requires at least
-      the Image service and Compute.</para>
-  </note>
-  <note>
-    <para>You must use an account with administrative privileges to configure
-      each node. Either run the commands as the <literal>root</literal> user
-      or configure the <literal>sudo</literal> utility.</para>
-  </note>
-  <note>
-    <para>
-      The <command>systemctl enable</command> call on openSUSE outputs
-      a warning message when the service uses SysV Init scripts
-      instead of native systemd files. This warning can be ignored.
-    </para>
+    <para>你必须使用一个有管理员权限的账号去配置每个节点。要么用<literal>root</literal> 用户要么用 <literal>sudo</literal> 工具。</para>
   </note>
   <xi:include href="section_basics-prerequisites.xml"/>
   <xi:include href="section_basics-security.xml"/>

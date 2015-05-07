@@ -6,36 +6,31 @@
   xml:id="basics-message-queue">
   <?dbhtml stop-chunking?>
   <title>消息队列</title>
-  <para>OpenStack uses a <glossterm>message queue</glossterm> to coordinate
-    operations and status information among services. The message queue
-    service typically runs on the controller node. OpenStack supports several
-    message queue services including
+  <para>OpenStack使用<glossterm>message queue</glossterm> 来协调各个服务之间的互动和状态交换。
+  消息队列服务通常运行在控制节点上。OpenStack 支持多种消息队列服务，包括
     <link xlink:href="http://www.rabbitmq.com">RabbitMQ</link>,
-    <link xlink:href="http://qpid.apache.org">Qpid</link>, and
-    <link xlink:href="http://zeromq.org">ZeroMQ</link>.
-    However, most distributions that package OpenStack support a particular
-    message queue service. This guide implements the RabbitMQ message queue
-    service because most distributions support it. If you prefer to implement
-    a different message queue service, consult the documentation associated
-    with it.</para>
+    <link xlink:href="http://qpid.apache.org">Qpid</link>, 和
+    <link xlink:href="http://zeromq.org">ZeroMQ</link>。
+    然而，OpenStack支持的多数发行版都有自己的特定的消息服务。本手册使用RabbitMQ
+    消息队列服务，因为多数发行版都支持它。如果你选择其它不同的队列服务，请查询相关手册。</para>
   <procedure>
-    <title>To install the message queue service</title>
+    <title>安装消息队列服务</title>
     <step os="ubuntu">
-      <para>Add the upstream repository key:</para>
+      <para>添加上游repo 秘钥:</para>
       <screen><prompt>#</prompt> <userinput>curl -O https://www.rabbitmq.com/rabbitmq-signing-key-public.asc</userinput>
 <prompt>#</prompt> <userinput>apt-key add rabbitmq-signing-key-public.asc</userinput></screen>
     </step>
     <step os="ubuntu">
-      <para>Add the upstream repository:</para>
+      <para>添加上游repo:</para>
       <screen><prompt>#</prompt> <userinput>echo "deb http://www.rabbitmq.com/debian/ testing main" \
   > /etc/apt/sources.list.d/rabbitmq.list</userinput></screen>
     </step>
     <step os="ubuntu">
-      <para>Update the package database:</para>
+      <para>跟新包数据库:</para>
       <screen><prompt>#</prompt> <userinput>apt-get update</userinput></screen>
     </step>
     <step os="ubuntu;debian">
-      <para>Install the package:</para>
+      <para>安装包:</para>
       <screen><prompt>#</prompt> <userinput>apt-get install rabbitmq-server</userinput></screen>
     </step>
     <step os="rhel;centos;fedora">
@@ -46,7 +41,7 @@
     </step>
   </procedure>
   <procedure>
-    <title>To configure the message queue service</title>
+    <title>配置消息队列服务</title>
     <step os="sles;opensuse"><para>Configure access to epmd on the controller IP:</para>
     <screen><prompt>#</prompt> <userinput>cp /usr/lib/systemd/system/epmd.socket /etc/systemd/system/</userinput></screen>
 
@@ -77,16 +72,15 @@
 <prompt>#</prompt> <userinput>systemctl start rabbitmq-server.service</userinput></screen>
     </step>
     <step>
-      <para>Add the <literal>openstack</literal> user:</para>
+      <para>添加 <literal>openstack</literal> 用户:</para>
       <screen><prompt>#</prompt> <userinput>rabbitmqctl add_user openstack <replaceable>RABBIT_PASS</replaceable></userinput>
 <computeroutput>Creating user "openstack" ...
 ...done.</computeroutput></screen>
-      <para>Replace <replaceable>RABBIT_PASS</replaceable> with a suitable
-        password.</para>
+      <para>用一个合适的密码替换<replaceable>RABBIT_PASS</replaceable> 。</para>
     </step>
     <step>
-      <para>Permit configuration, write, and read access for the
-        <literal>openstack</literal> user:</para>
+      <para>允许
+        <literal>openstack</literal> 用户配置，写和读:</para>
       <screen><prompt>#</prompt> <userinput>rabbitmqctl set_permissions openstack ".*" ".*" ".*"</userinput>
 <computeroutput>Setting permissions for user "openstack" in vhost "/" ...
 ...done.</computeroutput></screen>
