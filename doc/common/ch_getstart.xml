@@ -168,30 +168,6 @@
                     OpenStack-native REST API and a CloudFormation-compatible
                     Query API.</td>
             </tr>
-            <tr>
-                <td><link
-                        xlink:href="http://www.openstack.org/software/openstack-shared-services/"
-                        ><glossterm>Database service</glossterm></link>
-                </td>
-                <td><link
-                        xlink:href="http://docs.openstack.org/developer/trove/"
-                        ><glossterm>Trove</glossterm></link>
-                </td>
-                <td>Provides scalable and reliable Cloud Database-as-a-Service
-                   functionality for both relational and non-relational database
-                   engines.</td>
-            </tr>
-            <tr>
-                <td><link xlink:href="http://www.openstack.org/software/openstack-shared-services/"
-                            ><glossterm>Data processing service</glossterm></link>
-                </td>
-                <td><link xlink:href="http://docs.openstack.org/developer/sahara/"
-                            ><glossterm>Sahara</glossterm></link>
-                </td>
-                <td>Provides capabilties to provision and scale Hadoop clusters in OpenStack by
-                    specifying parameters like Hadoop version, cluster topology and nodes hardware
-                    details.</td>
-            </tr>
         </tbody>
     </table>
     <xi:include href="section_getstart_conceptual_arch.xml"/>
@@ -215,8 +191,7 @@
         <xi:include href="section_getstart_image.xml"/>
         <xi:include href="section_getstart_telemetry.xml"/>
         <xi:include href="section_getstart_orchestration.xml"/>
-        <xi:include href="section_getstart_trove.xml"/>
-        <xi:include href="section_getstart_sahara.xml"/>
+
     </section>
     <section xml:id="feedback">
         <title>Feedback</title>

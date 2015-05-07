@@ -5,7 +5,7 @@
   version="5.0"
   xml:id="app_community_support">
     <?dbhtml stop-chunking?>
-    <title>Community support</title>
+    <title>社区支持</title>
     <para>The following resources are available to help you run and use
         OpenStack. The OpenStack community constantly improves and
         adds to the main features of OpenStack, but if you have
@@ -13,7 +13,7 @@
         following resources to get OpenStack support,
         and troubleshoot your installations.</para>
     <section xml:id="support-documentation">
-        <title>Documentation</title>
+        <title>文档</title>
         <para>For the available OpenStack documentation, see <link
                 xlink:href="http://docs.openstack.org"
                 >docs.openstack.org</link>.</para>
@@ -178,7 +178,7 @@
             might be useful.</para>
     </section>
     <section xml:id="support-mailing-lists">
-        <title>OpenStack mailing lists</title>
+        <title>OpenStack邮件列表</title>
         <para>A great way to get answers and insights is to post your
             question or problematic scenario to the OpenStack mailing
             list. You can learn from and help others who might have
@@ -195,7 +195,7 @@
                 >http://wiki.openstack.org/MailingLists</link>.</para>
     </section>
     <section xml:id="support-wiki">
-        <title>The OpenStack wiki</title>
+        <title>OpenStack wiki</title>
         <para>The <link xlink:href="http://wiki.openstack.org/">OpenStack
                 wiki</link> contains a broad range of topics but some of the
             information can be difficult to find or is a few pages deep.
@@ -207,7 +207,7 @@
             OpenStack wiki page.</para>
     </section>
     <section xml:id="support-bugs-area">
-        <title>The Launchpad Bugs area</title>
+        <title>Launchpad Bugs</title>
         <para>The OpenStack community values your set up and testing efforts and
             wants your feedback. To log a bug, you must sign up for a Launchpad
             account at <link xlink:href="https://launchpad.net/+login"
@@ -332,7 +332,7 @@
         </itemizedlist>
     </section>
     <section xml:id="support-irc-channel">
-        <title>The OpenStack IRC channel</title>
+        <title>OpenStack IRC频道</title>
         <para>The OpenStack community lives in the #openstack IRC channel on the
             Freenode network. You can hang out, ask questions, or get immediate
             feedback for urgent and pressing issues. To install an IRC client or
@@ -356,14 +356,14 @@
                 >https://wiki.openstack.org/wiki/IRC</link>.</para>
     </section>
     <section xml:id="support-documentation-feedback">
-        <title>Documentation feedback</title>
+        <title>文档反馈</title>
         <para>To provide feedback on documentation, join and use the
             <email>openstack-docs@lists.openstack.org</email> mailing list at
             <link xlink:href="http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-docs">OpenStack
                 Documentation Mailing List</link>, or <link xlink:href="https://bugs.launchpad.net/openstack-manuals/+filebug">report a bug</link>.</para>
     </section>
     <section xml:id="distro-support">
-        <title>OpenStack distribution packages</title>
+        <title>OpenStack发行包</title>
         <para>The following Linux distributions provide
             community-supported packages for OpenStack:</para>
         <itemizedlist>

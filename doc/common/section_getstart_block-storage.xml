@@ -4,7 +4,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   version="5.0"
   xml:id="block-storage-service">
-      <title>OpenStack Block Storage</title>
+      <title>OpenStack块存储</title>
       <para>The OpenStack Block Storage service (cinder) adds
         persistent storage to a virtual machine. Block
         Storage provides an infrastructure for managing volumes, and
