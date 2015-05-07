@@ -65,25 +65,6 @@
               >安全组</glossterm>)服务和保证虚拟机网络联通性。</para>
             <para>计算节点还运行计量代理来收集度量数据。</para>
           </listitem>
-          <listitem>
-            <para>The optional Block Storage node contains the disks that
-              the Block Storage service provisions for tenant virtual machine
-              instances. You can run more than one of these nodes.</para>
-            <para>Optionally, the Block Storage node runs a Telemetry
-              agent to collect meters. Also, it can contain a second
-              network interface on a separate storage network to improve
-              performance of storage services.</para>
-          </listitem>
-          <listitem>
-            <para>The optional Object Storage nodes contain the disks that
-              the Object Storage service uses for storing accounts,
-              containers, and objects. You can run more than two of these
-              nodes. However, the minimal architecture example requires
-              two nodes.</para>
-            <para>Optionally, these nodes can contain a second network
-              interface on a separate storage network to improve
-              performance of storage services.</para>
-          </listitem>
         </itemizedlist>
 
         <figure xml:id="example-architecture-with-neutron-networking-hw">

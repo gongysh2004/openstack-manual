@@ -6,13 +6,7 @@
   xml:id="basics-prerequisites">
   <?dbhtml stop-chunking?>
   <title>机器配置</title>
-  <para>For best performance, we recommend that your environment meets or
-    exceeds the hardware requirements in
-    <xref linkend="example-architecture-with-neutron-networking-hw"/> However,
-    OpenStack does not require a significant amount of resources and the
-    following minimum requirements should support a proof-of-concept
-    environment with core services and several
-    <glossterm>CirrOS</glossterm> instances:</para>
+  <para>下面给出了运行本手册的推荐配置：</para>
   <itemizedlist>
     <listitem>
       <para>Controller Node: 4 processor, 8 GB memory, and 40 GB
@@ -23,41 +17,26 @@
         storage</para>
     </listitem>
   </itemizedlist>
-  <para>To minimize clutter and provide more resources for OpenStack, we
-    recommend a minimal installation of your Linux distribution. Also, we
-    strongly recommend that you install a 64-bit version of your distribution.
+  <para>本手册采用ubuntu 14.04 64bit 操作系统作为控制和计算节点的操作系统。
   </para>
   <note>
-    <para>A single disk partition on each node works for most basic
-      installations. However, you should consider
-      <glossterm>Logical Volume Manager (LVM)</glossterm> for installations
-      with optional services such as Block Storage.</para>
+    <para>在控制节点上我们需要三个独立的硬盘，第一个安装操作系统，第二个和第三个用作存储。</para>
   </note>
-  <para>Many users build their test environments on
+  <para>很多用户用
     <glossterm baseform="virtual machine (VM)">virtual machines
-    (VMs)</glossterm>. The primary benefits of VMs include the
-    following:</para>
+    (VMs)</glossterm>来构建他们的实验环境，好处在于：</para>
   <itemizedlist>
     <listitem>
-      <para>One physical server can support multiple nodes, each with almost
-        any number of network interfaces.</para>
+      <para>一个物理服务器能够支持多个节点，而且可以有任意多个网卡和硬盘。</para>
     </listitem>
     <listitem>
-      <para>Ability to take periodic "snap shots" throughout the installation
-        process and "roll back" to a working configuration in the event of
-        a problem.</para>
+      <para>能否不断地对系统打快照，和回滚系统。</para>
     </listitem>
   </itemizedlist>
-  <para>However, VMs will reduce performance of your instances, particularly
-    if your hypervisor and/or processor lacks support for hardware
-    acceleration of nested VMs.</para>
+  <para>然而，虚拟机作为节点会影响实例的性能。</para>
   <note>
-    <para>If you choose to install on VMs, make sure your hypervisor
-      permits <glossterm>promiscuous mode</glossterm> and disables MAC
-      address filtering on the
-      <glossterm>external network</glossterm>.</para>
+    <para>如果在虚拟机上安装节点，需要确保你的hypervisor允许
+      <glossterm>promiscuous mode</glossterm>和关闭 <glossterm>external network</glossterm>网卡的MAC
+      地址过滤。</para>
   </note>
-  <para>For more information about system requirements, see the <link
-    xlink:href="http://docs.openstack.org/ops/">OpenStack Operations
-    Guide</link>.</para>
 </section>
