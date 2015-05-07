@@ -5,129 +5,101 @@
   version="5.0"
   xml:id="keystone-concepts">
     <?dbhtml stop-chunking?>
-    <title>OpenStack 身份服务概念</title>
-    <para>The OpenStack<glossterm>Identity Service</glossterm> performs the
-           following functions:</para>
+    <title>OpenStack身份服务概念</title>
+    <para>OpenStack<glossterm>Identity Service</glossterm> 执行以下功能:</para>
     <itemizedlist spacing="compact">
         <listitem>
-            <para>Tracking users and their permissions.</para>
+            <para>用户与用户权限跟踪</para>
         </listitem>
         <listitem>
-            <para>Providing a catalog of available services with their API
-                  endpoints.</para>
+            <para>提供一个服务目录，包括服务项与相关API的位置。</para>
         </listitem>
     </itemizedlist>
-    <para>When installing OpenStack Identity service, you must register
-          each service in your OpenStack installation. Identity service
-          can then track which OpenStack services are installed, and
-          where they are located on the network.</para>
-    <para>To understand OpenStack Identity, you must understand the
-          following concepts:</para>
+    <para>当安装OpenStack身份服务时，你必须先注册你在OpenStack所安装的每一项服务。
+身份服务将可以跟踪OpenStack安装的服务和他们所在的网络位置。
+</para>
+    <para>身份服务有以下几个重要概念：</para>
     <variablelist>
         <varlistentry>
-            <term>User</term>
+            <term>用户 User</term>
             <listitem>
-                <para>Digital representation of a person, system, or
-                    service who uses OpenStack cloud services. The
-                    Identity service validates that incoming requests
-                    are made by the user who claims to be making the
-                    call. Users have a login and may be assigned
-                    tokens to access resources. Users can be directly
-                    assigned to a particular tenant and behave as if
-                    they are contained in that tenant.</para>
+                <para>代表使用OpenStack云服务的一个人、系统、或服务。当用户调用某个服务时，
+身份验证服务将会验证用户的身份和权限。用户如果已经登录，能用分配的令牌（tokens）访问资源。
+用户可能被直接分配给特定的租户，用户行为被包含在租户（tenant）环境下。 
+</para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Credentials</term>
+            <term>凭证 Credentials</term>
             <listitem>
-                <para>Data that confirms the user's identity. For
-                    example: user name and password, user name and API
-                    key, or an authentication token provided by the
-                    Identity Service.</para>
+                <para>确认用户身份的数据。以下为凭证的例子: 一个匹配的用户名和密码，一个匹配的用户名和API键，或一个由身份服务提供的令牌
+                    </para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Authentication</term>
+            <term>认证 Authentication</term>
             <listitem>
-                <para>The process of confirming the identity of a user.
-                    OpenStack Identity confirms an incoming request
-                    by validating a set of credentials supplied by the
-                    user.</para>
-                <para>These credentials are initially a user name and
-                    password, or a user name and API key. When user
-                    credentials are validated, OpenStack Identity issues an
-                    authentication token which the user provides in subsequent
-                    requests.</para>
+                <para>确认用户身份的过程。
+Openstack身份服务通过验证一组由用户提供的凭证以确认传入的请求是可以被访问的。</para>
+                <para>这些凭证初始为用户名和密码或者用户名和API键。当用户凭证被确认后，
+OpenStack身份服务将会给用户发布一个确认身份的令牌(Token)，在用户随后的请求中可以使用这个令牌授权访问。
+</para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Token</term>
+            <term>令牌 Token</term>
             <listitem>
-                <para>An alpha-numeric string of text used to access
-                    OpenStack APIs and resources. A token may be
-                    revoked at any time and is valid for a
-                    finite duration.</para>
-                <para>While OpenStack Identity supports token-based
-                    authentication in this release, the intention is
-                    to support additional protocols in the future.
-                    Its main purpose is to be an integration service,
-                    and not aspire to be a full-fledged identity store
-                    and management solution.</para>
+                <para>令牌是一个用于访问OpenStack APIs及资源的任意字符数字文本。一个令牌可以在任意时间废除并且有一定的有效期。
+                    </para>
+                <para> 身份服务支持基于令牌的认证，其意图是为了在将来支持一些附加的协议。
+其目的是为了让它首先成为一种集成服务，而不是一种渴望成为丰富的身份存储和管理的解决方案。
+</para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Tenant</term>
+            <term>租户 Tenant</term>
             <listitem>
-                <para>A container used to group or isolate resources.
-                    Tenants also group or isolate identity objects.
-                    Depending on the service operator, a tenant may map
-                    to a customer, account, organization, or project.</para>
+                <para>一个容器，用于组织或隔离资源。租户同时组织或隔离身份对象。
+依赖于服务运营商，一个租户可以被映射为一个客户、账户、组织、项目。
+</para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Service</term>
+            <term>服务Service</term>
             <listitem>
-                <para>An OpenStack service, such as Compute (nova),
-                    Object Storage (swift), or Image service (glance).
-                    It provides one or more endpoints in which
-                    users can access resources and perform operations.</para>
+                <para>一项OpenStack的服务，如计算（Nova）、对象存储（Swift）、或镜像服务（Glance）。
+一种服务提供给用户可能获取资源或执行操作的一个或多个端点。
+                    </para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Endpoint</term>
+            <term>端点Endpoint</term>
             <listitem>
-                <para>A network-accessible address where you access a service,
-                    usually a URL address. If you are using an extension for
-                    templates, an endpoint template can be created, which
-                    represents the templates of all the consumable services
-                    that are available across the regions.</para>
+                <para>一个有效的网络地址，通常为URL地址。如果使用模板扩展，你可以创建一个端点模板,
+它表示所有可跨地区消费的服务。 </para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Role</term>
+            <term>角色Role</term>
             <listitem>
-                <para>A personality with a defined set of user rights and
-                    privileges to perform a specific set of operations.</para>
-                <para>In the Identity service, a token that is issued
-                    to a user includes the list of roles. Services that are
-                    being called by that user determine how they interpret the
-                    set of roles a user has and to which operations or
-                    resources each role grants access.</para>
+                <para>一个权力组合，拥有一系列已定义的用户权利和特权，用于执行一组特定的操作。
+</para>
+                <para>在身份服务中，发送到用户的一个令牌，包括了用户可以承担角色的列表。用户访问的服务来决定
+这些角色的操作权限。 
+</para>
             </listitem>
         </varlistentry>
         <varlistentry>
-            <term>Keystone Client</term>
+            <term>Keystone 客户端 Keystone Client</term>
             <listitem>
-                <para>A command line interface for the OpenStack
-                    Identity API. For example, users can run the
-                    <command>keystone service-create</command> and
-                    <command>keystone endpoint-create</command> commands
-                    to register services in their OpenStack
-                    installations.</para>
+                <para>一个命令行界面，用于调用OpenStack 身份服务API。举个例子，用户可以运行
+                    <command>keystone service-create</command> 和
+                    <command>keystone endpoint-create</command> 的命令用于在OpenStack注册服务。
+           </para>
             </listitem>
         </varlistentry>
     </variablelist>
-    <para>The following diagram shows the OpenStack Identity process
+    <para>以下图表展示了OpenStack身份服务的过程：
         flow:</para>
     <mediaobject>
         <imageobject role="fo">

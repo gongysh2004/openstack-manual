@@ -9,30 +9,27 @@
   version="5.0"
   xml:id="keystone-install">
   <title>安装和配置</title>
-  <para>This section describes how to install and configure the OpenStack
-    Identity service, code-named keystone, on the controller node. For
-    performance, this configuration deploys the Apache HTTP server to
-    handle requests and Memcached to store tokens instead of a SQL
-    database.</para>
+  <para>这个部分描述了如何在控制器节点上安装和配置OpenStack身份服务Keystone。
+为了提高性能，以下配置部署了Apache HTTP server以处理请求，部署Memcached来存储令牌。
+</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you configure the OpenStack Identity service, you must create
-      a database and an administration token.</para>
+    <title>部署前提</title>
+    <para>在你配置OpenStack身份服务之前，你必须创建一个数据库和一个管理令牌。
+</para>
     <step>
-      <para>To create the database, complete these steps:</para>
+     <para>完成以下步骤，建立数据库：</para>
       <substeps>
         <step>
-          <para>Use the database access client to connect to the database
-            server as the <literal>root</literal> user:</para>
+          <para>使用数据库客户端,以 <literal>root</literal>账户来连接数据库服务：</para>
           <screen><prompt>$</prompt> <userinput>mysql -u root -p</userinput></screen>
         </step>
         <step>
-          <para>Create the <literal>keystone</literal> database:</para>
+          <para>建立 <literal>keystone</literal> 数据库:</para>
           <screen><userinput>CREATE DATABASE keystone;</userinput></screen>
         </step>
         <step>
-          <para>Grant proper access to the <literal>keystone</literal>
-            database:</para>
+          <para>为 <literal>keystone</literal>
+            数据库授予适当的访问权限:</para>
           <screen><userinput>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' \
   IDENTIFIED BY '<replaceable>KEYSTONE_DBPASS</replaceable>';</userinput>
 <userinput>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' \
@@ -40,100 +37,80 @@
           <para>Replace <replaceable>KEYSTONE_DBPASS</replaceable> with a suitable password.</para>
         </step>
         <step>
-          <para>Exit the database access client.</para>
+          <para>退出数据库接入客户端</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Generate a random value to use as the administration token during
-        initial configuration:</para>
+      <para>在初始配置时，生成一个随机值作为管理令牌使用</para>
       <screen><prompt>$</prompt> <userinput>openssl rand -hex 10</userinput></screen>
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install and configure the Identity service components</title>
-    <note>
-       <para>Default configuration files vary by distribution. You might need
-         to add these sections and options rather than modifying existing
-         sections and options. Also, an ellipsis (...) in the configuration
-         snippets indicates potential default configuration options that you
-         should retain.</para>
-    </note>
+    <title>安装和配置身份服务组件</title>
     <step os="ubuntu">
-      <para>By default, the <systemitem class="service">keystone</systemitem>
-        service listens on ports 5000 and 35357. However, this guide
-        configures the Apache HTTP server to listen on those ports. To avoid
-        port conflicts, disable the
-        <systemitem class="service">keystone</systemitem> service from starting
-        automatically after installation:</para>
+      <para>默认情况下, <systemitem class="service">keystone</systemitem>
+        服务监听端口5000 and 35357. 然而，这个指南教程配置了Apache HTTP server 监听这些端口。为了避免端口冲突，将
+        <systemitem class="service">keystone</systemitem> 服务在安装后，从自动启动中禁用。:</para>
       <screen><prompt>#</prompt> <userinput>echo "manual" > /etc/init/keystone.override</userinput></screen>
     </step>
     <step>
-      <para>Run the following command to install the packages:</para>
+      <para>运行以下命令来安装包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install keystone python-openstackclient apache2 libapache2-mod-wsgi memcached python-memcache</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-keystone python-openstackclient memcached python-memcached</userinput></screen>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install openstack-keystone python-openstackclient memcached python-python-memcached</userinput></screen>
     </step>
     <step os="rhel;fedora;centos;sles;opensuse">
-      <para>Start the Memcached service and configure it to start when the
-        system boots:</para>
+      <para>启动Memcached服务service，并配置其在开机时启动： </para>
       <screen><prompt>#</prompt> <userinput>systemctl enable memcached.service</userinput>
 <prompt>#</prompt> <userinput>systemctl start memcached.service</userinput></screen>
     </step>
     <step>
-      <para>Edit the <filename>/etc/keystone/keystone.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑 <filename>/etc/keystone/keystone.conf</filename> 文件并完成以下操作：</para>
       <substeps>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, define the value
-            of the initial administration token:</para>
+          <para>在<literal>[DEFAULT]</literal> 部分中, 定义初始管理令牌的值：</para>
           <programlisting language="ini">[DEFAULT]
 ...
 admin_token = <replaceable>ADMIN_TOKEN</replaceable></programlisting>
-          <para>Replace <replaceable>ADMIN_TOKEN</replaceable> with the random
-            value that you generated in a previous step.</para>
+          <para>用你之前步骤所生成的随机值替换 <replaceable>ADMIN_TOKEN</replaceable> </para>
         </step>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
+          <para>在 <literal>[database]</literal> 部分中,配置数据库接入：
+           </para>
           <programlisting language="ini">[database]
 ...
 connection = mysql://keystone:<replaceable>KEYSTONE_DBPASS</replaceable>@<replaceable>controller</replaceable>/keystone</programlisting>
-          <para>Replace <replaceable>KEYSTONE_DBPASS</replaceable> with the
-            password you chose for the database.</para>
+          <para>用你的数据库密码替换<replaceable>KEYSTONE_DBPASS</replaceable> 。</para>
         </step>
         <step>
-          <para>In the <literal>[memcache]</literal> section, configure
-            the Memcache service:</para>
+          <para>在<literal>[memcache]</literal> 部分中, 配置 Memcache 服务:</para>
           <programlisting language="ini">[memcache]
 ...
 servers = localhost:11211</programlisting>
         </step>
         <step>
-          <para>In the <literal>[token]</literal> section, configure the UUID
-            token provider and Memcached driver:</para>
+          <para>在 <literal>[token]</literal> 部分中, 配置 UUID
+            token和Memcached 驱动:</para>
           <programlisting language="ini">[token]
 ...
 provider = keystone.token.providers.uuid.Provider
 driver = keystone.token.persistence.backends.memcache.Token</programlisting>
         </step>
         <step>
-          <para>In the <literal>[revoke]</literal> section, configure
-          the SQL revocation driver:</para>
+          <para>在<literal>[revoke]</literal> 部分中，配置SQL 撤销后端:</para>
           <programlisting language="ini">[revoke]
 ...
 driver = keystone.contrib.revoke.backends.sql.Revoke</programlisting>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            log directory:</para>
+          <para>在 <literal>[DEFAULT]</literal> 部分中, 配置日志目录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 log_dir = /var/log/keystone</programlisting>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal> section:</para>
+          <para>协助故障排除,在 <literal>[DEFAULT]</literal> 部分中，开启冗余记录:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -153,134 +130,15 @@ verbose = True</programlisting>
       <screen><prompt>#</prompt> <userinput>su -s /bin/sh -c "keystone-manage db_sync" keystone</userinput></screen>
     </step>
   </procedure>
-  <procedure os="debian">
-    <title>To install and configure the components</title>
-    <step>
-      <para>Run the following command to install the packages:</para>
-      <screen><prompt>#</prompt> <userinput>apt-get install keystone</userinput></screen>
-      <note><para><package>python-keystoneclient</package> will automatically be installed as
-      it is a dependency of the <package>keystone</package> package.</para></note>
-    </step>
-    <step>
-      <para>Respond to prompts for <xref linkend="debconf-dbconfig-common"/>, which
-      will fill the below database access directive.</para>
-      <programlisting language="ini">[database]
-...
-connection = mysql://keystone:<replaceable>KEYSTONE_DBPASS</replaceable>@<replaceable>controller</replaceable>/keystone</programlisting>
-      <para>If you decide to not use <command>dbconfig-common</command>, then you will have to
-      create the database and manage its access rights yourself, and run the
-      following by hand.</para>
-      <screen><prompt>#</prompt> <userinput>keystone-manage db_sync</userinput></screen>
-    </step>
-    <step>
-      <para>Generate a random value to use as the administration token during
-        initial configuration:</para>
-      <screen><prompt>$</prompt> <userinput>openssl rand -hex 10</userinput></screen>
-      <para>Configure the initial administration token:</para>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50" fileref="figures/debconf-screenshots/keystone_1_admin_token.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-      <para>Use the random value that you generated in a previous step. If you
-        install using non-interactive mode or you do not specify this token,
-        the configuration tool generates a random value.</para>
-      <para>Later on, the package will configure the below directive with the
-        value you entered:</para>
-      <programlisting language="ini">[DEFAULT]
-...
-admin_token = <replaceable>ADMIN_TOKEN</replaceable></programlisting>
-    </step>
-    <step>
-      <para>Create the <literal>admin</literal> tenant and user:</para>
-      <para>During the final stage of the package installation, it is possible
-        to automatically create an admin tenant and an admin user. This can
-        later be used for other OpenStack services to contact the Identity
-        service. This is the equivalent of running the below commands:</para>
-      <screen><prompt>#</prompt> <userinput>openstack project create --description "Admin Tenant" admin</userinput>
-<prompt>#</prompt> <userinput>openstack user create --password <replaceable>ADMIN_PASS</replaceable> --email root@localhost admin</userinput>
-<prompt>#</prompt> <userinput>openstack role create admin</userinput>
-<prompt>#</prompt> <userinput>openstack role add --project demo --user demo _member_</userinput></screen>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50"
-              fileref="figures/debconf-screenshots/keystone_2_register_admin_tenant_yes_no.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-      <para>&nbsp;</para>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50"
-              fileref="figures/debconf-screenshots/keystone_3_admin_user_name.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-      <para>&nbsp;</para>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50"
-              fileref="figures/debconf-screenshots/keystone_4_admin_user_email.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-      <para>&nbsp;</para>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50"
-              fileref="figures/debconf-screenshots/keystone_5_admin_user_pass.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-      <para>&nbsp;</para>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50"
-              fileref="figures/debconf-screenshots/keystone_6_admin_user_pass_confirm.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-    </step>
-    <step>
-      <title>Create the Identity service endpoints</title>
-      <para>In Debian, the Keystone package offers automatic registration of Keystone
-        in the service catalogue. This is equivalent of running the below commands:</para>
-      <screen><prompt>#</prompt> <userinput>openstack service create --type identity --description "OpenStack Identity" keystone</userinput>
-<prompt>#</prompt> <userinput>keystone endpoint-create \
-  --publicurl http://<replaceable>controller</replaceable>:5000/v2.0 \
-  --internalurl http://<replaceable>controller</replaceable>:5000/v2.0 \
-  --adminurl http://<replaceable>controller</replaceable>:35357/v2.0 \
-  --region RegionOne \
-  identity</userinput></screen>
-      <informalfigure>
-        <mediaobject>
-          <imageobject>
-            <imagedata scale="50"
-              fileref="figures/debconf-screenshots/keystone_7_register_endpoint.png"/>
-          </imageobject>
-        </mediaobject>
-      </informalfigure>
-    </step>
-  </procedure>
   <procedure os="ubuntu">
-    <title>To configure the Apache HTTP server</title>
+    <title>配置Apache HTTP server</title>
     <step>
-      <para>Edit the <filename>/etc/apache2/apache2.conf</filename> file and
-        configure the <literal>ServerName</literal> option to reference the
-        controller node:</para>
+      <para>编辑<filename>/etc/apache2/apache2.conf</filename> 文件并
+        配置 <literal>ServerName</literal> 选项来引用控制器节点：</para>
       <programlisting>ServerName <replaceable>controller</replaceable></programlisting>
     </step>
     <step>
-      <para>Create the
-        <filename>/etc/apache2/sites-available/wsgi-keystone.conf</filename>
-        file with the following content:</para>
+      <para>以下文本创建<filename>/etc/apache2/sites-available/wsgi-keystone.conf</filename>文件：</para>
       <programlisting>Listen 5000
 Listen 35357
 
@@ -313,56 +171,47 @@ Listen 35357
 &lt;/VirtualHost&gt;</programlisting>
     </step>
     <step>
-      <para>Disable the default virtual host:</para>
+      <para>禁用默认虚拟主机：</para>
       <screen><prompt>#</prompt> <userinput>rm /etc/apache2/sites-enabled/000-default.conf</userinput></screen>
     </step>
     <step>
-      <para>Enable the Identity service virtual hosts:</para>
+      <para>开启身份服务的虚拟主机：</para>
       <screen><prompt>#</prompt> <userinput>ln -s /etc/apache2/sites-available/wsgi-keystone.conf /etc/apache2/sites-enabled</userinput></screen>
     </step>
     <step>
-      <para>Create the directory structure for the WSGI components:</para>
+      <para>为WSGI组件创建目录结构：</para>
       <screen><prompt>#</prompt> <userinput>mkdir -p /var/www/cgi-bin/keystone</userinput></screen>
     </step>
     <step>
-      <para>Copy the WSGI components from the upstream repository into this
-        directory:</para>
+      <para>从上游库复制WSGI组件到此目录中：
+       </para>
       <screen><prompt>#</prompt> <userinput>curl http://git.openstack.org/cgit/openstack/keystone/plain/httpd/keystone.py?h=stable/kilo \
   | tee /var/www/cgi-bin/keystone/main /var/www/cgi-bin/keystone/admin</userinput></screen>
     </step>
     <step>
-      <para>Adjust ownership and permissions on this directory and the files
-        in it:</para>
+      <para>调整次目录及目录下文件的所有权和权限：</para>
       <screen><prompt>#</prompt> <userinput>chown -R keystone:keystone /var/www/cgi-bin/keystone</userinput>
 <prompt>#</prompt> <userinput>chmod 755 /var/www/cgi-bin/keystone/*</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu">
-      <para>Restart the Apache HTTP server:</para>
+      <para>重启Apache HTTP server:</para>
       <screen><prompt>#</prompt> <userinput>service apache2 restart</userinput></screen>
     </step>
-    <step os="rhel;fedora;centos;opensuse;sles">
-      <para>Start the Identity service and configure it to start when the
-        system boots:</para>
-      <screen><prompt>#</prompt> <userinput>systemctl enable openstack-keystone.service</userinput>
-<prompt>#</prompt> <userinput>systemctl start openstack-keystone.service</userinput></screen>
-    </step>
     <step os="ubuntu">
-      <para>By default, the Ubuntu packages create a SQLite database.</para>
-      <para>Because this configuration uses a SQL database server, you can
-        remove the SQLite database file:</para>
+      <para>默认情况下, Ubuntu安装包会创建一个 SQLite 数据库。</para>
+      <para>由于这个配置使用了一个SQL数据库服务，你可以移除 SQLite数据库文件：</para>
       <screen><prompt>#</prompt> <userinput>rm -f /var/lib/keystone/keystone.db</userinput></screen>
     </step>
     <step os="sles;opensuse;debian">
-      <para>By default, the Identity service stores expired tokens in the
-        SQL database indefinitely. The accumulation of expired tokens
-        considerably increases the database size and degrades performance
-        over time, particularly in environments with limited resources.</para>
-      <para>The packages already contain a cron job under
-        <filename>/etc/cron.hourly/keystone</filename>, so it is not necessary
-        to manually configure a periodic task that purges expired tokens.</para>
+      <para>默认情况下，身份服务会无限期存储过期令牌在SQL数据库中。
+随着时间的推移，过期令牌的累积很可能增加数据库的大小并降低了其性能，
+尤其是在有限资源的环境中。</para>
+      <para>安装包已经包含了一个克隆作业在
+        <filename>/etc/cron.hourly/keystone</filename>下，
+所以并不需要人工配置一个清洗过期令牌的周期性任务。</para>
     </step>
   </procedure>
 </section>

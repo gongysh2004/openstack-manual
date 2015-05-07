@@ -5,26 +5,24 @@
   version="5.0"
   xml:id="keystone-verify">
   <title>验证</title>
-  <para>Verify operation of the Identity service before installing other
-    services.</para>
+  <para>在安装其他服务之前，我们来验证一下身份服务。</para>
   <procedure>
     <step>
-      <para>For security reasons, disable the temporary authentication
-        token mechanism:</para>
-      <para>Edit the <filename>/etc/keystone/keystone-paste.ini</filename> file
-        and remove <literal>admin_token_auth</literal> from the
+      <para>出于安全因素，禁用临时认证令牌机制： </para>
+      <para>编辑<filename>/etc/keystone/keystone-paste.ini</filename> 文件，并从
         <literal>[pipeline:public_api]</literal>,
-        <literal>[pipeline:admin_api]</literal>, and
-        <literal>[pipeline:api_v3]</literal> sections.</para>
+        <literal>[pipeline:admin_api]</literal>, 和
+        <literal>[pipeline:api_v3]</literal> 部分中移除 <literal>admin_token_auth</literal> 。
+</para>
     </step>
     <step>
-      <para>Unset the temporary <envar>OS_TOKEN</envar> and
-      <envar>OS_URL</envar> environment variables:</para>
+      <para>撤销临时<envar>OS_TOKEN</envar> 和
+      <envar>OS_URL</envar> 环境变量：</para>
       <screen><prompt>$</prompt> <userinput>unset OS_TOKEN OS_URL</userinput></screen>
     </step>
     <step>
-      <para>As the <literal>admin</literal> user, request an authentication
-        token from the Identity version 2.0 API:</para>
+      <para>以<literal>admin</literal> 用户，从身份服务API中获取一个认证令牌：
+</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:35357 \
   --os-project-name admin --os-username admin --os-auth-type password \
   token issue</userinput>
@@ -38,18 +36,13 @@
 | user_id    | 4d411f2291f34941b30eef9bd797505a |
 +------------+----------------------------------+</computeroutput></screen>
       <note>
-        <para>This command uses the password for the <literal>admin</literal>
-          user.</para>
+        <para>这个命令使用了 <literal>admin</literal>用户的密码。</para>
       </note>
     </step>
     <step>
-      <para>The Identity version 3 API adds support for domains that contain
-        projects and users. Projects and users can use the same names in
-        different domains. Therefore, in order to use the version 3 API,
-        requests must also explicitly contain at least the
-        <literal>default</literal> domain or use IDs. For simplicity, this
-        guide explicitly uses the <literal>default</literal> domain
-        so examples can use names instead of IDs.</para>
+      <para>身份服务版本3 API增加了对包含项目和用户的域名的支持。项目和用户可以在不通域名中使用相同的名字。
+因此,为了使用版本3 API，要求必须明确包含至少<literal>default</literal> 域名或使用IDs. 简单起见
+这个指南显示地使用了 <literal>default</literal> 域名。</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:35357 \
   --os-project-domain-id default --os-user-domain-id default \
   --os-project-name admin --os-username admin --os-auth-type password \
@@ -63,21 +56,16 @@
 | project_id | cf12a15c5ea84b019aec3dc45580896b |
 | user_id    | 4d411f2291f34941b30eef9bd797505a |
 +------------+----------------------------------+</computeroutput></screen>
-      <note>
-        <para>This command uses the password for the <literal>admin</literal>
-          user.</para>
-      </note>
+
     </step>
     <step>
-      <para os="ubuntu;rhel;centos;fedora;sles;opensuse">As the
-        <literal>admin</literal> user, list projects to verify that the
-        <literal>admin</literal> user can execute admin-only CLI commands
-        and that the Identity service contains the projects that you
-        created in <xref linkend="keystone-users"/>:</para>
-      <para os="debian">As the <literal>admin</literal> user, list projects
-        to verify that the <literal>admin</literal> user can execute
-        CLI commands and that the Identity service contains the projects
-        created by the configuration tool:</para>
+      <para os="ubuntu;rhel;centos;fedora;sles;opensuse">以
+        <literal>admin</literal> 用户，列出项目来验证
+        <literal>admin</literal>用户可以执行仅管理员CLI命令
+并验证身份服务包含了你在 <xref linkend="keystone-users"/>所创建的项目：</para>
+      <para os="debian">作为 <literal>admin</literal> 用户,列出用户来验证
+        <literal>admin</literal>用户可以执行仅管理员CLI命令 
+并验证身份服务包含了配置工具所创建的项目：</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:35357 \
   --os-project-name admin --os-username admin --os-auth-type password \
   project list</userinput>
@@ -89,19 +77,14 @@
 | ab8ea576c0574b6092bb99150449b2d3 | demo    |
 | cf12a15c5ea84b019aec3dc45580896b | admin   |
 +----------------------------------+---------+</computeroutput></screen>
-      <note>
-        <para>This command uses the password for the <literal>admin</literal>
-          user.</para>
-      </note>
+
     </step>
     <step>
-      <para os="ubuntu;rhel;centos;fedora;sles;opensuse">As the
-        <literal>admin</literal> user, list users to verify that the
-        Identity service contains the users that you created in
-        <xref linkend="keystone-users"/>:</para>
-      <para os="debian">As the <literal>admin</literal> user, list users to
-        verify that the Identity service contains the users created by
-        the configuration tool:</para>
+      <para os="ubuntu;rhel;centos;fedora;sles;opensuse">为
+        <literal>admin</literal> 用户， 列出用户来验证身份服务包含了你在
+        <xref linkend="keystone-users"/>所创建的用户：</para>
+      <para os="debian">作为 <literal>admin</literal> 用户，列出用户来
+        验证身份服务包含了配置工具所创建的用户：</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:35357 \
   --os-project-name admin --os-username admin --os-auth-type password \
   user list</userinput>
@@ -112,19 +95,13 @@
 | 4d411f2291f34941b30eef9bd797505a | admin |
 | 3a81e6c8103b46709ef8d141308d4c72 | demo  |
 +----------------------------------+-------+</computeroutput></screen>
-      <note>
-        <para>This command uses the password for the <literal>admin</literal>
-          user.</para>
-      </note>
     </step>
     <step>
-      <para os="ubuntu;rhel;centos;fedora;sles;opensuse">As the
-        <literal>admin</literal> user, list roles to verify that the
-        Identity service contains the role that you created in
-        <xref linkend="keystone-users"/>:</para>
-      <para os="debian">As the <literal>admin</literal> user, list roles to
-        verify that the Identity service contains the role created by the
-        configuration tool:</para>
+      <para os="ubuntu;rhel;centos;fedora;sles;opensuse">为
+        <literal>admin</literal> 用户,列出角色来验证身份服务包含了你在
+        <xref linkend="keystone-users"/>所创建的角色：</para>
+      <para os="debian">作为 <literal>admin</literal>用户,列出角色来 
+       验证身份服务包含了配置工具所创建的角色：</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:35357 \
   --os-project-name admin --os-username admin --os-auth-type password \
   role list</userinput>
@@ -135,14 +112,9 @@
 | 9fe2ff9ee4384b1894a90878d3e92bab | _member_ |
 | cd2cb9a39e874ea69e5d4b896eb16128 | admin    |
 +----------------------------------+----------+</computeroutput></screen>
-      <note>
-        <para>This command uses the password for the <literal>admin</literal>
-          user.</para>
-      </note>
     </step>
     <step>
-      <para>As the <literal>demo</literal> user, request an authentication
-        token from the Identity version 3 API:</para>
+      <para>作为<literal>demo</literal>用户，从身份服务版本3API要求一个认证令牌：</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:5000 \
   --os-project-domain-id default --os-user-domain-id default \
   --os-project-name demo --os-username demo --os-auth-type password \
@@ -156,15 +128,10 @@
 | tenant_id | 4aa51bb942be4dd0ac0555d7591f80a6 |
 |  user_id  | 7004dfa0dda84d63aef81cf7f100af01 |
 +-----------+----------------------------------+</computeroutput></screen>
-      <note>
-        <para>This command uses the password for the <literal>demo</literal>
-          user and API port 5000 which only allows regular (non-admin)
-          access to the Identity service API.</para>
-      </note>
+
     </step>
     <step>
-      <para>As the <literal>demo</literal> user, attempt to list users
-        to verify that it cannot execute admin-only CLI commands:</para>
+      <para>作为 <literal>demo</literal> 用户，尝试列出用户来证它不能执行仅管理员CLI命令：</para>
       <screen><prompt>$</prompt> <userinput>openstack --os-auth-url http://controller:5000 \
   --os-project-domain-id default --os-user-domain-id default \
   --os-project-name demo --os-username demo --os-auth-type password \

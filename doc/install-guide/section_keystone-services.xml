@@ -5,56 +5,42 @@
   version="5.0"
   xml:id="keystone-services">
   <title>创建服务实体和API端点</title>
-  <para>The Identity service provides a catalog of services and their
-     locations. Each service that you add to your OpenStack environment
-     requires a <glossterm>service</glossterm> entity and several
-    <glossterm>API endpoint</glossterm> in the
-    catalog.</para>
+  <para>身份服务提供了一个服务和服务所在位置的目录。你向OpenStack环境中所添加的每一项服务需要在此目录注册
+ 一个 <glossterm>service</glossterm> 实体和几个
+    <glossterm>API endpoint</glossterm> 。</para>
   <procedure>
-    <title>To configure prerequisites</title>
-      <para>By default, the Identity service database contains no information
-        to support conventional authentication and catalog services. You must
-        use a temporary authentication token that you created in
-        <xref linkend="keystone-install"/> to initialize the service entity
-        and API endpoint for the Identity service.</para>
-      <para>You must pass the value of the authentication token to the
-        <command>openstack</command> command with the
-        <parameter>--os-token</parameter> parameter or set the
-        <envar>OS_TOKEN</envar> environment variable. Similarly, you
-        must also pass the value of the Identity service URL to the
-        <command>openstack</command> command with the
-        <parameter>--os-url</parameter> parameter or set the
-        <envar>OS_URL</envar> environment variable. This guide
-        uses environment variables to reduce command length.</para>
+    <title>前提条件</title>
+      <para>默认情况下，身份服务数据库没有包含信息来支持传统的身份认证和目录服务。你必须使用在
+        <xref linkend="keystone-install"/> 中创建的一个临时的认证令牌来为身份服务初始化服务实体和API端点。</para>
+      <para>你必须使用
+        <parameter>--os-token</parameter> 参数或设定
+        <envar>OS_TOKEN</envar> 环境变量向
+        <command>openstack</command>命令传递认证令牌的值. 相似的，你必须同时使用
+        <parameter>--os-url</parameter> 参数或设定<envar>OS_URL</envar> 环境变量向
+ <command>openstack</command> 命令传递身份服务URL。以下指南使用环境变量来减少命令长度。</para>
       <warning>
-        <para>For security reasons, do not use the temporary authentication
-          token for longer than necessary to initialize the Identity
-          service.</para>
+        <para>出于安全考虑，请勿过长使用临时的认证令牌。</para>
       </warning>
     <step>
-      <para>Configure the authentication token:</para>
+      <para>配置认证令牌：</para>
       <screen><prompt>$</prompt> <userinput>export OS_TOKEN=<replaceable>ADMIN_TOKEN</replaceable></userinput></screen>
-      <para>Replace <replaceable>ADMIN_TOKEN</replaceable> with the
-        authentication token that you generated in
-        <xref linkend="keystone-install"/>. For example:</para>
+      <para>用你在<xref linkend="keystone-install"/>中生成的认证令牌替换<replaceable>ADMIN_TOKEN</replaceable> 
+         举例来说：</para>
       <screen><prompt>$</prompt> <userinput>export OS_TOKEN=294a4c8a8a475f9b9836</userinput></screen>
     </step>
     <step>
-      <para>Configure the endpoint URL:</para>
+      <para>配置端点URL：</para>
       <screen><prompt>$</prompt> <userinput>export OS_URL=http://<replaceable>controller</replaceable>:35357/v2.0</userinput></screen>
     </step>
   </procedure>
   <procedure>
-    <title>To create the service entity and API endpoint</title>
+    <title>创建服务实体和API端点</title>
     <note os="debian">
-      <para>The packages can automatically create the service entity and
-        API endpoint.</para>
+      <para>该安装包可以自动创建服务实体和API端点。</para>
     </note>
     <step>
-      <para>The Identity service manages a catalog of services in your
-        OpenStack environment. Services use this catalog to determine
-        the other services available in your environment.</para>
-      <para>Create the service entity for the Identity service:</para>
+      <para>身份服务管理你OpenStack环境中的服务目录。服务使用这个目录来决定你的环境中的其他服务的可用性。</para>
+      <para>为身份服务创建服务实体：</para>
       <screen><prompt>$</prompt> <userinput>openstack service create --type identity \
   --description "OpenStack Identity" keystone</userinput>
 <computeroutput>+-------------+----------------------------------+
@@ -67,28 +53,18 @@
 | type        | identity                         |
 +-------------+----------------------------------+</computeroutput></screen>
       <note>
-        <para>OpenStack generates IDs dynamically, so you will see
-          different values in the example command output.</para>
+        <para>OpenStack动态地生成ID，所以你会在样例命令输出中看到不同的值。</para>
       </note>
     </step>
     <step>
-      <para>The Identity service manages a catalog of API endpoints associated
-        with the services in your OpenStack environment. Services use this
-        catalog to determine how to communicate with other services in your
-        environment.</para>
-      <para>OpenStack uses three API endpoint variants for each service:
-        admin, internal, and public. The admin API endpoint allows modifying
-        users and tenants by default, while the public and internal APIs
-        do not. In a production environment, the variants might reside on
-        separate networks that service different types of users for security
-        reasons. For instance, the public API network might be reachable from
-        outside the cloud for management tools, the admin API network might be
-        protected, while the internal API network is connected to each host.
-        Also, OpenStack supports multiple regions for scalability. For
-        simplicity, this guide uses the management network for all
-        endpoint variations and the default <literal>RegionOne</literal>
-        region.</para>
-      <para>Create the Identity service API endpoint:</para>
+      <para>身份服务管理一个和你OpenStack环境中的服务相关API端口的目录。服务可以使用这个目录来决定如何和你环境中的其他服务通信。
+        </para>
+      <para>各个服务,OpenStack使用三个API端点变体：
+        admin, internal, and public. admin API端点允许修改默认用户和租户，而public和internal APIs并不能这么做。
+Public API 端点可能可以从云之外连接，当internal API被连接到每个主机上时，admin API 网络可能会被保护。
+另外，OpenStack 支持多个区域. 简单起见,这个指南为所有端点变体使用管理网络，并使用默认 <literal>RegionOne</literal>
+区域。</para>
+      <para>创建身份服务API端点：</para>
       <screen><prompt>$</prompt> <userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:5000/v2.0 \
   --internalurl http://<replaceable>controller</replaceable>:5000/v2.0 \
@@ -109,9 +85,4 @@
 +--------------+----------------------------------+</computeroutput></screen>
     </step>
   </procedure>
-  <note>
-    <para>Each service that you add to your OpenStack environment requires
-      one or more service entities and one API endpoint in the Identity
-      service.</para>
-  </note>
 </section>

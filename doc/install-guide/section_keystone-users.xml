@@ -5,28 +5,24 @@
   version="5.0"
   xml:id="keystone-users">
   <title>创建项目，用户和角色</title>
-  <para>The Identity service provides authentication services for each
-    OpenStack service. The authentication service uses a combination of
-    <glossterm baseform="domain">domains</glossterm>,
-    <glossterm baseform="project">projects</glossterm> (tenants),
-    <glossterm baseform="user">users</glossterm>, and
-    <glossterm baseform="role">roles</glossterm>.</para>
+  <para>身份服务为每个OpenStack服务提供认证服务。该认证服务使用一个
+    <glossterm baseform="domain">domains</glossterm>域,
+    <glossterm baseform="project">projects</glossterm> (租户),
+    <glossterm baseform="user">users</glossterm>用户, 和
+    <glossterm baseform="role">roles</glossterm>角色的组合。</para>
   <note>
-    <para>For simplicity, this guide implicitly uses the
-      <literal>default</literal> domain.</para>
+    <para>简单起见，这个指南隐含使用了<literal>default</literal> 域.</para>
   </note>
   <procedure>
-    <title>To create tenants, users, and roles</title>
+    <title>创建租户，用户和角色</title>
     <note os="debian">
-      <para>The packages can automatically create the service entity and
-        API endpoint.</para>
+      <para>安装包可以自动地创建服务实体和API端点。</para>
     </note>
     <step>
-      <para>Create an administrative project, user, and role for
-        administrative operations in your environment:</para>
+      <para>为管理你环境中的操作创建一个管理项目，用户和角色：</para>
       <substeps>
         <step>
-          <para>Create the <literal>admin</literal> project:</para>
+          <para>创建 <literal>admin</literal> 项目：</para>
           <screen><prompt>$</prompt> <userinput>openstack project create --description "Admin Project" admin</userinput>
 <computeroutput>+-------------+----------------------------------+
 | Field       | Value                            |
@@ -37,12 +33,12 @@
 | name        | admin                            |
 +-------------+----------------------------------+</computeroutput></screen>
           <note>
-            <para>OpenStack generates IDs dynamically, so you will see
-              different values in the example command output.</para>
+            <para>OpenStack动态地生成IDs , 所以你会在样例命令输出中，看到不同的值。
+</para>
           </note>
         </step>
         <step>
-          <para>Create the <literal>admin</literal> user:</para>
+          <para>创建<literal>admin</literal> 用户：</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt admin</userinput>
 <computeroutput>User Password:
 Repeat User Password:
@@ -57,7 +53,7 @@ Repeat User Password:
 +------------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>admin</literal> role:</para>
+          <para>创建 <literal>admin</literal> 角色：</para>
           <screen><prompt>$</prompt> <userinput>openstack role create admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -67,8 +63,8 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>admin</literal> project and user:</para>
+          <para>增加 <literal>admin</literal> 角色到
+            <literal>admin</literal>项目和用户：</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project admin --user admin admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -79,21 +75,16 @@ Repeat User Password:
         </step>
       </substeps>
       <note>
-        <para>Any roles that you create must map to roles specified in the
-        <filename>policy.json</filename> file in the configuration file
-        directory of each OpenStack service. The default policy for most
-        services grants administrative access to the
-        <literal>admin</literal> role. For more information,
-        see the
-        <link xlink:href="http://docs.openstack.org/openstack-ops/content/projects_users.html">Operations Guide - Managing Projects and Users</link>.</para>
+        <para>你所创建的任何角色必须映射到指定在每个OpenStack服务的配置文件目录中的
+        <filename>policy.json</filename> 文件的角色。 绝大多数服务的默认规则授权
+        <literal>admin</literal> 角色以管理访问权限。</para>
       </note>
     </step>
     <step>
-      <para>This guide uses a service project that contains a unique
-        user for each service that you add to your environment.</para>
+      <para>这个指南使用了一个service项目，和每个服务的独立的用户。</para>
       <substeps>
         <step>
-          <para>Create the <literal>service</literal> project:</para>
+          <para>创建<literal>service</literal> 项目：</para>
           <screen><prompt>$</prompt> <userinput>openstack project create --description "Service Project" service</userinput>
 <computeroutput>+-------------+----------------------------------+
 | Field       | Value                            |
@@ -107,12 +98,11 @@ Repeat User Password:
       </substeps>
     </step>
     <step>
-      <para>Regular (non-admin) tasks should use an unprivileged project
-        and user. As an example, this guide creates the
-        <literal>demo</literal> project and user.</para>
+      <para> 常规（非管理员）任务应该使用一个无特权的项目和用户。作为一个例子，这个指南创建了
+        <literal>demo</literal> 项目和用户.</para>
       <substeps>
         <step>
-          <para>Create the <literal>demo</literal> project:</para>
+          <para>创建 <literal>demo</literal> 项目：</para>
           <screen><prompt>$</prompt> <userinput>openstack project create --description "Demo Project" demo</userinput>
 <computeroutput>+-------------+----------------------------------+
 | Field       | Value                            |
@@ -122,13 +112,10 @@ Repeat User Password:
 | id          | ab8ea576c0574b6092bb99150449b2d3 |
 | name        | demo                             |
 +-------------+----------------------------------+</computeroutput></screen>
-          <note>
-            <para>Do not repeat this step when creating additional
-              users for this project.</para>
-          </note>
+
         </step>
         <step>
-          <para>Create the <literal>demo</literal> user:</para>
+          <para>创建<literal>demo</literal> 用户：</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt demo</userinput>
 <computeroutput>User Password:
 Repeat User Password:
@@ -144,7 +131,7 @@ Repeat User Password:
 +------------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>_member_</literal> role:</para>
+          <para>创建 <literal>_member_</literal> 角色：</para>
           <screen><prompt>$</prompt> <userinput>openstack role create _member_</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -154,8 +141,8 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>_member_</literal> role to the
-            <literal>demo</literal> project and user:</para>
+          <para>增加<literal>_member_</literal>角色到 
+            <literal>demo</literal>项目和用户：</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project demo --user demo _member_</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -167,8 +154,4 @@ Repeat User Password:
       </substeps>
     </step>
   </procedure>
-  <note>
-    <para>You can repeat this procedure to create additional projects
-      and users.</para>
-  </note>
 </section>
