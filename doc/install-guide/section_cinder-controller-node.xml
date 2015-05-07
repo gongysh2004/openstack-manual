@@ -5,51 +5,43 @@
   version="5.0"
   xml:id="cinder-install-controller-node">
   <title>控制节点安装和配置Cinder管理服务</title>
-  <para>This section describes how to install and configure the Block
-    Storage service, code-named cinder, on the controller node. This
-    service requires at least one additional storage node that provides
-    volumes to instances.</para>
+  <para>本章节讲述了如何安装和配置块存储服务(cinder service)， 在一个OpenStack的环境中， 至少需要一个运行cinder-volume来提供块存储。</para>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To configure prerequisites</title>
-    <para>Before you install and configure the Block Storage service, you
-      must create a database, service credentials, and API endpoint.</para>
+    <title>配置的前置条件</title>
+    <para>在安装和部署块存储服务之前， 我们必须新建一个数据库， 创建相应的服务凭证和API Endpoint。</para>
     <step>
-      <para>To create the database, complete these steps:</para>
+      <para>创建数据库， 完成以下步骤:</para>
       <substeps>
         <step>
-          <para>Use the database access client to connect to the database
-            server as the <literal>root</literal> user:</para>
+          <para>使用 <literal>root</literal> 账户连接到数据库:</para>
           <screen><prompt>$</prompt> <userinput>mysql -u root -p</userinput></screen>
         </step>
         <step>
-          <para>Create the <literal>cinder</literal> database:</para>
+          <para>创建 <literal>cinder</literal> 数据库:</para>
           <screen><userinput>CREATE DATABASE cinder;</userinput></screen>
         </step>
         <step>
-          <para>Grant proper access to the <literal>cinder</literal>
-            database:</para>
+          <para>赋予 <literal>cinder</literal>用户访问数据库的权限:</para>
           <screen><userinput>GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'localhost' \
   IDENTIFIED BY '<replaceable>CINDER_DBPASS</replaceable>';</userinput>
 <userinput>GRANT ALL PRIVILEGES ON cinder.* TO 'cinder'@'%' \
   IDENTIFIED BY '<replaceable>CINDER_DBPASS</replaceable>';</userinput></screen>
-          <para>Replace <replaceable>CINDER_DBPASS</replaceable> with
-            a suitable password.</para>
+          <para>替换 <replaceable>CINDER_DBPASS</replaceable> 为MySQL中cinder用户的密码。</para>
         </step>
         <step>
-          <para>Exit the database access client.</para>
+          <para>退出数据库.</para>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+      <para>切换到 <literal>admin</literal> 身份执行OpenStack CLI命令:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>To create the service credentials, complete these steps:</para>
+      <para>创建服务凭证， 并完成以下步骤:</para>
       <substeps>
         <step>
-          <para>Create a <literal>cinder</literal> user:</para>
+          <para>添加一个 <literal>cinder</literal> 用户:</para>
           <screen><prompt>$</prompt> <userinput>openstack user create --password-prompt cinder</userinput>
 <computeroutput>User Password:
 Repeat User Password:
@@ -64,8 +56,8 @@ Repeat User Password:
 +----------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Add the <literal>admin</literal> role to the
-            <literal>cinder</literal> user:</para>
+          <para>为<literal>cinder</literal>用户赋予
+            <literal>admin</literal> role:</para>
           <screen><prompt>$</prompt> <userinput>openstack role add --project service --user cinder admin</userinput>
 <computeroutput>+-------+----------------------------------+
 | Field | Value                            |
@@ -75,7 +67,7 @@ Repeat User Password:
 +-------+----------------------------------+</computeroutput></screen>
         </step>
         <step>
-          <para>Create the <literal>cinder</literal> service entities:</para>
+          <para>添加 <literal>cinder</literal> service :</para>
           <screen><prompt>$</prompt> <userinput>openstack service create --type volume \
   --description "OpenStack Block Storage" cinder</userinput>
 <computeroutput>+-------------+----------------------------------+
@@ -99,16 +91,13 @@ Repeat User Password:
 | type        | volumev2                         |
 +-------------+----------------------------------+</computeroutput></screen>
           <note>
-            <para>The Block Storage service requires both the
-              <literal>volume</literal> and <literal>volumev2</literal>
-              services. However, both services use the same API
-              endpoint that references the Block Storage version 2 API.</para>
+            <para>块存储服务需要创建<literal>volume</literal>和<literal>volumev2</literal>服务， 不过， 它们都适用version 2 API的Endpoint</para>
           </note>
         </step>
       </substeps>
     </step>
     <step>
-      <para>Create the Block Storage service API endpoints:</para>
+      <para>创建块存储的API Endpoint:</para>
       <screen><prompt>$</prompt> <userinput>openstack endpoint create \
   --publicurl http://<replaceable>controller</replaceable>:8776/v2/%\(tenant_id\)s \
   --internalurl http://<replaceable>controller</replaceable>:8776/v2/%\(tenant_id\)s \
@@ -148,35 +137,31 @@ Repeat User Password:
     </step>
   </procedure>
   <procedure os="ubuntu;rhel;centos;fedora;sles;opensuse">
-    <title>To install and configure Block Storage controller components</title>
+    <title>安装和配置块存储控制器组件</title>
     <step>
-      <para>Install the packages:</para>
+      <para>安装软件包:</para>
       <screen os="ubuntu"><prompt>#</prompt> <userinput>apt-get install cinder-api cinder-scheduler python-cinderclient</userinput></screen>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>yum install openstack-cinder python-cinderclient python-oslo-db</userinput></screen>
       <screen os="sles;opensuse"><prompt>#</prompt> <userinput>zypper install openstack-cinder-api openstack-cinder-scheduler python-cinderclient</userinput></screen>
     </step>
     <step>
       <!-- Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1212900. -->
-      <para os="rhel;centos;fedora">Copy the <filename>/usr/share/cinder/cinder-dist.conf</filename> file
-        to <filename>/etc/cinder/cinder.conf</filename>.</para>
+      <para os="rhel;centos;fedora">将<filename>/usr/share/cinder/cinder-dist.conf</filename> 文件拷贝到<filename>/etc/cinder/cinder.conf</filename>.</para>
       <screen os="rhel;centos;fedora"><prompt>#</prompt> <userinput>cp /usr/share/cinder/cinder-dist.conf /etc/cinder/cinder.conf</userinput>
 <prompt>#</prompt> <userinput>chown -R cinder:cinder /etc/cinder/cinder.conf</userinput></screen>
-      <para>Edit the <filename>/etc/cinder/cinder.conf</filename> file and
-        complete the following actions:</para>
+      <para>编辑<filename>/etc/cinder/cinder.conf</filename> 文件并完成以下步骤:</para>
       <substeps>
         <step>
-          <para>In the <literal>[database]</literal> section, configure
-            database access:</para>
+          <para>在<literal>[database]</literal> 配置组中, 配置数据库访问:</para>
           <programlisting language="ini">[database]
 ...
 connection = mysql://cinder:<replaceable>CINDER_DBPASS</replaceable>@controller/cinder</programlisting>
-          <para>Replace <replaceable>CINDER_DBPASS</replaceable> with the
-            password you chose for the Block Storage database.</para>
+          <para>将 <replaceable>CINDER_DBPASS</replaceable> 替换成正确的密码.</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[oslo_messaging_rabbit]</literal> sections, configure
-            <application>RabbitMQ</application> message queue access:</para>
+          <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[oslo_messaging_rabbit]</literal> 配置组中, 配置
+            <application>RabbitMQ</application> 服务访问:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 rpc_backend = rabbit
@@ -186,14 +171,12 @@ rpc_backend = rabbit
 rabbit_host = <replaceable>controller</replaceable>
 rabbit_userid = openstack
 rabbit_password = <replaceable>RABBIT_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>RABBIT_PASS</replaceable> with the
-            password you chose for the <literal>openstack</literal> account in
-            <application>RabbitMQ</application>.</para>
+          <para>替换 <replaceable>RABBIT_PASS</replaceable> 为<application>RabbitMQ</application>中 <literal>openstack</literal> 用户的密码。</para>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> and
-            <literal>[keystone_authtoken]</literal> sections,
-            configure Identity service access:</para>
+          <para>在 <literal>[DEFAULT]</literal> 和
+            <literal>[keystone_authtoken]</literal> 配置组中,
+            配置身份认证服务:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 auth_strategy = keystone
@@ -208,33 +191,30 @@ user_domain_id = default
 project_name = service
 username = cinder
 password = <replaceable>CINDER_PASS</replaceable></programlisting>
-          <para>Replace <replaceable>CINDER_PASS</replaceable> with the password
-            you chose for the <literal>cinder</literal> user in the Identity
-            service.</para>
+          <para>将 <replaceable>CINDER_PASS</replaceable> 替换为<literal>cinder</literal> 用户的密码.</para>
           <note>
-            <para>Comment out or remove any other options in the
-              <literal>[keystone_authtoken]</literal> section.</para>
+            <para>注释或删除
+              <literal>[keystone_authtoken]</literal> 配置组中无用的配置项.</para>
           </note>
         </step>
         <step>
-          <para>In the <literal>[DEFAULT]</literal> section, configure the
-            <literal>my_ip</literal> option to use the management interface IP
-            address of the controller node:</para>
+          <para>在 <literal>[DEFAULT]</literal> 配置组中, 将
+            <literal>my_ip</literal> 选项配置成控制器节点的管理网络IP:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 my_ip = 10.0.0.11</programlisting>
         </step>
         <step>
-          <para>In the <literal>[oslo_concurrency]</literal> section,
-            configure the lock path:</para>
+          <para>在 <literal>[oslo_concurrency]</literal> 配置组中,
+            配置lock path:</para>
           <programlisting language="ini">[oslo_concurrency]
 ...
 lock_path = /var/lock/cinder</programlisting>
         </step>
         <step>
-          <para>(Optional) To assist with troubleshooting,
-            enable verbose logging in the <literal>[DEFAULT]</literal>
-            section:</para>
+          <para>(可选) 为了帮助以后troubleshooting,
+            可以在<literal>[DEFAULT]</literal>
+            配置组中将logging的verbose选项打开:</para>
           <programlisting language="ini">[DEFAULT]
 ...
 verbose = True</programlisting>
@@ -242,14 +222,14 @@ verbose = True</programlisting>
       </substeps>
     </step>
     <step>
-      <para>Populate the Block Storage database:</para>
+      <para>添加数据库表结构:</para>
       <screen><prompt>#</prompt> <userinput>su -s /bin/sh -c "cinder-manage db sync" cinder</userinput></screen>
     </step>
   </procedure>
   <procedure os="debian">
-    <title>To install and configure Block Storage controller components</title>
+    <title>安装和配置块存储控制器组件</title>
     <step>
-      <para>Install the packages:</para>
+      <para>安装软件包:</para>
       <screen><prompt>#</prompt> <userinput>apt-get install cinder-api cinder-scheduler python-cinderclient</userinput></screen>
     </step>
     <step>
@@ -264,9 +244,9 @@ verbose = True</programlisting>
     </step>
   </procedure>
   <procedure>
-    <title>To finalize installation</title>
+    <title>完成安装</title>
     <step os="ubuntu;debian">
-      <para>Restart the Block Storage services:</para>
+      <para>重启cinder服务:</para>
       <screen><prompt>#</prompt> <userinput>service cinder-scheduler restart</userinput>
 <prompt>#</prompt> <userinput>service cinder-api restart</userinput></screen>
     </step>
@@ -277,9 +257,7 @@ verbose = True</programlisting>
 <prompt>#</prompt> <userinput>systemctl start openstack-cinder-api.service openstack-cinder-scheduler.service</userinput></screen>
     </step>
     <step os="ubuntu">
-      <para>By default, the Ubuntu packages create an SQLite database.</para>
-      <para>Because this configuration uses a SQL database server, you can
-        remove the SQLite database file:</para>
+      <para>默认情况下， Ubuntu的OpenStack软件包会自动创建一个SQLite数据库， 因为我们已经配置成使用MySQL作为我们的后端数据库， 所以我们可以删除这个数据库文件:</para>
       <screen><prompt>#</prompt> <userinput>rm -f /var/lib/cinder/cinder.sqlite</userinput></screen>
     </step>
   </procedure>

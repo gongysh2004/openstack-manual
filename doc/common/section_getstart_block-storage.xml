@@ -5,55 +5,39 @@
   version="5.0"
   xml:id="block-storage-service">
       <title>OpenStack块存储</title>
-      <para>The OpenStack Block Storage service (cinder) adds
-        persistent storage to a virtual machine. Block
-        Storage provides an infrastructure for managing volumes, and
-        interacts with OpenStack Compute to provide
-        volumes for instances. The service also enables management of
-        volume snapshots, and volume types.</para>
-      <para>The Block Storage service consists of the following
-        components:</para>
+      <para>OpenStack块存储服务(Cinder) 为虚拟机提供了持久化存储的块设备， 它提供了一个用于管理卷(Volume)的基础架构， 并通过与计算服务(Nova)进行交互， 让Nova可以为计算节点上的虚机可以直接访问到块设备。 Cinder提供了管理卷(volume), 快照(snapshots)和卷的类型(Volume Type).</para>
+      <para>块存储服务包含了下列组件:</para>
       <variablelist>
         <varlistentry>
           <term><systemitem class="service">cinder-api</systemitem></term>
-          <listitem><para>Accepts API requests, and
-            routes them to the <systemitem class="service">cinder-volume</systemitem>
-            for action.</para></listitem>
+          <listitem><para>处理API请求， 并将请求交给 <systemitem class="service">cinder-volume</systemitem>
+            处理.</para></listitem>
         </varlistentry>
         <varlistentry>
           <term><systemitem class="service">cinder-volume</systemitem></term>
-          <listitem><para>Interacts directly with the Block Storage
-            service, and processes such as the
+          <listitem><para>直接与实际存储设备打交道， 并且由
             <systemitem class="service">cinder-scheduler</systemitem>.
-            It also interacts with these processes through a message
-            queue. The <systemitem>cinder-volume service</systemitem>
-            responds to read and write requests sent to the Block
-            Storage service to maintain state. It can interact with a
-            variety of storage providers through a driver architecture.
+            调度处理实际的管理请求， 它通过rpc获取来自消息队列的任务， 并将后端存储的状态上报给scheduler。<systemitem>cinder-volume service</systemitem>
+            通过不同的driver管理后端不同的存储设备。
           </para>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term><systemitem class="service">cinder-scheduler</systemitem>
           daemon</term>
-        <listitem> <para>Selects the optimal storage provider node on
-          which to create the volume. A similar component to
-          the <systemitem class="service">nova-scheduler</systemitem>.
+        <listitem> <para>选择适合的存储节点来创建卷(Volume)。类似<systemitem class="service">nova-scheduler</systemitem>服务。
         </para></listitem>
         </varlistentry>
         <varlistentry>
           <term><systemitem class="service">cinder-backup</systemitem>
           daemon</term>
         <listitem> <para>The <systemitem class="service">cinder-backup</systemitem>
-          service provides backing up volumes of any type to a backup
-          storage provider. Like the <systemitem>cinder-volume</systemitem>
-          service, it can interact with a variety of storage providers through
-          a driver architecture.</para></listitem>
+          提供对卷(volume)的备份支持，类似<systemitem>cinder-volume</systemitem>
+          ， 它可以通过不同的driver来管理不同的后端备份设备。</para></listitem>
         </varlistentry>
         <varlistentry>
-          <term>Messaging queue</term>
-          <listitem><para>Routes information between the Block Storage
-            processes.</para></listitem>
+          <term>消息队列</term>
+          <listitem><para>将消息传递给不同的块存储服务进程</para></listitem>
         </varlistentry>
     </variablelist>
     </section>

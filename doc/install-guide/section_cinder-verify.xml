@@ -5,28 +5,24 @@
   version="5.0"
   xml:id="cinder-verify">
   <title>验证</title>
-  <para>This section describes how to verify operation of the Block Storage
-    service by creating a volume.</para>
-  <para>For more information about how to manage volumes, see the <link
+  <para>这部分内容讲述了如何通过创建一个卷(Volume)来验证我们的块存储服务是否安装成功。</para>
+  <para>更多管理卷的内容， 参考 <link
       xlink:href="http://docs.openstack.org/user-guide/index.html"
-    ><citetitle>OpenStack User Guide</citetitle></link>.</para>
+    ><citetitle>OpenStack User Guide (http://docs.openstack.org/user-guide/index.html)</citetitle></link>.</para>
   <note>
-    <para>Perform these commands on the controller node.</para>
+    <para>在控制器上执行如下操作。</para>
   </note>
   <procedure>
     <step>
-      <para>In each client environment script, configure the Block Storage
-        client to use API version 2.0:</para>
+      <para>在每个客户端环境的脚本中， 配置块存储服务的API使用Version 2.0:</para>
       <screen><prompt>$</prompt> <userinput>echo "export OS_VOLUME_API_VERSION=2" | tee -a admin-openrc.sh demo-openrc.sh</userinput></screen>
     </step>
     <step>
-     <para>Source the <literal>admin</literal> credentials to gain access to
-        admin-only CLI commands:</para>
+     <para>切换到 <literal>admin</literal> 身份执行openstack的CLI命令:</para>
       <screen><prompt>$</prompt> <userinput>source admin-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>List service components to verify successful launch of each
-        process:</para>
+      <para>列出cinder的所有服务查看所有服务是否正常:</para>
       <screen><prompt>$</prompt> <userinput>cinder service-list</userinput>
 <computeroutput>+------------------+------------+------+---------+-------+----------------------------+-----------------+
 |      Binary      |    Host    | Zone |  Status | State |         Updated_at         | Disabled Reason |
@@ -36,12 +32,11 @@
 +------------------+------------+------+---------+-------+----------------------------+-----------------+</computeroutput></screen>
     </step>
     <step>
-      <para>Source the <literal>demo</literal> credentials to perform
-        the following steps as a non-administrative project:</para>
+      <para>切换到 <literal>demo</literal> 用户身份执行如下操作:</para>
       <screen><prompt>$</prompt> <userinput>source demo-openrc.sh</userinput></screen>
     </step>
     <step>
-      <para>Create a 1 GB volume:</para>
+      <para>创建一个1GB大小的卷(Volume):</para>
       <screen><prompt>$</prompt> <userinput>cinder create --name demo-volume1 1</userinput>
 <computeroutput>+---------------------------------------+--------------------------------------+
 |                Property               |                Value                 |
@@ -70,16 +65,15 @@
 +---------------------------------------+--------------------------------------+</computeroutput></screen>
     </step>
     <step>
-      <para>Verify creation and availability of the volume:</para>
+      <para>验证卷是否创建成功:</para>
       <screen><prompt>$</prompt> <userinput>cinder list</userinput>
 <computeroutput>+--------------------------------------+-----------+--------------+------+-------------+----------+-------------+
 |                  ID                  |   Status  |     Name     | Size | Volume Type | Bootable | Attached to |
 +--------------------------------------+-----------+--------------+------+-------------+----------+-------------+
 | 6c7a3d28-e1ef-42a0-b1f7-8d6ce9218412 | available | demo-volume1 |  1   |     None    |  false   |             |
 +--------------------------------------+-----------+--------------+------+-------------+----------+-------------+</computeroutput></screen>
-      <para>If the status does not indicate <literal>available</literal>,
-        check the logs in the <filename>/var/log/cinder</filename> directory
-        on the controller and volume nodes for more information.</para>
+      <para>如果卷的状态不是 <literal>available</literal>,
+        我们需要在<filename>/var/log/cinder</filename> 文件夹中查看相关的日志.</para>
     </step>
   </procedure>
 </section>
